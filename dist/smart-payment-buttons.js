@@ -130,9 +130,9 @@ window.spb = function(modules) {
             })), S.d(N, "FPTI_KEY", (function() {
                 return p;
             })), S.d(N, "FPTI_USER_ACTION", (function() {
-                return f;
-            })), S.d(N, "FPTI_DATA_SOURCE", (function() {
                 return l;
+            })), S.d(N, "FPTI_DATA_SOURCE", (function() {
+                return f;
             })), S.d(N, "FPTI_FEED", (function() {
                 return Y;
             })), S.d(N, "FPTI_SDK_NAME", (function() {
@@ -140,9 +140,9 @@ window.spb = function(modules) {
             })), S.d(N, "FUNDING", (function() {
                 return m;
             })), S.d(N, "FUNDING_BRAND_LABEL", (function() {
-                return y;
-            })), S.d(N, "CARD", (function() {
                 return b;
+            })), S.d(N, "CARD", (function() {
+                return y;
             })), S.d(N, "WALLET_INSTRUMENT", (function() {
                 return W;
             })), S.d(N, "FUNDING_PRODUCTS", (function() {
@@ -876,10 +876,10 @@ window.spb = function(modules) {
                 OPTION_SELECTED: "optsel",
                 USER_IDENTITY_METHOD: "user_identity_method",
                 FIELDS_COMPONENT_SESSION_ID: "fields_component_session_id"
-            }, f = {
+            }, l = {
                 COMMIT: "commit",
                 CONTINUE: "continue"
-            }, l = {
+            }, f = {
                 PAYMENTS_SDK: "checkout"
             }, Y = {
                 PAYMENTS_SDK: "payments_sdk"
@@ -911,11 +911,12 @@ window.spb = function(modules) {
                 BOLETO: "boleto",
                 WECHATPAY: "wechatpay",
                 MERCADOPAGO: "mercadopago",
-                MULTIBLANCO: "multiblanco"
-            }, y = {
+                MULTIBLANCO: "multiblanco",
+                MULTIBANCO: "multibanco"
+            }, b = {
                 PAYPAL: "PayPal",
                 CREDIT: "PayPal Credit"
-            }, b = {
+            }, y = {
                 VISA: "visa",
                 MASTERCARD: "mastercard",
                 AMEX: "amex",
@@ -5313,87 +5314,38 @@ window.spb = function(modules) {
             return ZalgoPromise;
         }();
         var IE_WIN_ACCESS_ERROR = "Call was rejected by callee.\r\n";
-        function getActualProtocol(win) {
-            void 0 === win && (win = window);
-            return win.location.protocol;
-        }
-        function getProtocol(win) {
-            void 0 === win && (win = window);
-            if (win.mockDomain) {
-                var protocol = win.mockDomain.split("//")[0];
-                if (protocol) return protocol;
-            }
-            return getActualProtocol(win);
-        }
-        function isAboutProtocol(win) {
-            void 0 === win && (win = window);
-            return "about:" === getProtocol(win);
-        }
         function utils_getParent(win) {
             void 0 === win && (win = window);
             if (win) try {
                 if (win.parent && win.parent !== win) return win.parent;
             } catch (err) {}
         }
-        function canReadFromWindow(win) {
-            try {
-                return !0;
-            } catch (err) {}
-            return !1;
-        }
-        function getActualDomain(win) {
-            void 0 === win && (win = window);
-            var location = win.location;
-            if (!location) throw new Error("Can not read window location");
-            var protocol = getActualProtocol(win);
-            if (!protocol) throw new Error("Can not read window protocol");
-            if ("file:" === protocol) return "file://";
-            if ("about:" === protocol) {
-                var parent = utils_getParent(win);
-                return parent && canReadFromWindow() ? getActualDomain(parent) : "about://";
-            }
-            var host = location.host;
-            if (!host) throw new Error("Can not read window host");
-            return protocol + "//" + host;
-        }
         function getDomain(win) {
             void 0 === win && (win = window);
-            var domain = getActualDomain(win);
+            var domain = function getActualDomain(win) {
+                void 0 === win && (win = window);
+                var location = win.location;
+                if (!location) throw new Error("Can not read window location");
+                var protocol = function(win) {
+                    void 0 === win && (win = window);
+                    return win.location.protocol;
+                }(win);
+                if (!protocol) throw new Error("Can not read window protocol");
+                if ("file:" === protocol) return "file://";
+                if ("about:" === protocol) {
+                    var parent = utils_getParent(win);
+                    return parent && function(win) {
+                        try {
+                            return !0;
+                        } catch (err) {}
+                        return !1;
+                    }() ? getActualDomain(parent) : "about://";
+                }
+                var host = location.host;
+                if (!host) throw new Error("Can not read window host");
+                return protocol + "//" + host;
+            }(win);
             return domain && win.mockDomain && 0 === win.mockDomain.indexOf("mock:") ? win.mockDomain : domain;
-        }
-        function isSameDomain(win) {
-            if (!function(win) {
-                try {
-                    if (win === window) return !0;
-                } catch (err) {}
-                try {
-                    var desc = Object.getOwnPropertyDescriptor(win, "location");
-                    if (desc && !1 === desc.enumerable) return !1;
-                } catch (err) {}
-                try {
-                    if (isAboutProtocol(win) && canReadFromWindow()) return !0;
-                } catch (err) {}
-                try {
-                    if (function(win) {
-                        void 0 === win && (win = window);
-                        return "mock:" === getProtocol(win);
-                    }(win) && canReadFromWindow()) return !0;
-                } catch (err) {}
-                try {
-                    if (getActualDomain(win) === getActualDomain(window)) return !0;
-                } catch (err) {}
-                return !1;
-            }(win)) return !1;
-            try {
-                if (win === window) return !0;
-                if (isAboutProtocol(win) && canReadFromWindow()) return !0;
-                if (getDomain(window) === getDomain(win)) return !0;
-            } catch (err) {}
-            return !1;
-        }
-        function assertSameDomain(win) {
-            if (!isSameDomain(win)) throw new Error("Expected window to be same domain");
-            return win;
         }
         function isAncestorParent(parent, child) {
             if (!parent || !child) return !1;
@@ -5500,7 +5452,7 @@ window.spb = function(modules) {
             } catch (err) {
                 return !err || err.message !== IE_WIN_ACCESS_ERROR;
             }
-            if (allowMock && isSameDomain(win)) try {
+            if (allowMock) try {
                 if (win.mockclosed) return !0;
             } catch (err) {}
             try {
@@ -6544,7 +6496,7 @@ window.spb = function(modules) {
         function Logger(_ref) {
             var url = _ref.url, prefix = _ref.prefix, _ref$logLevel = _ref.logLevel, logLevel = void 0 === _ref$logLevel ? "debug" : _ref$logLevel, _ref$transport = _ref.transport, transport = void 0 === _ref$transport ? function(httpWin) {
                 void 0 === httpWin && (httpWin = window);
-                var win = isSameDomain(httpWin) ? assertSameDomain(httpWin) : window;
+                var win = httpWin;
                 return function(_ref) {
                     var url = _ref.url, method = _ref.method, headers = _ref.headers, json = _ref.json, _ref$enableSendBeacon = _ref.enableSendBeacon, enableSendBeacon = void 0 !== _ref$enableSendBeacon && _ref$enableSendBeacon;
                     return promise_ZalgoPromise.try((function() {
@@ -7165,7 +7117,7 @@ window.spb = function(modules) {
             logger_getLogger().info("rest_api_create_order_token");
             var headers = ((_headers15 = {}).authorization = "Bearer " + accessToken, _headers15["paypal-partner-attribution-id"] = partnerAttributionID, 
             _headers15["paypal-client-metadata-id"] = clientMetadataID, _headers15["x-app-name"] = "smart-payment-buttons", 
-            _headers15["x-app-version"] = "5.0.84", _headers15);
+            _headers15["x-app-version"] = "5.0.86", _headers15);
             var paymentSource = {
                 token: {
                     id: paymentMethodID,
@@ -9528,11 +9480,11 @@ window.spb = function(modules) {
                                 var _getDimensions = getDimensions(fundingSource);
                                 win = function(_ref) {
                                     var _ref$closeOnUnload = _ref.closeOnUnload;
-                                    var win = assertSameDomain(popup("", {
+                                    var win = popup("", {
                                         width: _ref.width,
                                         height: _ref.height,
                                         closeOnUnload: void 0 === _ref$closeOnUnload ? 1 : _ref$closeOnUnload
-                                    }));
+                                    });
                                     var doc = win.document;
                                     !function(win, el) {
                                         var tag = el.tagName.toLowerCase();
@@ -9817,7 +9769,7 @@ window.spb = function(modules) {
             try {
                 for (var _i2 = 0, _getAllFramesInWindow2 = getAllFramesInWindow(window); _i2 < _getAllFramesInWindow2.length; _i2++) {
                     var win = _getAllFramesInWindow2[_i2];
-                    if (isSameDomain(win) && win.exports && win.exports.name === name) return win.exports;
+                    if (win.exports && win.exports.name === name) return win.exports;
                 }
             } catch (err) {}
         }
@@ -12956,7 +12908,7 @@ window.spb = function(modules) {
                             try {
                                 for (var _i2 = 0, _getAllFramesInWindow2 = getAllFramesInWindow(window); _i2 < _getAllFramesInWindow2.length; _i2++) {
                                     var win = _getAllFramesInWindow2[_i2];
-                                    if (isSameDomain(win) && win.exports && "smart-fields" === win.exports.name && win.exports.fundingSource === fundingSource) return win.exports;
+                                    if (win.exports && "smart-fields" === win.exports.name && win.exports.fundingSource === fundingSource) return win.exports;
                                 }
                             } catch (err) {}
                         }(paymentFundingSource);
@@ -13286,7 +13238,7 @@ window.spb = function(modules) {
                 logger.addTrackingBuilder((function() {
                     var _ref3;
                     return (_ref3 = {}).state_name = "smart_button", _ref3.context_type = "button_session_id", 
-                    _ref3.context_id = buttonSessionID, _ref3.button_session_id = buttonSessionID, _ref3.button_version = "5.0.84", 
+                    _ref3.context_id = buttonSessionID, _ref3.button_session_id = buttonSessionID, _ref3.button_version = "5.0.86", 
                     _ref3.button_correlation_id = buttonCorrelationID, _ref3.stickiness_id = isAndroidChrome() ? stickinessID : null, 
                     _ref3.bn_code = partnerAttributionID, _ref3.user_action = commit ? "commit" : "continue", 
                     _ref3.seller_id = merchantID[0], _ref3.merchant_domain = merchantDomain, _ref3.t = Date.now().toString(), 

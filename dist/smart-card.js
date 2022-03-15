@@ -4072,9 +4072,9 @@ window.smartCard = function(modules) {
         })), S.d(N, "FPTI_KEY", (function() {
             return p;
         })), S.d(N, "FPTI_USER_ACTION", (function() {
-            return f;
-        })), S.d(N, "FPTI_DATA_SOURCE", (function() {
             return l;
+        })), S.d(N, "FPTI_DATA_SOURCE", (function() {
+            return f;
         })), S.d(N, "FPTI_FEED", (function() {
             return Y;
         })), S.d(N, "FPTI_SDK_NAME", (function() {
@@ -4082,9 +4082,9 @@ window.smartCard = function(modules) {
         })), S.d(N, "FUNDING", (function() {
             return m;
         })), S.d(N, "FUNDING_BRAND_LABEL", (function() {
-            return y;
-        })), S.d(N, "CARD", (function() {
             return b;
+        })), S.d(N, "CARD", (function() {
+            return y;
         })), S.d(N, "WALLET_INSTRUMENT", (function() {
             return W;
         })), S.d(N, "FUNDING_PRODUCTS", (function() {
@@ -4818,10 +4818,10 @@ window.smartCard = function(modules) {
             OPTION_SELECTED: "optsel",
             USER_IDENTITY_METHOD: "user_identity_method",
             FIELDS_COMPONENT_SESSION_ID: "fields_component_session_id"
-        }, f = {
+        }, l = {
             COMMIT: "commit",
             CONTINUE: "continue"
-        }, l = {
+        }, f = {
             PAYMENTS_SDK: "checkout"
         }, Y = {
             PAYMENTS_SDK: "payments_sdk"
@@ -4853,11 +4853,12 @@ window.smartCard = function(modules) {
             BOLETO: "boleto",
             WECHATPAY: "wechatpay",
             MERCADOPAGO: "mercadopago",
-            MULTIBLANCO: "multiblanco"
-        }, y = {
+            MULTIBLANCO: "multiblanco",
+            MULTIBANCO: "multibanco"
+        }, b = {
             PAYPAL: "PayPal",
             CREDIT: "PayPal Credit"
-        }, b = {
+        }, y = {
             VISA: "visa",
             MASTERCARD: "mastercard",
             AMEX: "amex",
@@ -5580,83 +5581,11 @@ window.smartCard = function(modules) {
         return ZalgoPromise;
     }();
     var IE_WIN_ACCESS_ERROR = "Call was rejected by callee.\r\n";
-    function getActualProtocol(win) {
-        void 0 === win && (win = window);
-        return win.location.protocol;
-    }
-    function getProtocol(win) {
-        void 0 === win && (win = window);
-        if (win.mockDomain) {
-            var protocol = win.mockDomain.split("//")[0];
-            if (protocol) return protocol;
-        }
-        return getActualProtocol(win);
-    }
-    function isAboutProtocol(win) {
-        void 0 === win && (win = window);
-        return "about:" === getProtocol(win);
-    }
     function utils_getParent(win) {
         void 0 === win && (win = window);
         if (win) try {
             if (win.parent && win.parent !== win) return win.parent;
         } catch (err) {}
-    }
-    function canReadFromWindow(win) {
-        try {
-            return !0;
-        } catch (err) {}
-        return !1;
-    }
-    function getActualDomain(win) {
-        void 0 === win && (win = window);
-        var location = win.location;
-        if (!location) throw new Error("Can not read window location");
-        var protocol = getActualProtocol(win);
-        if (!protocol) throw new Error("Can not read window protocol");
-        if ("file:" === protocol) return "file://";
-        if ("about:" === protocol) {
-            var parent = utils_getParent(win);
-            return parent && canReadFromWindow() ? getActualDomain(parent) : "about://";
-        }
-        var host = location.host;
-        if (!host) throw new Error("Can not read window host");
-        return protocol + "//" + host;
-    }
-    function getDomain(win) {
-        void 0 === win && (win = window);
-        var domain = getActualDomain(win);
-        return domain && win.mockDomain && 0 === win.mockDomain.indexOf("mock:") ? win.mockDomain : domain;
-    }
-    function isSameDomain(win) {
-        if (!function(win) {
-            try {
-                if (win === window) return !0;
-            } catch (err) {}
-            try {
-                var desc = Object.getOwnPropertyDescriptor(win, "location");
-                if (desc && !1 === desc.enumerable) return !1;
-            } catch (err) {}
-            try {
-                if (isAboutProtocol(win) && canReadFromWindow()) return !0;
-            } catch (err) {}
-            try {
-                if (function(win) {
-                    void 0 === win && (win = window);
-                    return "mock:" === getProtocol(win);
-                }(win) && canReadFromWindow()) return !0;
-            } catch (err) {}
-            try {
-                if (getActualDomain(win) === getActualDomain(window)) return !0;
-            } catch (err) {}
-            return !1;
-        }(win)) return !1;
-        try {
-            if (win === window) return !0;
-            if (isAboutProtocol(win) && canReadFromWindow()) return !0;
-            if (getDomain(window) === getDomain(win)) return !0;
-        } catch (err) {}
-        return !1;
     }
     function isAncestorParent(parent, child) {
         if (!parent || !child) return !1;
@@ -5736,7 +5665,7 @@ window.smartCard = function(modules) {
         } catch (err) {
             return !err || err.message !== IE_WIN_ACCESS_ERROR;
         }
-        if (allowMock && isSameDomain(win)) try {
+        if (allowMock) try {
             if (win.mockclosed) return !0;
         } catch (err) {}
         try {
@@ -6340,219 +6269,6 @@ window.smartCard = function(modules) {
     var extendIfDefined = function(target, source) {
         for (var key in source) source.hasOwnProperty(key) && (target[key] = source[key]);
     };
-    function Logger(_ref) {
-        var url = _ref.url, prefix = _ref.prefix, _ref$logLevel = _ref.logLevel, logLevel = void 0 === _ref$logLevel ? "warn" : _ref$logLevel, _ref$transport = _ref.transport, transport = void 0 === _ref$transport ? function(httpWin) {
-            void 0 === httpWin && (httpWin = window);
-            var win = isSameDomain(httpWin) ? function(win) {
-                if (!isSameDomain(win)) throw new Error("Expected window to be same domain");
-                return win;
-            }(httpWin) : window;
-            return function(_ref) {
-                var url = _ref.url, method = _ref.method, headers = _ref.headers, json = _ref.json, _ref$enableSendBeacon = _ref.enableSendBeacon, enableSendBeacon = void 0 !== _ref$enableSendBeacon && _ref$enableSendBeacon;
-                return promise_ZalgoPromise.try((function() {
-                    var beaconResult = !1;
-                    (function(_ref) {
-                        var headers = _ref.headers, enableSendBeacon = _ref.enableSendBeacon;
-                        var hasHeaders = headers && Object.keys(headers).length;
-                        return !!(window && window.navigator.sendBeacon && !hasHeaders && enableSendBeacon && window.Blob);
-                    })({
-                        headers: headers,
-                        enableSendBeacon: enableSendBeacon
-                    }) && (beaconResult = function(url) {
-                        return "https://api2.amplitude.com/2/httpapi" === url;
-                    }(url) ? sendBeacon({
-                        win: win,
-                        url: url,
-                        data: json,
-                        useBlob: !1
-                    }) : sendBeacon({
-                        win: win,
-                        url: url,
-                        data: json,
-                        useBlob: !0
-                    }));
-                    return beaconResult || request({
-                        win: win,
-                        url: url,
-                        method: method,
-                        headers: headers,
-                        json: json
-                    });
-                })).then(src_util_noop);
-            };
-        }() : _ref$transport, amplitudeApiKey = _ref.amplitudeApiKey, _ref$flushInterval = _ref.flushInterval, flushInterval = void 0 === _ref$flushInterval ? 6e4 : _ref$flushInterval, _ref$enableSendBeacon = _ref.enableSendBeacon, enableSendBeacon = void 0 !== _ref$enableSendBeacon && _ref$enableSendBeacon;
-        var events = [];
-        var tracking = [];
-        var payloadBuilders = [];
-        var metaBuilders = [];
-        var trackingBuilders = [];
-        var headerBuilders = [];
-        function print(level, event, payload) {
-            if (dom_isBrowser() && window.console && window.console.log && !(LOG_LEVEL_PRIORITY.indexOf(level) > LOG_LEVEL_PRIORITY.indexOf(logLevel))) {
-                var args = [ event ];
-                args.push(payload);
-                (payload.error || payload.warning) && args.push("\n\n", payload.error || payload.warning);
-                try {
-                    window.console[level] && window.console[level].apply ? window.console[level].apply(window.console, args) : window.console.log && window.console.log.apply && window.console.log.apply(window.console, args);
-                } catch (err) {}
-            }
-        }
-        function immediateFlush() {
-            return promise_ZalgoPromise.try((function() {
-                if (dom_isBrowser() && "file:" !== window.location.protocol && (events.length || tracking.length)) {
-                    var meta = {};
-                    for (var _i2 = 0; _i2 < metaBuilders.length; _i2++) extendIfDefined(meta, (0, metaBuilders[_i2])(meta));
-                    var headers = {};
-                    for (var _i4 = 0; _i4 < headerBuilders.length; _i4++) extendIfDefined(headers, (0, 
-                    headerBuilders[_i4])(headers));
-                    var res;
-                    url && (res = transport({
-                        method: "POST",
-                        url: url,
-                        headers: headers,
-                        json: {
-                            events: events,
-                            meta: meta,
-                            tracking: tracking
-                        },
-                        enableSendBeacon: enableSendBeacon
-                    }).catch(src_util_noop));
-                    amplitudeApiKey && transport({
-                        method: "POST",
-                        url: "https://api2.amplitude.com/2/httpapi",
-                        headers: {},
-                        json: {
-                            api_key: amplitudeApiKey,
-                            events: tracking.map((function(payload) {
-                                return _extends({
-                                    event_type: payload.transition_name || "event",
-                                    event_properties: payload
-                                }, payload);
-                            }))
-                        },
-                        enableSendBeacon: enableSendBeacon
-                    }).catch(src_util_noop);
-                    events = [];
-                    tracking = [];
-                    return promise_ZalgoPromise.resolve(res).then(src_util_noop);
-                }
-            }));
-        }
-        var flush = function(method, delay) {
-            void 0 === delay && (delay = 50);
-            var promise;
-            var timeout;
-            return setFunctionName((function() {
-                timeout && clearTimeout(timeout);
-                var localPromise = promise = promise || new promise_ZalgoPromise;
-                timeout = setTimeout((function() {
-                    promise = null;
-                    timeout = null;
-                    promise_ZalgoPromise.try(method).then((function(result) {
-                        localPromise.resolve(result);
-                    }), (function(err) {
-                        localPromise.reject(err);
-                    }));
-                }), delay);
-                return localPromise;
-            }), getFunctionName(method) + "::promiseDebounced");
-        }(immediateFlush);
-        function log(level, event, payload) {
-            void 0 === payload && (payload = {});
-            if (!dom_isBrowser()) return logger;
-            prefix && (event = prefix + "_" + event);
-            var logPayload = _extends({}, objFilter(payload), {
-                timestamp: Date.now().toString()
-            });
-            for (var _i6 = 0; _i6 < payloadBuilders.length; _i6++) extendIfDefined(logPayload, (0, 
-            payloadBuilders[_i6])(logPayload));
-            !function(level, event, payload) {
-                events.push({
-                    level: level,
-                    event: event,
-                    payload: payload
-                });
-                -1 !== AUTO_FLUSH_LEVEL.indexOf(level) && flush();
-            }(level, event, logPayload);
-            print(level, event, logPayload);
-            return logger;
-        }
-        function addBuilder(builders, builder) {
-            builders.push(builder);
-            return logger;
-        }
-        dom_isBrowser() && (method = flush, time = flushInterval, function loop() {
-            setTimeout((function() {
-                method();
-                loop();
-            }), time);
-        }());
-        var method, time;
-        if ("object" == typeof window) {
-            window.addEventListener("beforeunload", (function() {
-                immediateFlush();
-            }));
-            window.addEventListener("unload", (function() {
-                immediateFlush();
-            }));
-            window.addEventListener("pagehide", (function() {
-                immediateFlush();
-            }));
-        }
-        var logger = {
-            debug: function(event, payload) {
-                return log("debug", event, payload);
-            },
-            info: function(event, payload) {
-                return log("info", event, payload);
-            },
-            warn: function(event, payload) {
-                return log("warn", event, payload);
-            },
-            error: function(event, payload) {
-                return log("error", event, payload);
-            },
-            track: function(payload) {
-                void 0 === payload && (payload = {});
-                if (!dom_isBrowser()) return logger;
-                var trackingPayload = objFilter(payload);
-                for (var _i8 = 0; _i8 < trackingBuilders.length; _i8++) extendIfDefined(trackingPayload, (0, 
-                trackingBuilders[_i8])(trackingPayload));
-                print("debug", "track", trackingPayload);
-                tracking.push(trackingPayload);
-                return logger;
-            },
-            flush: flush,
-            immediateFlush: immediateFlush,
-            addPayloadBuilder: function(builder) {
-                return addBuilder(payloadBuilders, builder);
-            },
-            addMetaBuilder: function(builder) {
-                return addBuilder(metaBuilders, builder);
-            },
-            addTrackingBuilder: function(builder) {
-                return addBuilder(trackingBuilders, builder);
-            },
-            addHeaderBuilder: function(builder) {
-                return addBuilder(headerBuilders, builder);
-            },
-            setTransport: function(newTransport) {
-                transport = newTransport;
-                return logger;
-            },
-            configure: function(opts) {
-                opts.url && (url = opts.url);
-                opts.prefix && (prefix = opts.prefix);
-                opts.logLevel && (logLevel = opts.logLevel);
-                opts.transport && (transport = opts.transport);
-                opts.amplitudeApiKey && (amplitudeApiKey = opts.amplitudeApiKey);
-                opts.flushInterval && (flushInterval = opts.flushInterval);
-                opts.enableSendBeacon && (enableSendBeacon = opts.enableSendBeacon);
-                return logger;
-            }
-        };
-        return logger;
-    }
     var _FUNDING_SKIP_LOGIN, _AMPLITUDE_API_KEY;
     (_FUNDING_SKIP_LOGIN = {}).paypal = "paypal", _FUNDING_SKIP_LOGIN.paylater = "paypal", 
     _FUNDING_SKIP_LOGIN.credit = "paypal";
@@ -6561,7 +6277,216 @@ window.smartCard = function(modules) {
     _AMPLITUDE_API_KEY.production = "ce423f79daba95faeb0694186170605c";
     function getLogger() {
         return inlineMemoize(getLogger, (function() {
-            return Logger({
+            return function(_ref) {
+                var url = _ref.url, prefix = _ref.prefix, _ref$logLevel = _ref.logLevel, logLevel = void 0 === _ref$logLevel ? "warn" : _ref$logLevel, _ref$transport = _ref.transport, transport = void 0 === _ref$transport ? function(httpWin) {
+                    void 0 === httpWin && (httpWin = window);
+                    var win = httpWin;
+                    return function(_ref) {
+                        var url = _ref.url, method = _ref.method, headers = _ref.headers, json = _ref.json, _ref$enableSendBeacon = _ref.enableSendBeacon, enableSendBeacon = void 0 !== _ref$enableSendBeacon && _ref$enableSendBeacon;
+                        return promise_ZalgoPromise.try((function() {
+                            var beaconResult = !1;
+                            (function(_ref) {
+                                var headers = _ref.headers, enableSendBeacon = _ref.enableSendBeacon;
+                                var hasHeaders = headers && Object.keys(headers).length;
+                                return !!(window && window.navigator.sendBeacon && !hasHeaders && enableSendBeacon && window.Blob);
+                            })({
+                                headers: headers,
+                                enableSendBeacon: enableSendBeacon
+                            }) && (beaconResult = function(url) {
+                                return "https://api2.amplitude.com/2/httpapi" === url;
+                            }(url) ? sendBeacon({
+                                win: win,
+                                url: url,
+                                data: json,
+                                useBlob: !1
+                            }) : sendBeacon({
+                                win: win,
+                                url: url,
+                                data: json,
+                                useBlob: !0
+                            }));
+                            return beaconResult || request({
+                                win: win,
+                                url: url,
+                                method: method,
+                                headers: headers,
+                                json: json
+                            });
+                        })).then(src_util_noop);
+                    };
+                }() : _ref$transport, amplitudeApiKey = _ref.amplitudeApiKey, _ref$flushInterval = _ref.flushInterval, flushInterval = void 0 === _ref$flushInterval ? 6e4 : _ref$flushInterval, _ref$enableSendBeacon = _ref.enableSendBeacon, enableSendBeacon = void 0 !== _ref$enableSendBeacon && _ref$enableSendBeacon;
+                var events = [];
+                var tracking = [];
+                var payloadBuilders = [];
+                var metaBuilders = [];
+                var trackingBuilders = [];
+                var headerBuilders = [];
+                function print(level, event, payload) {
+                    if (dom_isBrowser() && window.console && window.console.log && !(LOG_LEVEL_PRIORITY.indexOf(level) > LOG_LEVEL_PRIORITY.indexOf(logLevel))) {
+                        var args = [ event ];
+                        args.push(payload);
+                        (payload.error || payload.warning) && args.push("\n\n", payload.error || payload.warning);
+                        try {
+                            window.console[level] && window.console[level].apply ? window.console[level].apply(window.console, args) : window.console.log && window.console.log.apply && window.console.log.apply(window.console, args);
+                        } catch (err) {}
+                    }
+                }
+                function immediateFlush() {
+                    return promise_ZalgoPromise.try((function() {
+                        if (dom_isBrowser() && "file:" !== window.location.protocol && (events.length || tracking.length)) {
+                            var meta = {};
+                            for (var _i2 = 0; _i2 < metaBuilders.length; _i2++) extendIfDefined(meta, (0, metaBuilders[_i2])(meta));
+                            var headers = {};
+                            for (var _i4 = 0; _i4 < headerBuilders.length; _i4++) extendIfDefined(headers, (0, 
+                            headerBuilders[_i4])(headers));
+                            var res;
+                            url && (res = transport({
+                                method: "POST",
+                                url: url,
+                                headers: headers,
+                                json: {
+                                    events: events,
+                                    meta: meta,
+                                    tracking: tracking
+                                },
+                                enableSendBeacon: enableSendBeacon
+                            }).catch(src_util_noop));
+                            amplitudeApiKey && transport({
+                                method: "POST",
+                                url: "https://api2.amplitude.com/2/httpapi",
+                                headers: {},
+                                json: {
+                                    api_key: amplitudeApiKey,
+                                    events: tracking.map((function(payload) {
+                                        return _extends({
+                                            event_type: payload.transition_name || "event",
+                                            event_properties: payload
+                                        }, payload);
+                                    }))
+                                },
+                                enableSendBeacon: enableSendBeacon
+                            }).catch(src_util_noop);
+                            events = [];
+                            tracking = [];
+                            return promise_ZalgoPromise.resolve(res).then(src_util_noop);
+                        }
+                    }));
+                }
+                var flush = function(method, delay) {
+                    void 0 === delay && (delay = 50);
+                    var promise;
+                    var timeout;
+                    return setFunctionName((function() {
+                        timeout && clearTimeout(timeout);
+                        var localPromise = promise = promise || new promise_ZalgoPromise;
+                        timeout = setTimeout((function() {
+                            promise = null;
+                            timeout = null;
+                            promise_ZalgoPromise.try(method).then((function(result) {
+                                localPromise.resolve(result);
+                            }), (function(err) {
+                                localPromise.reject(err);
+                            }));
+                        }), delay);
+                        return localPromise;
+                    }), getFunctionName(method) + "::promiseDebounced");
+                }(immediateFlush);
+                function log(level, event, payload) {
+                    void 0 === payload && (payload = {});
+                    if (!dom_isBrowser()) return logger;
+                    prefix && (event = prefix + "_" + event);
+                    var logPayload = _extends({}, objFilter(payload), {
+                        timestamp: Date.now().toString()
+                    });
+                    for (var _i6 = 0; _i6 < payloadBuilders.length; _i6++) extendIfDefined(logPayload, (0, 
+                    payloadBuilders[_i6])(logPayload));
+                    !function(level, event, payload) {
+                        events.push({
+                            level: level,
+                            event: event,
+                            payload: payload
+                        });
+                        -1 !== AUTO_FLUSH_LEVEL.indexOf(level) && flush();
+                    }(level, event, logPayload);
+                    print(level, event, logPayload);
+                    return logger;
+                }
+                function addBuilder(builders, builder) {
+                    builders.push(builder);
+                    return logger;
+                }
+                dom_isBrowser() && (method = flush, time = flushInterval, function loop() {
+                    setTimeout((function() {
+                        method();
+                        loop();
+                    }), time);
+                }());
+                var method, time;
+                if ("object" == typeof window) {
+                    window.addEventListener("beforeunload", (function() {
+                        immediateFlush();
+                    }));
+                    window.addEventListener("unload", (function() {
+                        immediateFlush();
+                    }));
+                    window.addEventListener("pagehide", (function() {
+                        immediateFlush();
+                    }));
+                }
+                var logger = {
+                    debug: function(event, payload) {
+                        return log("debug", event, payload);
+                    },
+                    info: function(event, payload) {
+                        return log("info", event, payload);
+                    },
+                    warn: function(event, payload) {
+                        return log("warn", event, payload);
+                    },
+                    error: function(event, payload) {
+                        return log("error", event, payload);
+                    },
+                    track: function(payload) {
+                        void 0 === payload && (payload = {});
+                        if (!dom_isBrowser()) return logger;
+                        var trackingPayload = objFilter(payload);
+                        for (var _i8 = 0; _i8 < trackingBuilders.length; _i8++) extendIfDefined(trackingPayload, (0, 
+                        trackingBuilders[_i8])(trackingPayload));
+                        print("debug", "track", trackingPayload);
+                        tracking.push(trackingPayload);
+                        return logger;
+                    },
+                    flush: flush,
+                    immediateFlush: immediateFlush,
+                    addPayloadBuilder: function(builder) {
+                        return addBuilder(payloadBuilders, builder);
+                    },
+                    addMetaBuilder: function(builder) {
+                        return addBuilder(metaBuilders, builder);
+                    },
+                    addTrackingBuilder: function(builder) {
+                        return addBuilder(trackingBuilders, builder);
+                    },
+                    addHeaderBuilder: function(builder) {
+                        return addBuilder(headerBuilders, builder);
+                    },
+                    setTransport: function(newTransport) {
+                        transport = newTransport;
+                        return logger;
+                    },
+                    configure: function(opts) {
+                        opts.url && (url = opts.url);
+                        opts.prefix && (prefix = opts.prefix);
+                        opts.logLevel && (logLevel = opts.logLevel);
+                        opts.transport && (transport = opts.transport);
+                        opts.amplitudeApiKey && (amplitudeApiKey = opts.amplitudeApiKey);
+                        opts.flushInterval && (flushInterval = opts.flushInterval);
+                        opts.enableSendBeacon && (enableSendBeacon = opts.enableSendBeacon);
+                        return logger;
+                    }
+                };
+                return logger;
+            }({
                 url: "/xoplatform/logger/api/logger",
                 enableSendBeacon: !0
             });
@@ -8382,7 +8307,7 @@ window.smartCard = function(modules) {
                 return result;
             }(window); _i2 < _getAllFramesInWindow2.length; _i2++) {
                 var win = _getAllFramesInWindow2[_i2];
-                if (isSameDomain(win) && win.exports && win.exports.name === name) return win.exports;
+                if (win.exports && win.exports.name === name) return win.exports;
             }
         } catch (err) {}
     }

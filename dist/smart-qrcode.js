@@ -1240,87 +1240,6 @@
             _setPrototypeOf(subClass, superClass);
         }
         var IE_WIN_ACCESS_ERROR = "Call was rejected by callee.\r\n";
-        function getActualProtocol(win) {
-            void 0 === win && (win = window);
-            return win.location.protocol;
-        }
-        function getProtocol(win) {
-            void 0 === win && (win = window);
-            if (win.mockDomain) {
-                var protocol = win.mockDomain.split("//")[0];
-                if (protocol) return protocol;
-            }
-            return getActualProtocol(win);
-        }
-        function isAboutProtocol(win) {
-            void 0 === win && (win = window);
-            return "about:" === getProtocol(win);
-        }
-        function canReadFromWindow(win) {
-            try {
-                return !0;
-            } catch (err) {}
-            return !1;
-        }
-        function getActualDomain(win) {
-            void 0 === win && (win = window);
-            var location = win.location;
-            if (!location) throw new Error("Can not read window location");
-            var protocol = getActualProtocol(win);
-            if (!protocol) throw new Error("Can not read window protocol");
-            if ("file:" === protocol) return "file://";
-            if ("about:" === protocol) {
-                var parent = function(win) {
-                    void 0 === win && (win = window);
-                    if (win) try {
-                        if (win.parent && win.parent !== win) return win.parent;
-                    } catch (err) {}
-                }(win);
-                return parent && canReadFromWindow() ? getActualDomain(parent) : "about://";
-            }
-            var host = location.host;
-            if (!host) throw new Error("Can not read window host");
-            return protocol + "//" + host;
-        }
-        function getDomain(win) {
-            void 0 === win && (win = window);
-            var domain = getActualDomain(win);
-            return domain && win.mockDomain && 0 === win.mockDomain.indexOf("mock:") ? win.mockDomain : domain;
-        }
-        function isSameDomain(win) {
-            if (!function(win) {
-                try {
-                    if (win === window) return !0;
-                } catch (err) {}
-                try {
-                    var desc = Object.getOwnPropertyDescriptor(win, "location");
-                    if (desc && !1 === desc.enumerable) return !1;
-                } catch (err) {}
-                try {
-                    if (isAboutProtocol(win) && canReadFromWindow()) return !0;
-                } catch (err) {}
-                try {
-                    if (function(win) {
-                        void 0 === win && (win = window);
-                        return "mock:" === getProtocol(win);
-                    }(win) && canReadFromWindow()) return !0;
-                } catch (err) {}
-                try {
-                    if (getActualDomain(win) === getActualDomain(window)) return !0;
-                } catch (err) {}
-                return !1;
-            }(win)) return !1;
-            try {
-                if (win === window) return !0;
-                if (isAboutProtocol(win) && canReadFromWindow()) return !0;
-                if (getDomain(window) === getDomain(win)) return !0;
-            } catch (err) {}
-            return !1;
-        }
-        function assertSameDomain(win) {
-            if (!isSameDomain(win)) throw new Error("Expected window to be same domain");
-            return win;
-        }
         var iframeWindows = [];
         var iframeFrames = [];
         function isWindowClosed(win, allowMock) {
@@ -1340,7 +1259,7 @@
             } catch (err) {
                 return !err || err.message !== IE_WIN_ACCESS_ERROR;
             }
-            if (allowMock && isSameDomain(win)) try {
+            if (allowMock) try {
                 if (win.mockclosed) return !0;
             } catch (err) {}
             try {
@@ -1917,7 +1836,7 @@
         };
         function getHTTPTransport(httpWin) {
             void 0 === httpWin && (httpWin = window);
-            var win = isSameDomain(httpWin) ? assertSameDomain(httpWin) : window;
+            var win = httpWin;
             return function(_ref) {
                 var url = _ref.url, method = _ref.method, headers = _ref.headers, json = _ref.json, _ref$enableSendBeacon = _ref.enableSendBeacon, enableSendBeacon = void 0 !== _ref$enableSendBeacon && _ref$enableSendBeacon;
                 return promise_ZalgoPromise.try((function() {
@@ -2905,6 +2824,17 @@
             primary: "#373535",
             secondary: "#1866AB"
         };
+        var multibanco_logo_LOGO_COLORS;
+        (multibanco_logo_LOGO_COLORS = {}).default = {
+            primary: "#373535",
+            secondary: "#1866AB"
+        }, multibanco_logo_LOGO_COLORS.white = {
+            primary: "#ffffff",
+            secondary: "#ffffff"
+        }, multibanco_logo_LOGO_COLORS.black = {
+            primary: "#373535",
+            secondary: "#1866AB"
+        };
         function ErrorMessage(_ref) {
             var resetFunc = _ref.resetFunc;
             return v("div", {
@@ -3154,7 +3084,7 @@
             logger.addTrackingBuilder((function() {
                 var _ref2;
                 return (_ref2 = {}).state_name = "smart_button", _ref2.context_type = "EC-Token", 
-                _ref2.context_id = orderID, _ref2.button_session_id = buttonSessionID, _ref2.button_version = "5.0.84", 
+                _ref2.context_id = orderID, _ref2.button_session_id = buttonSessionID, _ref2.button_version = "5.0.86", 
                 _ref2.user_id = buttonSessionID, _ref2;
             }));
             (function() {
@@ -3321,7 +3251,7 @@
                 window.xprops.hide();
                 var win = function(_ref) {
                     var _ref$closeOnUnload = _ref.closeOnUnload;
-                    var win = assertSameDomain(function(url, options) {
+                    var win = function(url, options) {
                         var _options$closeOnUnloa = (options = options || {}).closeOnUnload, closeOnUnload = void 0 === _options$closeOnUnloa ? 1 : _options$closeOnUnloa, _options$name = options.name, name = void 0 === _options$name ? "" : _options$name, width = options.width, height = options.height;
                         var top = 0;
                         var left = 0;
@@ -3362,7 +3292,7 @@
                         width: _ref.width,
                         height: _ref.height,
                         closeOnUnload: void 0 === _ref$closeOnUnload ? 1 : _ref$closeOnUnload
-                    }));
+                    });
                     var doc = win.document;
                     !function(win, el) {
                         var tag = el.tagName.toLowerCase();
