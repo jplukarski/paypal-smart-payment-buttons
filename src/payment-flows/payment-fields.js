@@ -1,14 +1,15 @@
 /* @flow */
-import { ZalgoPromise } from 'zalgo-promise/src';
+import { ZalgoPromise } from '@krakenjs/zalgo-promise/src';
 import { FUNDING } from '@paypal/sdk-constants/src';
-import { memoize, querySelectorAll, debounce, noop } from 'belter/src';
+import { memoize, querySelectorAll, debounce, noop } from '@krakenjs/belter/src';
 
 import { DATA_ATTRIBUTES } from '../constants';
 import { unresolvedPromise, promiseNoop } from '../lib';
 import { getConfirmOrder } from '../props/confirmOrder';
 
-import type { PaymentFlow, PaymentFlowInstance, IsEligibleOptions, IsPaymentEligibleOptions, InitOptions } from './types';
+import type { PaymentFlow, PaymentFlowInstance, InitOptions } from './types';
 import { checkout } from './checkout';
+
 function setupPaymentField() {
     // pass
 }
@@ -121,9 +122,9 @@ function initPaymentFields({ props, components, payment, serviceData, config } :
     const { createOrder, onApprove, onCancel,
         locale, commit, onError, sessionID, fieldsSessionID, partnerAttributionID, buttonSessionID, onAuth  } = props;
     const { PaymentFields } = components;
-    let { fundingSource, card, win } = payment;
+    const { fundingSource } = payment;
     const { cspNonce } = config;
-    const { buyerCountry, sdkMeta } = serviceData;
+    const { buyerCountry } = serviceData;
     if (paymentFieldsOpen) {
         // highlightCard(card);
         return {
@@ -146,9 +147,7 @@ function initPaymentFields({ props, components, payment, serviceData, config } :
         fieldsSessionID,
         createOrder,
         onContinue: async (data) => {
-            console.log('data', data);
             const orderID = await createOrder();
-            console.log('fundingSource', fundingSource);
             return getConfirmOrder({
                 orderID, payload: data, partnerAttributionID
             }, {
