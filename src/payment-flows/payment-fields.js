@@ -2,12 +2,13 @@
 import { ZalgoPromise } from '@krakenjs/zalgo-promise/src';
 import { FUNDING } from '@paypal/sdk-constants/src';
 import { memoize, querySelectorAll, debounce, noop } from '@krakenjs/belter/src';
+import { getParent } from '@krakenjs/cross-domain-utils/src';
 
-import { DATA_ATTRIBUTES } from '../constants';
+import { DATA_ATTRIBUTES, TARGET_ELEMENT } from '../constants';
 import { unresolvedPromise, promiseNoop } from '../lib';
 import { getConfirmOrder } from '../props/confirmOrder';
 
-import type { PaymentFlow, PaymentFlowInstance, InitOptions } from './types';
+import type { PaymentFlow, PaymentFlowInstance, IsEligibleOptions, IsPaymentEligibleOptions, InitOptions } from './types';
 import { checkout } from './checkout';
 
 function setupPaymentField() {
@@ -45,7 +46,9 @@ let paymentFieldsOpen = false;
 //
 //     return true;
 // }
-function isPaymentFieldsEligible() : boolean {
+function isPaymentFieldsEligible({ props, serviceData } : IsEligibleOptions) : boolean {
+    console.log('props ---- ', props);
+    console.log('serviceData ---- ', serviceData);
     return true;
 }
 function isPaymentFieldsPaymentEligible() : boolean {
@@ -121,10 +124,10 @@ const slideDownButtons = (fundingSource : ?$Values<typeof FUNDING>) => {
 function initPaymentFields({ props, components, payment, serviceData, config } : InitOptions) : PaymentFlowInstance {
     const { createOrder, onApprove, onCancel,
         locale, commit, onError, sessionID, fieldsSessionID, partnerAttributionID, buttonSessionID, onAuth  } = props;
-    const { PaymentFields } = components;
+    const { PaymentFields, Checkout } = components;
     const { fundingSource } = payment;
     const { cspNonce } = config;
-    const { buyerCountry } = serviceData;
+    const { buyerCountry, sdkMeta } = serviceData;
     if (paymentFieldsOpen) {
         // highlightCard(card);
         return {
@@ -147,11 +150,27 @@ function initPaymentFields({ props, components, payment, serviceData, config } :
         fieldsSessionID,
         createOrder,
         onContinue: async (data) => {
+            console.log('data in spb payment-fields ----- ', data);
             const orderID = await createOrder();
             return getConfirmOrder({
                 orderID, payload: data, partnerAttributionID
             }, {
                 facilitatorAccessToken: serviceData.facilitatorAccessToken
+            }).then((response) => {
+                let checkout = Checkout({
+                    ...props,
+                    onClose: () => {
+                        console.log('onClose was fired');
+                    },
+                    sdkMeta,
+                    branded: false,
+                    standaloneFundingSource: fundingSource,
+                    inlinexo: false,
+                    onCancel: () => {
+                        console.log('pop up closed');
+                    }
+                });
+                checkout.renderTo(getParent(), TARGET_ELEMENT.BODY);
             });
         },
         onApprove:     ({ payerID, paymentID, billingToken }) => {
