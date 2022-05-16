@@ -1,6 +1,6 @@
 {
   "name": "@paypal/smart-payment-buttons",
-  "version": "5.0.96",
+  "version": "5.0.98",
   "publishConfig": {
     "registry": "https://registry.npmjs.org"
   },
@@ -70,7 +70,7 @@
   },
   "alias": {},
   "dependencies": {
-    "@krakenjs/grabthar": "^5.0.0",
+    "@krakenjs/grabthar": "^6.0.0",
     "@krakenjs/beaver-logger": "^5.0.1",
     "@krakenjs/belter": "^2.0.0",
     "@krakenjs/cross-domain-utils": "^3.0.0",
@@ -95,7 +95,7 @@
   },
   "devDependencies": {
     "@krakenjs/grabthar-release": "^2.0.0",
-    "@krakenjs/grumbler-scripts": "^6.0.2",
+    "@krakenjs/grumbler-scripts": "^7.0.0",
     "@krakenjs/sync-browser-mocks": "^3.0.0",
     "@krakenjs/webpack-mem-compile": "^2.0.1",
     "babel-core": "^7.0.0-bridge.0",
