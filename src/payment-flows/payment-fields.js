@@ -141,7 +141,7 @@ function initPaymentFields({ props, components, payment, serviceData, config } :
 
     let buyerAccessToken;
     let checkout;
-    const { render, close: closeCardForm } = PaymentFields({
+    const { render, close: closePaymentFields } = PaymentFields({
         fundingSource,
         fieldsSessionID,
         onContinue: async (data) => {
@@ -202,7 +202,7 @@ function initPaymentFields({ props, components, payment, serviceData, config } :
         return renderPromise;
     };
     const close = () => {
-        return closeCardForm().then(() => {
+        return closePaymentFields().then(() => {
             paymentFieldsOpen = false;
             checkout.close();
             slideDownButtons(fundingSource);
