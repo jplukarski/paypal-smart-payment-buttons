@@ -152,8 +152,7 @@ export type ServiceData = {|
     buyerAccessToken : ?string,
     content : ContentType,
     eligibility : {|
-        cardForm : boolean,
-        paymentFields : boolean
+        cardForm : boolean
     |},
     cookies : string,
     personalization : PersonalizationType

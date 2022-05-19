@@ -3,58 +3,51 @@ import { ZalgoPromise } from '@krakenjs/zalgo-promise/src';
 import { FUNDING } from '@paypal/sdk-constants/src';
 import { memoize, querySelectorAll, debounce, noop } from '@krakenjs/belter/src';
 import { getParent } from '@krakenjs/cross-domain-utils/src';
+import { EXPERIENCE } from '@paypal/checkout-components/src/constants/button';
 
-import { DATA_ATTRIBUTES, TARGET_ELEMENT } from '../constants';
+import { DATA_ATTRIBUTES, TARGET_ELEMENT, INLINE_PAYMENT_FIELDS_APM_LIST } from '../constants';
 import { unresolvedPromise, promiseNoop } from '../lib';
-import { getConfirmOrder } from '../props/confirmOrder';
+import { getConfirmOrder } from '../props';
 
 import type { PaymentFlow, PaymentFlowInstance, IsEligibleOptions, IsPaymentEligibleOptions, InitOptions } from './types';
-import { checkout } from './checkout';
 
 function setupPaymentField() {
     // pass
 }
 let paymentFieldsOpen = false;
-// function isPaymentFieldsEligible({ props, serviceData } : IsEligibleOptions) : boolean {
-//     const { vault, onShippingChange, inline } = props;
-//     const { eligibility } = serviceData;
-//
-//     if (inline) {
-//         return false;
-//     }
-//
-//     if (vault) {
-//         return false;
-//     }
-//
-//     if (onShippingChange) {
-//         return false;
-//     }
-//
-//     return eligibility.paymentFields;
-// }
-// function isPaymentFieldsPaymentEligible({ payment } : IsPaymentEligibleOptions) : boolean {
-//     const { win, fundingSource } = payment || {};
-//
-//     if (win) {
-//         return false;
-//     }
-//
-//     if (fundingSource && fundingSource !== FUNDING.EPS) {
-//         return false;
-//     }
-//
-//     return true;
-// }
-function isPaymentFieldsEligible({ props, serviceData } : IsEligibleOptions) : boolean {
-    console.log('props ---- ', props);
-    console.log('serviceData ---- ', serviceData);
+function isPaymentFieldsEligible({ props } : IsEligibleOptions) : boolean {
+    const { vault, onShippingChange, experience } = props;
+
+    if (experience === EXPERIENCE.INLINE) {
+        return false;
+    }
+
+    if (vault) {
+        return false;
+    }
+
+    if (onShippingChange) {
+        return false;
+    }
+
     return true;
 }
-function isPaymentFieldsPaymentEligible() : boolean {
+
+function isPaymentFieldsPaymentEligible({ payment } : IsPaymentEligibleOptions) : boolean {
+    const { win, fundingSource } = payment || {};
+
+    if (win) {
+        return false;
+    }
+
+    if (fundingSource && !INLINE_PAYMENT_FIELDS_APM_LIST.includes(fundingSource)) {
+        return false;
+    }
+
     return true;
 }
-function highlightCard(fundingSource : ?$Values<typeof FUNDING>) {
+
+function highlightFundingSource(fundingSource : ?$Values<typeof FUNDING>) {
     if (!fundingSource) {
         return;
     }
@@ -69,31 +62,31 @@ function highlightCard(fundingSource : ?$Values<typeof FUNDING>) {
     });
 }
 
-function unhighlightCards() {
+function unhighlightFundingSources() {
     querySelectorAll(`[${ DATA_ATTRIBUTES.FUNDING_SOURCE }]`).forEach(el => {
         el.style.opacity = '1';
         el.parentElement.style.display = '';
     });
 }
 
-const getElements = (fundingSource : ?$Values<typeof FUNDING>) : {| buttonsContainer : HTMLElement, epsButtonsContainer : HTMLElement, paymentFieldsContainer : HTMLElement |} => {
+const getElements = (fundingSource : ?$Values<typeof FUNDING>) : {| buttonsContainer : HTMLElement, fundingSourceButtonsContainer : HTMLElement, paymentFieldsContainer : HTMLElement |} => {
     const buttonsContainer = document.querySelector('#buttons-container');
-    const epsButtonsContainer = document.querySelector(`[${ DATA_ATTRIBUTES.FUNDING_SOURCE }="${ fundingSource }"]`);
+    const fundingSourceButtonsContainer = document.querySelector(`[${ DATA_ATTRIBUTES.FUNDING_SOURCE }="${ fundingSource }"]`);
     const paymentFieldsContainer = document.querySelector('#payment-fields-container');
 
-    if (!buttonsContainer || !epsButtonsContainer || !paymentFieldsContainer) {
+    if (!buttonsContainer || !fundingSourceButtonsContainer || !paymentFieldsContainer) {
         throw new Error(`Did not find payment fields elements`);
     }
 
-    return { buttonsContainer, epsButtonsContainer, paymentFieldsContainer };
+    return { buttonsContainer, fundingSourceButtonsContainer, paymentFieldsContainer };
 };
 
 let resizeListener;
 
 const slideUpButtons = (fundingSource : ?$Values<typeof FUNDING>) => {
-    const { buttonsContainer, epsButtonsContainer, paymentFieldsContainer } = getElements(fundingSource);
+    const { buttonsContainer, fundingSourceButtonsContainer, paymentFieldsContainer } = getElements(fundingSource);
 
-    if (!buttonsContainer || !epsButtonsContainer || !paymentFieldsContainer) {
+    if (!buttonsContainer || !fundingSourceButtonsContainer || !paymentFieldsContainer) {
         throw new Error(`Required elements not found`);
     }
 
@@ -101,7 +94,7 @@ const slideUpButtons = (fundingSource : ?$Values<typeof FUNDING>) => {
     paymentFieldsContainer.style.display = 'block';
 
     const recalculateMargin = () => {
-        buttonsContainer.style.marginTop = `${ buttonsContainer.offsetTop - epsButtonsContainer.offsetTop }px`;
+        buttonsContainer.style.marginTop = `${ buttonsContainer.offsetTop - fundingSourceButtonsContainer.offsetTop }px`;
     };
 
     resizeListener = debounce(() => {
@@ -113,10 +106,9 @@ const slideUpButtons = (fundingSource : ?$Values<typeof FUNDING>) => {
     recalculateMargin();
 };
 
-const slideDownButtons = (fundingSource : ?$Values<typeof FUNDING>) => {
-    const { buttonsContainer } = getElements(fundingSource);
-
-    unhighlightCards();
+const slideDownButtons = () => {
+    const buttonsContainer = document.querySelector('#buttons-container');
+    unhighlightFundingSources();
     window.removeEventListener('resize', resizeListener);
     buttonsContainer.style.removeProperty('transition-duration');
     buttonsContainer.style.removeProperty('margin-top');
@@ -129,66 +121,68 @@ function initPaymentFields({ props, components, payment, serviceData, config } :
     const { cspNonce } = config;
     const { buyerCountry, sdkMeta } = serviceData;
     if (paymentFieldsOpen) {
-        // highlightCard(card);
+        highlightFundingSource(fundingSource);
         return {
             start: promiseNoop,
             close: promiseNoop
         };
     }
-    const restart = memoize(() : ZalgoPromise<void> =>
-        checkout.init({ props, components, payment: { ...payment, isClick: false }, serviceData, config, restart })
-            .start().finally(unresolvedPromise));
+    const restart = memoize(() : ZalgoPromise<void> => {
+        // eslint-disable-next-line no-use-before-define
+        return close().finally(() => {
+            return initPaymentFields({ props, components, serviceData, config, payment: { ...payment }, restart })
+                .start().finally(unresolvedPromise);
+        });
+    });
+
     const onClose = () => {
         paymentFieldsOpen = false;
     };
-    // const onCardTypeChange = ({ card: cardType }) => {
-    //     highlightCard(cardType);
-    // };
+
     let buyerAccessToken;
+    let checkout;
     const { render, close: closeCardForm } = PaymentFields({
         fundingSource,
         fieldsSessionID,
-        createOrder,
         onContinue: async (data) => {
-            console.log('data in spb payment-fields ----- ', data);
             const orderID = await createOrder();
             return getConfirmOrder({
                 orderID, payload: data, partnerAttributionID
             }, {
                 facilitatorAccessToken: serviceData.facilitatorAccessToken
-            }).then((response) => {
-                let checkout = Checkout({
+            }).then(() => {
+                checkout = Checkout({
                     ...props,
                     onClose: () => {
-                        console.log('onClose was fired');
+                        // eslint-disable-next-line no-use-before-define
+                        return close().then(() => {
+                            return onCancel();
+                        });
                     },
                     sdkMeta,
                     branded: false,
                     standaloneFundingSource: fundingSource,
                     inlinexo: false,
+                    onApprove:     ({ payerID, paymentID, billingToken }) => {
+                        // eslint-disable-next-line no-use-before-define
+                        return close().then(() => {
+                            return onApprove({ payerID, paymentID, billingToken, buyerAccessToken }, { restart }).catch(noop);
+                        });
+                    },
+                    onAuth: ({ accessToken }) => {
+                        const access_token = accessToken ? accessToken : buyerAccessToken;
+                        return onAuth({ accessToken: access_token }).then(token => {
+                            buyerAccessToken = token;
+                        });
+                    },
                     onCancel: () => {
-                        console.log('pop up closed');
+                        // eslint-disable-next-line no-use-before-define
+                        return close().then(() => {
+                            return onCancel();
+                        });
                     }
                 });
-                checkout.renderTo(getParent(), TARGET_ELEMENT.BODY);
-            });
-        },
-        onApprove:     ({ payerID, paymentID, billingToken }) => {
-            // eslint-disable-next-line no-use-before-define
-            return close().then(() => {
-                return onApprove({ payerID, paymentID, billingToken, buyerAccessToken }, { restart }).catch(noop);
-            });
-        },
-        onAuth: ({ accessToken }) => {
-            const access_token = accessToken ? accessToken : buyerAccessToken;
-            return onAuth({ accessToken: access_token }).then(token => {
-                buyerAccessToken = token;
-            });
-        },
-        onCancel: () => {
-            // eslint-disable-next-line no-use-before-define
-            return close().then(() => {
-                return onCancel();
+                checkout.renderTo(getParent(window), TARGET_ELEMENT.BODY);
             });
         },
         onError,
@@ -204,13 +198,14 @@ function initPaymentFields({ props, components, payment, serviceData, config } :
         paymentFieldsOpen = true;
         const renderPromise = render('#payment-fields-container');
         slideUpButtons(fundingSource);
-        highlightCard(fundingSource);
+        highlightFundingSource(fundingSource);
         return renderPromise;
     };
     const close = () => {
-        slideDownButtons();
         return closeCardForm().then(() => {
             paymentFieldsOpen = false;
+            checkout.close();
+            slideDownButtons(fundingSource);
         });
     };
     return { start, close };
