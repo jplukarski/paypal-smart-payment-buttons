@@ -205,7 +205,7 @@ function initPaymentFields({ props, components, payment, serviceData, config } :
         return closePaymentFields().then(() => {
             paymentFieldsOpen = false;
             checkout.close();
-            slideDownButtons(fundingSource);
+            slideDownButtons();
         });
     };
     return { start, close };
