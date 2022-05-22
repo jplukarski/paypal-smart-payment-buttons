@@ -32,6 +32,7 @@ import './exports';
 import './card-fields';
 import './data';
 import './menu';
+import './payment-fields';
 
 beforeEach(() => {
     setupMocks();

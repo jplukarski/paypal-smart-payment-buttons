@@ -15,6 +15,8 @@ import { setupButton, setupCard, submitCardFields } from '../../src';
 import { loadFirebaseSDK, clearLsatState } from '../../src/api';
 
 import { triggerKeyPress } from './util';
+import { getConfirmOrder } from "../../src/props";
+import {Checkout} from "@paypal/checkout-components/src/interface/button";
 
 window.mockDomain = 'mock://www.paypal.com';
 
@@ -273,6 +275,29 @@ export function setupMocks() {
                 },
                 submit: () => {
                     return submitCardFields({ facilitatorAccessToken: 'ABCDEF12345' });
+                }
+            };
+        },
+        PaymentFields: (props) => {
+            return {
+                render: () => {
+                    return props.onContinue().then(() => {
+                        return props.createOrder();
+                    }).then(orderID => {
+                        return props.Checkout((props) => {
+                            console.log('checkout props --- ', props)
+                        })
+                   });
+                },
+                close: () => {
+                    return ZalgoPromise.delay(50).then(() => {
+                        if (props.onClose) {
+                            return props.onClose();
+                        }
+                    });
+                },
+                onError: (err) => {
+                    throw err;
                 }
             };
         },
