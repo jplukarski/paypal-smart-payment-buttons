@@ -15,8 +15,6 @@ import { setupButton, setupCard, submitCardFields } from '../../src';
 import { loadFirebaseSDK, clearLsatState } from '../../src/api';
 
 import { triggerKeyPress } from './util';
-import { getConfirmOrder } from "../../src/props";
-import {Checkout} from "@paypal/checkout-components/src/interface/button";
 
 window.mockDomain = 'mock://www.paypal.com';
 

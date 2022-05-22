@@ -162,7 +162,7 @@ export type PaymentFieldsProps = {|
     sessionID : string,
     fieldsSessionID : string,
     partnerAttributionID : string,
-    onInit : () => ZalgoPromise<void> | void,
+    onClose : () => ZalgoPromise<void> | void,
     onContinue: () => ZalgoPromise<void> | void,
     buyerCountry : $Values<typeof COUNTRY>,
     locale : LocaleType,
