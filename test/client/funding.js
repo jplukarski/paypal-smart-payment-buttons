@@ -183,8 +183,7 @@ describe('funding source cases', () => {
                 }
 
                 return {
-                    render: promiseNoop,
-                    close: promiseNoop
+                    render: promiseNoop
                 };
             }));
 
