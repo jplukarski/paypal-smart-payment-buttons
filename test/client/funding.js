@@ -175,16 +175,16 @@ describe('funding source cases', () => {
 
     it('should render a button, click the button, and render checkout with eps funding source', async () => {
         return await wrapPromise(async ({ expect }) => {
-            const fundingSource = FUNDING.EPS;
-            console.log('fundingsourec -----------', fundingSource);
-            console.log('window.paypal -----------', window.paypal);
+        const fundingSource = FUNDING.EPS;
+
             mockFunction(window.paypal, 'PaymentFields', expect('PaymentFields', ({ args: [ props ] }) => {
                 if (props.fundingSource !== fundingSource) {
                     throw new Error(`Expected fundingSource to be ${ fundingSource }, got ${ props.fundingSource }`);
                 }
 
                 return {
-                    render: promiseNoop
+                    render: promiseNoop,
+                    close: promiseNoop
                 };
             }));
 

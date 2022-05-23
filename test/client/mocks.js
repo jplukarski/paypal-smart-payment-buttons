@@ -385,6 +385,11 @@ export function setupMocks() {
     singleCardFieldContainer.id = 'card-fields-container';
     destroyElement(singleCardFieldContainer);
     body.appendChild(singleCardFieldContainer);
+
+    const paymentFieldsContainer = document.querySelector('#payment-fields-container') || document.createElement('div');
+    paymentFieldsContainer.id = 'payment-fields-container';
+    destroyElement(paymentFieldsContainer);
+    body.appendChild(paymentFieldsContainer);
 }
 
 setupMocks();
