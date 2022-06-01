@@ -2,10 +2,10 @@
 import { ZalgoPromise } from '@krakenjs/zalgo-promise/src';
 import { FUNDING } from '@paypal/sdk-constants/src';
 import { memoize, querySelectorAll, debounce, noop } from '@krakenjs/belter/src';
-import { getParent } from '@krakenjs/cross-domain-utils/src';
+import { getParent, getTop } from '@krakenjs/cross-domain-utils/src';
 import { EXPERIENCE } from '@paypal/checkout-components/src/constants/button';
 
-import { DATA_ATTRIBUTES, TARGET_ELEMENT, INLINE_PAYMENT_FIELDS_APM_LIST } from '../constants';
+import { DATA_ATTRIBUTES, TARGET_ELEMENT, CONTEXT, INLINE_PAYMENT_FIELDS_APM_LIST } from '../constants';
 import { unresolvedPromise, promiseNoop } from '../lib';
 import { getConfirmOrder } from '../props';
 
@@ -14,6 +14,18 @@ import type { PaymentFlow, PaymentFlowInstance, IsEligibleOptions, IsPaymentElig
 function setupPaymentField() {
     // pass
 }
+const canRenderTop = false;
+function getRenderWindow() : Object {
+    const top = getTop(window);
+    if (canRenderTop && top) {
+        return top;
+    } else if (getParent()) {
+        return getParent();
+    } else {
+        return window;
+    }
+}
+
 let paymentFieldsOpen = false;
 function isPaymentFieldsEligible({ props } : IsEligibleOptions) : boolean {
     const { vault, onShippingChange, experience } = props;
@@ -66,6 +78,7 @@ function unhighlightFundingSources() {
     querySelectorAll(`[${ DATA_ATTRIBUTES.FUNDING_SOURCE }]`).forEach(el => {
         el.style.opacity = '1';
         el.parentElement.style.display = '';
+        el.style.display = '';
     });
 }
 
@@ -121,12 +134,16 @@ function initPaymentFields({ props, components, payment, serviceData, config } :
     const { cspNonce } = config;
     const { buyerCountry, sdkMeta } = serviceData;
     if (paymentFieldsOpen) {
-        highlightFundingSource(fundingSource);
+        // highlightFundingSource(fundingSource);
         return {
             start: promiseNoop,
             close: promiseNoop
         };
     }
+    let instance;
+    let approved = false;
+    let forceClosed = false;
+
     const restart = memoize(() : ZalgoPromise<void> => {
         // eslint-disable-next-line no-use-before-define
         return close().finally(() => {
@@ -140,33 +157,41 @@ function initPaymentFields({ props, components, payment, serviceData, config } :
     };
 
     let buyerAccessToken;
-    let checkout;
     const { render, close: closePaymentFields } = PaymentFields({
         fundingSource,
         fieldsSessionID,
-        onContinue: async (data) => {
+        onContinue:   async (data) => {
             const orderID = await createOrder();
             return getConfirmOrder({
                 orderID, payload: data, partnerAttributionID
             }, {
                 facilitatorAccessToken: serviceData.facilitatorAccessToken
             }).then(() => {
-                checkout = Checkout({
+                instance = Checkout({
                     ...props,
                     onClose: () => {
+                        if (!forceClosed && !approved) {
+                            // eslint-disable-next-line no-use-before-define
+                            return close().then(() => {
+                                return onCancel();
+                            });
+                        }
+                    },
+                    onApprove: ({ payerID, paymentID, billingToken }) => {
+                        approved = true;
                         // eslint-disable-next-line no-use-before-define
                         return close().then(() => {
-                            return onCancel();
+                            return onApprove({ payerID, paymentID, billingToken, buyerAccessToken }, { restart }).catch(noop);
                         });
                     },
                     sdkMeta,
                     branded: false,
                     standaloneFundingSource: fundingSource,
                     inlinexo: false,
-                    onApprove:     ({ payerID, paymentID, billingToken }) => {
+                    onCancel: () => {
                         // eslint-disable-next-line no-use-before-define
                         return close().then(() => {
-                            return onApprove({ payerID, paymentID, billingToken, buyerAccessToken }, { restart }).catch(noop);
+                            return onCancel();
                         });
                     },
                     onAuth: ({ accessToken }) => {
@@ -175,18 +200,21 @@ function initPaymentFields({ props, components, payment, serviceData, config } :
                             buyerAccessToken = token;
                         });
                     },
-                    onCancel: () => {
-                        // eslint-disable-next-line no-use-before-define
-                        return close().then(() => {
-                            return onCancel();
-                        });
-                    }
+                    restart,
                 });
-                checkout.renderTo(getParent(window), TARGET_ELEMENT.BODY);
+                instance.renderTo(getRenderWindow(), TARGET_ELEMENT.BODY, CONTEXT.POPUP);
             });
+        },
+        onFieldsClose: () => {
+            return closePaymentFields().then(() => {
+                paymentFieldsOpen = false;
+                slideDownButtons();
+            })
         },
         onError,
         onClose,
+        showActionButtons: true,
+        sdkMeta,
         sessionID,
         buttonSessionID,
         buyerCountry,
@@ -203,8 +231,9 @@ function initPaymentFields({ props, components, payment, serviceData, config } :
     };
     const close = () => {
         return closePaymentFields().then(() => {
+            forceClosed = true;
             paymentFieldsOpen = false;
-            checkout.close();
+            instance.close();
             slideDownButtons();
         });
     };
