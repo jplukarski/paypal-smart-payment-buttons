@@ -29,6 +29,7 @@ function getRenderWindow() : Object {
 let paymentFieldsOpen = false;
 function isPaymentFieldsEligible({ props } : IsEligibleOptions) : boolean {
     const { vault, onShippingChange, experience } = props;
+    const componentsList = window.xprops.components || [];
 
     if (experience === EXPERIENCE.INLINE) {
         return false;
@@ -39,6 +40,10 @@ function isPaymentFieldsEligible({ props } : IsEligibleOptions) : boolean {
     }
 
     if (onShippingChange) {
+        return false;
+    }
+
+    if (componentsList.includes('marks')){
         return false;
     }
 
@@ -134,7 +139,6 @@ function initPaymentFields({ props, components, payment, serviceData, config } :
     const { cspNonce } = config;
     const { buyerCountry, sdkMeta } = serviceData;
     if (paymentFieldsOpen) {
-        // highlightFundingSource(fundingSource);
         return {
             start: promiseNoop,
             close: promiseNoop
