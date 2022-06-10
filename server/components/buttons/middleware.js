@@ -8,7 +8,7 @@ import { clientErrorResponse, htmlResponse, allowFrame, defaultLogger, safeJSON,
     graphQLBatch, type GraphQL, javascriptResponse, emptyResponse, promiseTimeout, isLocalOrTest, getDefaultExperiments, type GetExperimentsParams, type GetExperimentsType } from '../../lib';
 import { resolveFundingEligibility, resolveMerchantID, resolveWallet, resolvePersonalization } from '../../service';
 import { EXPERIMENT_TIMEOUT, TIMEOUT_ERROR_MESSAGE, FPTI_STATE } from '../../config';
-import type { LoggerType, CacheType, ExpressRequest, FirebaseConfig, InstanceLocationInformation, SDKLocationInformation } from '../../types';
+import type { LoggerType, CacheType, ExpressRequest, FirebaseConfig, InstanceLocationInformation, SDKLocationInformation, SDKVersionManager } from '../../types';
 import type { ContentType } from '../../../src/types';
 
 import { getSmartPaymentButtonsClientScript, getPayPalSmartPaymentButtonsRenderScript } from './script';
@@ -33,13 +33,25 @@ type ButtonMiddlewareOptions = {|
     cdn? : boolean,
     getInstanceLocationInformation : () => InstanceLocationInformation,
     getSDKLocationInformation : (req : ExpressRequest, env : string) => Promise<SDKLocationInformation>,
-    getExperiments? : (req : ExpressRequest, params : GetExperimentsParams) => Promise<GetExperimentsType>
+    getExperiments? : (req : ExpressRequest, params : GetExperimentsParams) => Promise<GetExperimentsType>,
+    sdkVersionManager: SDKVersionManager
 |};
 
 export function getButtonMiddleware({
-    logger = defaultLogger, content: smartContent, graphQL, getAccessToken, cdn = !isLocalOrTest(),
-    getMerchantID, cache, firebaseConfig, tracking,
-    getPersonalizationEnabled = () => false, getInstanceLocationInformation, getSDKLocationInformation, getExperiments = getDefaultExperiments
+    logger = defaultLogger,
+    content: smartContent,
+    graphQL,
+    getAccessToken,
+    cdn = !isLocalOrTest(),
+    getMerchantID,
+    cache,
+    firebaseConfig,
+    tracking,
+    getPersonalizationEnabled = () => false,
+    getInstanceLocationInformation,
+    getSDKLocationInformation,
+    getExperiments = getDefaultExperiments,
+    sdkVersionManager,
 } : ButtonMiddlewareOptions = {}) : ExpressMiddleware {
     const useLocal = !cdn;
 
@@ -48,6 +60,7 @@ export function getButtonMiddleware({
     return sdkMiddleware({ logger, cache, locationInformation }, {
         app: async ({ req, res, params, meta, logBuffer, sdkMeta }) => {
             logger.info(req, 'smart_buttons_render');
+            const middlewareStartTime = Date.now();
 
             for (const name of Object.keys(req.cookies || {})) {
                 logger.info(req, `smart_buttons_cookie_${ name || 'unknown' }`);
@@ -74,7 +87,14 @@ export function getButtonMiddleware({
             const facilitatorAccessTokenPromise = getAccessToken(req, clientID);
             const merchantIDPromise = facilitatorAccessTokenPromise.then(facilitatorAccessToken => resolveMerchantID(req, { merchantID: sdkMerchantID, getMerchantID, facilitatorAccessToken }));
             const clientPromise = getSmartPaymentButtonsClientScript({ debug, logBuffer, cache, useLocal, locationInformation });
-            const renderPromise = getPayPalSmartPaymentButtonsRenderScript({ logBuffer, cache, useLocal, locationInformation, sdkLocationInformation });
+            const renderPromise = getPayPalSmartPaymentButtonsRenderScript({
+                sdkCDNRegistry: sdkLocationInformation?.sdkCDNRegistry,
+                cache,
+                logBuffer,
+                useLocal,
+                sdkVersionManager
+            });
+            const sdkVersion = sdkVersionManager.getLiveVersion();
 
             const fundingEligibilityPromise = resolveFundingEligibility(req, gqlBatch, {
                 logger, clientID, merchantID: sdkMerchantID, buttonSessionID, currency, intent, commit, vault,
@@ -107,7 +127,7 @@ export function getButtonMiddleware({
                 throw err;
             }
 
-            const render = await renderPromise;
+            const renderButton = await renderPromise;
             const client = await clientPromise;
             const merchantID = await merchantIDPromise;
             const wallet = await walletPromise;
@@ -131,7 +151,7 @@ export function getButtonMiddleware({
                 cardFields: experiments.isCardFieldsExperimentEnabled
             };
 
-            logger.info(req, `button_render_version_${ render.version }`);
+            logger.info(req, `button_render_version_${ sdkVersion }`);
             logger.info(req, `button_client_version_${ client.version }`);
 
             const buttonProps = {
@@ -151,23 +171,49 @@ export function getButtonMiddleware({
             };
 
             try {
-                if (render.button.validateButtonProps) {
-                    render.button.validateButtonProps(buttonProps);
+                if (renderButton.validateButtonProps) {
+                    renderButton.validateButtonProps(buttonProps);
                 }
 
             } catch (err) {
                 return clientErrorResponse(res, err.stack || err.message);
             }
-            const buttonHTML = render.button.Buttons(buttonProps).render(html());
+            const buttonHTML = renderButton.Buttons(buttonProps).render(html());
             const setupParams = {
                 fundingEligibility, buyerCountry, cspNonce, merchantID, sdkMeta, wallet, correlationID,
                 firebaseConfig, facilitatorAccessToken, eligibility, content, cookies, personalization,
                 brandedDefault: experiments.isFundingSourceBranded
             };
+
+            const cplCompPayload = {
+                'second-render-middleware': {
+                    start: middlewareStartTime,
+                    tt:    Date.now() - middlewareStartTime
+                }
+            };
+
+            logger.info(req, 'CPL_LATENCY_METRICS_SECOND_RENDER_MIDDLEWARE');
+            logger.track(req, {
+                [FPTI_KEY.STATE]:                 'CPL_LATENCY_METRICS',
+                [FPTI_KEY.TRANSITION]:            'process_server_metrics',
+                [FPTI_KEY.PAGE]:                  'main:xo:paypal-components:smart-payment-buttons',
+                [FPTI_KEY.CONTEXT_ID]:            buttonSessionID,
+                [FPTI_KEY.CPL_COMP_METRICS]:      cplCompPayload,
+                [FPTI_KEY.CPL_QUERY_METRICS]:     {},
+                [FPTI_KEY.CPL_CHUNK_METRICS]:     {}
+            }, {});
+            const responseStartTime = Date.now();
+
             const pageHTML = `
                 <!DOCTYPE html>
-                <head></head>
-                <body data-nonce="${ cspNonce }" data-client-version="${ client.version }" data-render-version="${ render.version }">
+                <head>
+                    <script nonce="${ cspNonce }">
+                      if (window.performance && performance.mark) {
+                          performance.mark('buttons-response-received');
+                      }
+                    </script>
+                </head>
+                <body data-nonce="${ cspNonce }" data-client-version="${ client.version }" data-render-version="${ sdkVersion }" data-response-start-time="${ responseStartTime }">
                     <style nonce="${ cspNonce }">${ buttonStyle }</style>
 
                     <div id="buttons-container" class="buttons-container" role="main" aria-label="PayPal">${ buttonHTML }</div>
@@ -183,8 +229,8 @@ export function getButtonMiddleware({
                 rootTxnData: {
                     name:                  rootTransactionName,
                     client_id:             clientID,
-                    sdk_version:           render.version,
-                    smart_buttons_version: render.version
+                    sdk_version:           sdkVersion,
+                    smart_buttons_version: client.version
                 }
             });
             allowFrame(res);
