@@ -1,7 +1,8 @@
 /* @flow */
+
 import { ZalgoPromise } from '@krakenjs/zalgo-promise/src';
 import { FUNDING } from '@paypal/sdk-constants/src';
-import { memoize, querySelectorAll, debounce, noop } from '@krakenjs/belter/src';
+import { memoize, querySelectorAll, debounce, noop, isCrossSiteTrackingEnabled } from '@krakenjs/belter/src';
 import { getParent, getTop } from '@krakenjs/cross-domain-utils/src';
 import { EXPERIENCE } from '@paypal/checkout-components/src/constants/button';
 
@@ -31,7 +32,7 @@ function isPaymentFieldsEligible({ props } : IsEligibleOptions) : boolean {
     const { vault, onShippingChange, experience } = props;
     const componentsList = window.xprops.components || [];
 
-    if (experience === EXPERIENCE.INLINE) {
+    if (experience === EXPERIENCE.INLINE && !isCrossSiteTrackingEnabled('enforce_policy')) {
         return false;
     }
 
@@ -134,22 +135,30 @@ const slideDownButtons = () => {
 function initPaymentFields({ props, components, payment, serviceData, config } : InitOptions) : PaymentFlowInstance {
     const { createOrder, onApprove, onCancel,
         locale, commit, onError, sessionID, fieldsSessionID, partnerAttributionID, buttonSessionID, onAuth  } = props;
+    console.error('######### in initPaymentFields props ######', props);
     const { PaymentFields, Checkout } = components;
     const { fundingSource } = payment;
     const { cspNonce } = config;
     const { buyerCountry, sdkMeta } = serviceData;
+    console.error('######### in initPaymentFields payment-fields 141 ######');
+    console.error(' ################ in initPaymentFields paymentFieldsOpen before setting ############### ', paymentFieldsOpen);
+    paymentFieldsOpen = false;
+    console.error(' ################ in initPaymentFields paymentFieldsOpen after setting ############### ', paymentFieldsOpen);
     if (paymentFieldsOpen) {
+        console.error('######### in paymentFieldsOpen 143 ######');
         return {
             start: promiseNoop,
             close: promiseNoop
         };
     }
+    console.error('######### in initPaymentFields payment-fields 148 ######');
     let instance;
     let approved = false;
     let forceClosed = false;
 
     const restart = memoize(() : ZalgoPromise<void> => {
         // eslint-disable-next-line no-use-before-define
+        console.error('######### in restart payment-fields ######');
         return close().finally(() => {
             return initPaymentFields({ props, components, serviceData, config, payment: { ...payment }, restart })
                 .start().finally(unresolvedPromise);
@@ -165,12 +174,14 @@ function initPaymentFields({ props, components, payment, serviceData, config } :
         fundingSource,
         fieldsSessionID,
         onContinue:   async (data) => {
+            console.error('######### inside onContinue invoked data ######', data);
             const orderID = await createOrder();
             return getConfirmOrder({
                 orderID, payload: data, partnerAttributionID
             }, {
                 facilitatorAccessToken: serviceData.facilitatorAccessToken
             }).then(() => {
+                console.error('######### inside onContinue getConfirmOrder then ######');
                 instance = Checkout({
                     ...props,
                     onClose: () => {
@@ -206,7 +217,10 @@ function initPaymentFields({ props, components, payment, serviceData, config } :
                     },
                     restart,
                 });
+                console.error('######### inside onContinue instance ######', instance);
                 instance.renderTo(getRenderWindow(), TARGET_ELEMENT.BODY, CONTEXT.POPUP);
+            }).catch(e => {
+                console.error('######### inside onContinue then catch ######', e);
             });
         },
         onFieldsClose: () => {
@@ -227,20 +241,28 @@ function initPaymentFields({ props, components, payment, serviceData, config } :
         cspNonce
     });
     const start = () => {
+        console.error('######### in start payment-fields ######');
         paymentFieldsOpen = true;
         const renderPromise = render('#payment-fields-container');
         slideUpButtons(fundingSource);
         highlightFundingSource(fundingSource);
+        console.error('######### in start before return payment-fields ######')
         return renderPromise;
     };
     const close = () => {
+        console.error('######### in close payment-fields ######');
         return closePaymentFields().then(() => {
+            console.error('######### in closePaymentFields payment-fields ######');
             forceClosed = true;
             paymentFieldsOpen = false;
-            instance.close();
+            console.error('######### in closePaymentFields payment-fields 251 instance value ######', instance);
+            if(instance) {
+                instance.close();
+            }
             slideDownButtons();
         });
     };
+    console.error('######### before return start, close payment-fields ######');
     return { start, close };
 }
 export const paymentFields : PaymentFlow = {
