@@ -31,6 +31,7 @@ const logger = {
 test('should do a basic button render and succeed', async () => {
     const authButtonMiddleware = getAuthButtonMiddleware({
         cache,
+        // $FlowFixMe
         logger,
         getInstanceLocationInformation
     });
@@ -69,6 +70,7 @@ test('should do a basic button render and succeed', async () => {
 test('should give a 400 error with no clientID passed', async () => {
     const authButtonMiddleware = getAuthButtonMiddleware({
         cache,
+        // $FlowFixMe
         logger,
         getInstanceLocationInformation
     });
@@ -90,6 +92,7 @@ test('Should pass the props correctly to the window handler.', async () => {
 
     const authButtonMiddleware = getAuthButtonMiddleware({
         cache,
+        // $FlowFixMe
         logger,
         getInstanceLocationInformation
     });
@@ -124,7 +127,7 @@ test('Should pass the props correctly to the window handler.', async () => {
         throw new Error(`Expected status code to be 200, got ${ status }`);
     }
 
-    const tests = Object.entries(query)
+    const tests = Object.entries(query) // $FlowFixMe
                         .map(([k, v]) => ({ k, v: html.includes(typeof v === 'object' ? v.label : v) }))
 
     if (tests.some(({ v }) => !v)) {
