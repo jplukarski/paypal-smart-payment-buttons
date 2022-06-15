@@ -290,7 +290,10 @@ const buttonMiddleware = getButtonMiddleware({
 const authButtonMiddleware = getAuthButtonMiddleware({
     cache,
     logger,
-    getInstanceLocationInformation
+    getInstanceLocationInformation,
+    getSDKLocationInformation,
+    // $FlowFixMe we don't use this locally
+    sdkVersionManager: {},
 });
 
 const menuMiddleware = getMenuMiddleware({

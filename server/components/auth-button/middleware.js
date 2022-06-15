@@ -1,6 +1,6 @@
 /* @flow */
-import { clientErrorResponse, htmlResponse, allowFrame, defaultLogger, sdkMiddleware, getCSPNonce, type ExpressMiddleware } from '../../lib';
-import type { LoggerType, CacheType, InstanceLocationInformation } from '../../types';
+import { clientErrorResponse, htmlResponse, allowFrame, defaultLogger, sdkMiddleware, getCSPNonce, type ExpressMiddleware, isLocalOrTest } from '../../lib';
+import type { LoggerType, CacheType, ExpressRequest, InstanceLocationInformation, SDKLocationInformation, SDKVersionManager } from '../../types';
 
 import { getPayPalAuthButtonsRenderScript } from './script';
 import { htmlTemplate } from './htmlTemplate';
@@ -9,11 +9,21 @@ import { htmlTemplate } from './htmlTemplate';
 type AuthButtonMiddlewareOptions = {|
     logger : LoggerType,
     cache : CacheType,
+    getSDKLocationInformation : (req : ExpressRequest, env : string) => Promise<SDKLocationInformation>,
     getInstanceLocationInformation : () => InstanceLocationInformation,
+    sdkVersionManager: SDKVersionManager
 |};
 
-export function getAuthButtonMiddleware({ logger = defaultLogger, cache, getInstanceLocationInformation } : AuthButtonMiddlewareOptions) : ExpressMiddleware {
+export function getAuthButtonMiddleware({
+    logger = defaultLogger,
+    cache,
+    getSDKLocationInformation,
+    getInstanceLocationInformation,
+    sdkVersionManager
+} : AuthButtonMiddlewareOptions) : ExpressMiddleware {
     const locationInformation = getInstanceLocationInformation();
+    const useLocal = isLocalOrTest();
+
     return sdkMiddleware({ logger, cache, locationInformation }, {
         app: async ({ req, res, params, meta, logBuffer }) => {
             const cspNonce = getCSPNonce(res);
@@ -33,18 +43,18 @@ export function getAuthButtonMiddleware({ logger = defaultLogger, cache, getInst
                 return clientErrorResponse(res, 'Please provide a clientID query parameter');
             }
             logger.info(req, `auth_button clientID: ${clientID}`);
+            const sdkLocationInformation = await getSDKLocationInformation(req, params.env);
             const script = await getPayPalAuthButtonsRenderScript({
+                useLocal,
                 logBuffer,
                 cache,
-                locationInformation,
-                sdkLocationInformation: {
-                    sdkCDNRegistry: undefined,
-                    sdkActiveTag: undefined
-                },
+                sdkCDNRegistry: sdkLocationInformation.sdkCDNRegistry,
+                sdkVersionManager,
             });
-            logger.info(req, `auth_button script version ${script.version}`);
+            const sdkVersion = sdkVersionManager.getLiveVersion()
+            logger.info(req, `auth_button script version ${sdkVersion}`);
             const pageHTML = htmlTemplate({
-                AuthButton: script.button.AuthButton,
+                AuthButton: script.AuthButton,
                 locale,
                 buttonType,
                 cspNonce,
