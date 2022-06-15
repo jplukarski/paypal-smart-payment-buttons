@@ -8,10 +8,9 @@ import { FUNDING } from '@paypal/sdk-constants/src';
 import { mockSetupButton, generateOrderID, mockAsyncProp, createButtonHTML, mockFunction, clickButton } from './mocks';
 
 describe('payment field cases', () => {
-    it('should render a button with createOrder, click the button, and render payment fields', async () => {
+    it('should render a button, click the button, and render payment-fields', async () => {
         return await wrapPromise(async ({ expect, avoid }) => {
             const orderID = generateOrderID();
-            const payerID = 'AAABBBCCC';
 
             window.xprops.createOrder = mockAsyncProp(expect('createOrder', async () => {
                 return ZalgoPromise.try(() => {
@@ -21,35 +20,29 @@ describe('payment field cases', () => {
 
             window.xprops.onCancel = avoid('onCancel');
 
-            window.xprops.onApprove = mockAsyncProp(expect('onApprove', async (data) => {
-                if (data.orderID !== orderID) {
-                    throw new Error(`Expected orderID to be ${ orderID }, got ${ data.orderID }`);
+            window.xprops.onApprove = avoid('onApprove');
+
+            mockFunction(window.paypal, 'PaymentFields', expect('PaymentFields', ({ original: PaymentFieldsOriginal, args: [ props ] }) => {
+                const onContinueData = {
+                    payment_source: {
+                        'eps': {
+                            country_code: 'AT',
+                            name: 'Jane Doe',
+                        },
+                    }
                 }
 
-                if (data.payerID !== payerID) {
-                    throw new Error(`Expected payerID to be ${ payerID }, got ${ data.payerID }`);
-                }
-            }));
-
-            mockFunction(window.paypal, 'PaymentFields', expect('PaymentFields', ({ original: CheckoutOriginal, args: [ props ] }) => {
-
-                mockFunction(props, 'onApprove', expect('onApprove', ({ original: onApproveOriginal, args: [ data, actions ] }) => {
-                    return onApproveOriginal({ ...data, payerID }, actions);
+                mockFunction(props, 'onContinue', expect('onContinue', ({ original: onContinueOriginal }) => {
+                    return onContinueOriginal({ ...onContinueData });
                 }));
 
-                const checkoutInstance = CheckoutOriginal(props);
+                const paymentFieldsInstance = PaymentFieldsOriginal(props);
 
-                mockFunction(checkoutInstance, 'render', expect('render', async ({ original: renderToOriginal, args }) => {
-                    return props.createOrder().then(id => {
-                        if (id !== orderID) {
-                            throw new Error(`Expected orderID to be ${ orderID }, got ${ id }`);
-                        }
-
-                        return renderToOriginal(...args);
-                    });
+                mockFunction(paymentFieldsInstance, 'render', expect('render', async ({ original: renderToOriginal, args }) => {
+                    return renderToOriginal(...args);
                 }));
 
-                return checkoutInstance;
+                return paymentFieldsInstance;
             }));
 
             const fundingEligibility = {

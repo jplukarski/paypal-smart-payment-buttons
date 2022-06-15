@@ -279,13 +279,9 @@ export function setupMocks() {
         PaymentFields: (props) => {
             return {
                 render: () => {
-                    return props.onContinue().then(() => {
-                        return props.createOrder();
-                    }).then(orderID => {
-                        return props.Checkout((props) => {
-                            console.log('checkout props --- ', props)
-                        })
-                   });
+                    return ZalgoPromise.delay(50).then(() => {
+                        return props.onContinue();
+                    });
                 },
                 close: () => {
                     return ZalgoPromise.delay(50).then(() => {
@@ -342,6 +338,7 @@ export function setupMocks() {
         onApprove:  mockAsyncProp(noop),
         onCancel:   mockAsyncProp(noop),
         onChange:   mockAsyncProp(noop),
+        onContinue: mockAsyncProp(noop),
         export:     mockAsyncProp(noop),
         onError:    mockAsyncProp((err) => {
             throw err;
