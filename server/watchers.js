@@ -2,7 +2,7 @@
 
 import { poll } from '@krakenjs/grabthar';
 
-import type { CacheType, InstanceLocationInformation } from './types';
+import type { CacheType, InstanceLocationInformation, SDKLocationInformation } from './types';
 import type { LoggerBufferType } from './lib';
 import { SDK_RELEASE_MODULE, SMART_BUTTONS_MODULE, MODULE_POLL_INTERVAL, SMART_BUTTONS_CDN_NAMESPACE,
          SDK_CDN_NAMESPACE, IDENTITY_COMPONENTS_MODULE, LATEST_TAG, ACTIVE_TAG } from './config';
