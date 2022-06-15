@@ -38,11 +38,7 @@ export function getAuthButtonMiddleware({
                 style = {}
             } = params;
 
-            if (!clientID) {
-                logger.info(req, 'smart_buttons_render');
-                return clientErrorResponse(res, 'Please provide a clientID query parameter');
-            }
-            logger.info(req, `auth_button clientID: ${clientID}`);
+            logger.info(req, `auth_button: ${clientID}`);
             const sdkLocationInformation = await getSDKLocationInformation(req, params.env);
             const script = await getPayPalAuthButtonsRenderScript({
                 useLocal,
@@ -52,7 +48,7 @@ export function getAuthButtonMiddleware({
                 sdkVersionManager,
             });
             const sdkVersion = sdkVersionManager.getLiveVersion()
-            logger.info(req, `auth_button script version ${sdkVersion}`);
+            logger.info(req, `auth_button_version_${sdkVersion}`);
             const pageHTML = htmlTemplate({
                 AuthButton: script.AuthButton,
                 locale,
