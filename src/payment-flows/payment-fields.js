@@ -9,6 +9,7 @@ import { EXPERIENCE } from '@paypal/checkout-components/src/constants/button';
 import { DATA_ATTRIBUTES, TARGET_ELEMENT, CONTEXT, INLINE_PAYMENT_FIELDS_APM_LIST } from '../constants';
 import { unresolvedPromise, promiseNoop } from '../lib';
 import { getConfirmOrder } from '../props';
+import type { ConfirmData } from '../api';
 
 import type { PaymentFlow, PaymentFlowInstance, IsEligibleOptions, IsPaymentEligibleOptions, InitOptions } from './types';
 
@@ -90,7 +91,10 @@ function unhighlightFundingSources() {
 
 const getElements = (fundingSource : ?$Values<typeof FUNDING>) : {| buttonsContainer : HTMLElement, fundingSourceButtonsContainer : HTMLElement, paymentFieldsContainer : HTMLElement |} => {
     const buttonsContainer = document.querySelector('#buttons-container');
-    const fundingSourceButtonsContainer = document.querySelector(`[${ DATA_ATTRIBUTES.FUNDING_SOURCE }="${ fundingSource }"]`);
+    let fundingSourceButtonsContainer;
+    if(fundingSource){
+        fundingSourceButtonsContainer = document.querySelector(`[${ DATA_ATTRIBUTES.FUNDING_SOURCE }="${ fundingSource }"]`);
+    }
     const paymentFieldsContainer = document.querySelector('#payment-fields-container');
 
     if (!buttonsContainer || !fundingSourceButtonsContainer || !paymentFieldsContainer) {
@@ -126,7 +130,8 @@ const slideUpButtons = (fundingSource : ?$Values<typeof FUNDING>) => {
 };
 
 const slideDownButtons = () => {
-    const buttonsContainer = document.querySelector('#buttons-container');
+    const { buttonsContainer } = getElements();
+
     unhighlightFundingSources();
     window.removeEventListener('resize', resizeListener);
     buttonsContainer.style.removeProperty('transition-duration');
@@ -134,8 +139,7 @@ const slideDownButtons = () => {
 };
 
 function initPaymentFields({ props, components, payment, serviceData, config } : InitOptions) : PaymentFlowInstance {
-    const { createOrder, onApprove, onCancel,
-        locale, commit, onError, sessionID, fieldsSessionID, partnerAttributionID, buttonSessionID, onAuth  } = props;
+    const { createOrder, onApprove, onCancel, locale, commit, onError, sessionID, partnerAttributionID, buttonSessionID, onAuth } = props;
 
     const { PaymentFields, Checkout } = components;
     const { fundingSource } = payment;
@@ -168,17 +172,16 @@ function initPaymentFields({ props, components, payment, serviceData, config } :
 
     let buyerAccessToken;
     const { render, close: closePaymentFields } = PaymentFields({
+        createOrder,
         fundingSource,
-        fieldsSessionID,
-        onContinue:   async (data) => {
-            const orderID = await createOrder();
+        // fieldsSessionID,
+        onContinue: (data : ConfirmData, orderID: string) => {
             return getConfirmOrder({
                 orderID, payload: data, partnerAttributionID
             }, {
                 facilitatorAccessToken: serviceData.facilitatorAccessToken
             }).then(() => {
                 instance = Checkout({
-                    ...props,
                     onClose: () => {
                         if (!forceClosed && !approved) {
                             // eslint-disable-next-line no-use-before-define
@@ -194,7 +197,6 @@ function initPaymentFields({ props, components, payment, serviceData, config } :
                             return onApprove({ payerID, paymentID, billingToken, buyerAccessToken }, { restart }).catch(noop);
                         });
                     },
-                    sdkMeta,
                     branded: false,
                     standaloneFundingSource: fundingSource,
                     inlinexo: false,
@@ -211,6 +213,14 @@ function initPaymentFields({ props, components, payment, serviceData, config } :
                         });
                     },
                     restart,
+                    createOrder,
+                    onError,
+                    sessionID,
+                    fundingSource,
+                    buyerCountry,
+                    locale,
+                    commit,
+                    cspNonce,
                 });
                 instance.renderTo(getRenderWindow(), TARGET_ELEMENT.BODY, CONTEXT.POPUP);
             })
