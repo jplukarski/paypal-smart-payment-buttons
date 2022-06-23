@@ -1,6 +1,9 @@
 /* @flow */
 /** @jsx node */
+
 import { html } from '@krakenjs/jsx-pragmatic';
+
+import { AuthButton } from './button';
 
 export type htmlTemplateProps = {|
     AuthButton : Function,
@@ -17,7 +20,7 @@ export type htmlTemplateProps = {|
 |};
 
 export const htmlTemplate = ({
-    AuthButton,
+    inputLabel,
     locale = { lang: 'en' },
     buttonType = 'logIn',
     cspNonce,
@@ -33,7 +36,7 @@ export const htmlTemplate = ({
     ${ sdkMeta.getSDKLoader({ nonce: cspNonce }) }
     </head>
     <body data-nonce="${ cspNonce }" data-client-version="1.1.1" data-render-version="1.1.1">
-    ${ AuthButton({ style , nonce: cspNonce, locale, buttonType }).render(html()) }
+    ${ AuthButton({ inputLabel, style , nonce: cspNonce, locale, buttonType }).render(html()) }
     <script nonce="${ cspNonce }">
     document.querySelector('.paypal-auth-button').addEventListener('click', function () {
              function onApproveHandler(data) {

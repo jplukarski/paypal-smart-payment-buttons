@@ -1,69 +1,65 @@
 /* @flow */
-import { htmlResponse, allowFrame, defaultLogger, sdkMiddleware, getCSPNonce, type ExpressMiddleware, isLocalOrTest } from '../../lib';
+
+import { clientErrorResponse, htmlResponse, allowFrame, defaultLogger, sdkMiddleware, getCSPNonce, type ExpressMiddleware, isLocalOrTest } from '../../lib';
 import type { LoggerType, CacheType, ExpressRequest, InstanceLocationInformation, SDKLocationInformation, SDKVersionManager } from '../../types';
 
-import { getPayPalAuthButtonsRenderScript } from './script';
 import { htmlTemplate } from './htmlTemplate';
 
 
 type AuthButtonMiddlewareOptions = {|
     logger : LoggerType,
     cache : CacheType,
-    getSDKLocationInformation : (req : ExpressRequest, env : string) => Promise<SDKLocationInformation>,
-    getInstanceLocationInformation : () => InstanceLocationInformation,
-    sdkVersionManager: SDKVersionManager
 |};
 
 export function getAuthButtonMiddleware({
     logger = defaultLogger,
     cache,
-    getSDKLocationInformation,
-    getInstanceLocationInformation,
-    sdkVersionManager
 } : AuthButtonMiddlewareOptions) : ExpressMiddleware {
-    const locationInformation = getInstanceLocationInformation();
-    const useLocal = isLocalOrTest();
+    return sdkMiddleware({ logger, cache }, {
+        app: ({ req, res, params, meta }) => {
+            try {
+                const cspNonce = getCSPNonce(res);
+                const {
+                    inputLabel,
+                    scopes,
+                    buttonType,
+                    responseType,
+                    clientID,
+                    returnurl,
+                    customLabel,
+                    style = {}
+                } = params;
 
-    return sdkMiddleware({ logger, cache, locationInformation }, {
-        app: async ({ req, res, params, meta, logBuffer }) => {
-            const cspNonce = getCSPNonce(res);
-            const {
-                scopes,
-                buttonType,
-                responseType,
-                clientID,
-                returnurl,
-                customLabel,
-                locale,
-                style = {}
-            } = params;
+                const locale = {
+                    country: req.headers['accept-language'].split(',')[0].split('-')[1],
+                    lang: req.headers['accept-language'].split(',')[0].split('-')[0]
+                }
 
-            logger.info(req, `auth_button: ${clientID}`);
-            const sdkLocationInformation = await getSDKLocationInformation(req, params.env);
-            const script = await getPayPalAuthButtonsRenderScript({
-                useLocal,
-                logBuffer,
-                cache,
-                sdkCDNRegistry: sdkLocationInformation.sdkCDNRegistry,
-                sdkVersionManager,
-            });
-            const sdkVersion = sdkVersionManager.getLiveVersion()
-            logger.info(req, `auth_button_version_${sdkVersion}`);
-            const pageHTML = htmlTemplate({
-                AuthButton: script.AuthButton,
-                locale,
-                buttonType,
-                cspNonce,
-                style,
-                customLabel,
-                clientID,
-                scopes,
-                returnUrl: returnurl,
-                sdkMeta:   meta,
-                responseType
-            });
-            allowFrame(res);
-            return htmlResponse(res, pageHTML);
+                if (!clientID) {
+                    logger.info(req, 'smart_buttons_render');
+                    return clientErrorResponse(res, 'Please provide a clientID query parameter');
+                }
+                logger.info(req, `auth_button clientID: ${clientID}`);
+                const pageHTML = htmlTemplate({
+                    inputLabel,
+                    locale,
+                    buttonType,
+                    cspNonce,
+                    style,
+                    customLabel,
+                    clientID,
+                    scopes,
+                    returnUrl: returnurl,
+                    sdkMeta:   meta,
+                    responseType
+                });
+                allowFrame(res);
+                return htmlResponse(res, pageHTML);
+            } catch(e){
+                logger.error(req, e.message)
+                return clientErrorResponse(res, `Server error: ${e.message}`);
+            }
+
         }
     });
 }

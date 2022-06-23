@@ -289,11 +289,7 @@ const buttonMiddleware = getButtonMiddleware({
 
 const authButtonMiddleware = getAuthButtonMiddleware({
     cache,
-    logger,
-    getInstanceLocationInformation,
-    getSDKLocationInformation,
-    // $FlowFixMe we don't use this locally
-    sdkVersionManager: {},
+    logger
 });
 
 const menuMiddleware = getMenuMiddleware({
@@ -361,6 +357,7 @@ app.listen(PORT, () => {
     // eslint-disable-next-line no-console
     console.log(`
         Smart Button server listening
+          - http://localhost.paypal.com:${ PORT }/smart/auth-button?clientID=alc_client1
           - http://localhost.paypal.com:${ PORT }/smart/buttons?clientID=alc_client1
           - http://localhost.paypal.com:${ PORT }/smart/menu?clientID=alc_client1
           - http://localhost.paypal.com:${ PORT }/smart/qrcode?demo=true&qrPath=string_to_be_encoded
