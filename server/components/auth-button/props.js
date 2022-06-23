@@ -246,7 +246,7 @@ export function validateButtonProps(props : ?ButtonPropsInputs) : RenderButtonPr
         warnings.push(`Expected valid country, got ${ locale.country }`);
     }
 
-    if (!locale.lang || !COUNTRY_LANGS[locale.country].includes(locale.lang)) {
+    if (!locale.lang || !COUNTRY_LANGS[locale.country]?.includes(locale.lang)) {
         warnings.push(`Expected valid lang, got ${ locale.lang }`);
     }
 

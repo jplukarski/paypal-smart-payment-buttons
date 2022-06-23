@@ -21,7 +21,7 @@ export type htmlTemplateProps = {|
 
 export const htmlTemplate = ({
     inputLabel,
-    locale = { lang: 'en' },
+    locale,
     buttonType = 'logIn',
     cspNonce,
     style,
