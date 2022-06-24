@@ -55,7 +55,7 @@ export const pageStyle = `
 
     @media only screen and (min-width: 300px) {
         body {
-            font-size: 16px;
+            font-size: 15px;
         }
     }
 
@@ -87,7 +87,7 @@ export const pageStyle = `
     @media only screen and (min-width: 300px) {
         .${ CLASS.BUTTON } > .${ CLASS.BUTTON_LABEL } {
             height: 23px;
-            font-size: 16px;
+            font-size: 15px;
         }
     }
 

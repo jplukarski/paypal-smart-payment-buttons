@@ -1,5 +1,7 @@
+/* @flow */
+/* eslint max-lines: 0 */
 export const locales = {
-  "en-ad": {
+    "en-ad": {
     "connect": "Connect with PayPal",
     "login": "Log in with PayPal",
     "signup": "Sign up with PayPal",

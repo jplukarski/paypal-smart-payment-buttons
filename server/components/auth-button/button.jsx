@@ -5,7 +5,6 @@ import { node, type ElementNode, type ComponentNode } from '@krakenjs/jsx-pragma
 import {  LOGO_COLOR, PPLogo } from '@paypal/sdk-logos';
 
 import { validateButtonProps, type ButtonStyleType, type ButtonPropsInputs } from './props';
-import { Text } from './text';
 import { componentStyle } from './styles';
 import { CLASS } from './constants';
 
@@ -78,7 +77,7 @@ export function AuthButton(props : ButtonProps) : ElementNode {
              tabindex='0'>
                 <div class={ CLASS.BUTTON_LABEL }>
                     <PPSymbol buttonBackgroundColor={color} />
-                    <Text>{ buttonText }</Text>
+                    <span class={CLASS.TEXT}>{ buttonText }</span>
                 </div>
             </div>
         </div>

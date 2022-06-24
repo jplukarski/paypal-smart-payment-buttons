@@ -1,7 +1,7 @@
 /* @flow */
 
-import { clientErrorResponse, htmlResponse, allowFrame, defaultLogger, sdkMiddleware, getCSPNonce, type ExpressMiddleware, isLocalOrTest } from '../../lib';
-import type { LoggerType, CacheType, ExpressRequest, InstanceLocationInformation, SDKLocationInformation, SDKVersionManager } from '../../types';
+import { clientErrorResponse, htmlResponse, allowFrame, defaultLogger, sdkMiddleware, getCSPNonce, type ExpressMiddleware } from '../../lib';
+import type { LoggerType, CacheType } from '../../types';
 
 import { htmlTemplate } from './htmlTemplate';
 
