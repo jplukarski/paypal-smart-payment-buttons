@@ -3,9 +3,10 @@
 
 import { values } from '@krakenjs/belter';
 import { FUNDING, PLATFORM, ENV, INTENT, LANG, COUNTRY, COUNTRY_LANGS } from '@paypal/sdk-constants';
-import { SUPPORTED_FUNDING_SOURCES } from '@paypal/funding-components';
 
 import { selectLocalizedText } from './locales';
+
+const SUPPORTED_FUNDING_SOURCES = Object.keys(FUNDING).map(fk => FUNDING[fk]);
 
 export const BUTTON_LABEL = {
     CONNECT:     ('connect' : 'connect')
@@ -158,7 +159,7 @@ export function validateButtonProps(props : ?ValidateButtonPropsInput) : Validat
     }
 
     if (fundingSource) {
-        if (SUPPORTED_FUNDING_SOURCES.indexOf(fundingSource) === -1) {
+        if (!SUPPORTED_FUNDING_SOURCES.includes(fundingSource)) {
             throw new Error(`Invalid funding source: ${ fundingSource }`);
         }
     }
