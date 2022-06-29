@@ -2,7 +2,7 @@
 /** @jsx node */
 
 import { html } from '@krakenjs/jsx-pragmatic';
-import { FUNDING } from '@paypal/sdk-constants/src';
+import { FUNDING } from '@paypal/sdk-constants';
 
 import { AuthButton } from './button';
 

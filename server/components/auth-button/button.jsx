@@ -3,7 +3,7 @@
 
 import { node, type ElementNode } from '@krakenjs/jsx-pragmatic';
 import {  LOGO_COLOR, PPLogo } from '@paypal/sdk-logos';
-import { FUNDING } from '@paypal/sdk-constants/src';
+import { FUNDING } from '@paypal/sdk-constants';
 
 import { validateButtonProps, type ButtonStyleInputs } from './props';
 import { componentStyle } from './styles';
