@@ -7,7 +7,12 @@ const newTodeprecatedLocales = {
     'zh-hant': 'zh-tw'
 }
 
-export const selectLocalizedText = ({ inputLabel = 'login', locale }) => {
+type ParamsType = {|
+    inputLabel : string,
+    locale : string,
+|};
+
+export const selectLocalizedText = ({ inputLabel = 'login', locale } : ParamsType) : string => {
     const depLocaleFormat = newTodeprecatedLocales[locale.toLowerCase()];
     const selectedLocale = locales[depLocaleFormat || locale.toLowerCase()] || locales['en-us'];
     const selectedMessage = selectedLocale[inputLabel.toLowerCase()];

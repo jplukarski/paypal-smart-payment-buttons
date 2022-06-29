@@ -4,7 +4,6 @@ import { cancelWatchers, getAuthButtonMiddleware  } from '../../server';
 import {
     mockReq,
     mockRes,
-    getInstanceLocationInformation
 } from './mock';
 
 jest.setTimeout(300000);
@@ -33,7 +32,6 @@ test('should do a basic button render and succeed', async () => {
         cache,
         // $FlowFixMe
         logger,
-        getInstanceLocationInformation
     });
 
     const req = mockReq({
@@ -72,7 +70,6 @@ test('should give a 400 error with no clientID passed', async () => {
         cache,
         // $FlowFixMe
         logger,
-        getInstanceLocationInformation
     });
 
     const req = mockReq();
@@ -94,7 +91,6 @@ test('Should pass the props correctly to the window handler.', async () => {
         cache,
         // $FlowFixMe
         logger,
-        getInstanceLocationInformation
     });
 
     // These are considered valid (validateButtonProps pass)

@@ -1,10 +1,8 @@
 /* @flow */
 /** @jsx node */
 
-import { ZalgoPromise } from '@krakenjs/zalgo-promise';
-import { values, uniqueID } from '@krakenjs/belter';
-import { FUNDING, PLATFORM, ENV, INTENT, LANG, COUNTRY, COUNTRY_LANGS, type LocaleType, CARD } from '@paypal/sdk-constants';
-import { type CrossDomainWindowType } from '@krakenjs/cross-domain-utils';
+import { values } from '@krakenjs/belter';
+import { FUNDING, PLATFORM, ENV, INTENT, LANG, COUNTRY, COUNTRY_LANGS } from '@paypal/sdk-constants';
 import { SUPPORTED_FUNDING_SOURCES } from '@paypal/funding-components';
 
 import { selectLocalizedText } from './locales';
@@ -33,128 +31,39 @@ export const BUTTON_SHAPE = {
     RECT: ('rect' : 'rect')
 };
 
-type OnApproveData = {|
-
-|};
-
-type OnApproveActions = {|
-
-|};
-
-type OnApprove = (data : OnApproveData, actions : OnApproveActions) => ZalgoPromise<void> | void;
-
-type OnCancelData = {|
-
-|};
-
-type OnCancelActions = {|
-
-|};
-
-type OnCancel = (data : OnCancelData, actions : OnCancelActions) => ZalgoPromise<void> | void;
-
-type OnClickData = {|
-
-|};
-
-type OnClickActions = {|
-
-|};
-
-type OnClick = (OnClickData, OnClickActions) => void;
-
-export type BillingOptions = {|
-    type? : string | void,
-    productCode? : string | void,
-    cancelUrl? : string | void,
-    returnUrl? : string | void
-|};
-
-export type ButtonStyle = {|
-    label : $Values<typeof BUTTON_LABEL> | void,
+export type ButtonStyleType = {|
     color : $Values<typeof BUTTON_COLOR>,
     shape : $Values<typeof BUTTON_SHAPE>,
     height? : number
 |};
 
 export type ButtonStyleInputs = {|
-    label? : $PropertyType<ButtonStyle, 'label'> | void,
-    color? : $PropertyType<ButtonStyle, 'color'> | void,
-    shape? : $PropertyType<ButtonStyle, 'shape'> | void,
-    height? : $PropertyType<ButtonStyle, 'height'> | void
+    label? : $PropertyType<ButtonStyleType, 'label'> | void,
+    color? : $PropertyType<ButtonStyleType, 'color'> | void,
+    shape? : $PropertyType<ButtonStyleType, 'shape'> | void,
+    height? : $PropertyType<ButtonStyleType, 'height'> | void
 |};
 
 
-export type RenderButtonProps = {|
-    style : ButtonStyle,
-    locale : LocaleType,
+type ValidateButtonPropsReturnValue = {|
+    buttonText : string,
+    style : ButtonStyleType,
     fundingSource : ?$Values<typeof FUNDING>,
     env : $Values<typeof ENV>,
     stage? : string,
     stageUrl? : string,
     platform : $Values<typeof PLATFORM>,
-    clientID : string,
-    sessionID : string,
-    authButtonSessionID : string,
     nonce : string,
     content : string,
-    customLabel : string,
-    responseType : string
 |};
 
-export type PrerenderDetails = {|
-    win : ?CrossDomainWindowType,
+type ValidateButtonPropsInput = {|
     fundingSource : $Values<typeof FUNDING>,
-    card : ?$Values<typeof CARD>
-|};
-
-export type GetPrerenderDetails = () => PrerenderDetails | void;
-
-export type ButtonProps = {|
-    fundingSource : $Values<typeof FUNDING>,
-    onCancel : OnCancel,
-    onApprove : OnApprove,
-    onClick : OnClick,
-    getPrerenderDetails : GetPrerenderDetails,
+    inputLabel : string,
     style : ButtonStyleInputs,
-    locale : LocaleType,
-    env : $Values<typeof ENV>,
-    stage? : string,
-    stageUrl? : string,
-    platform : $Values<typeof PLATFORM>,
-    clientID : string,
-    sessionID : string,
-    authButtonSessionID : string,
+    locale : {| country: string, lang: string |},
     nonce : string,
-    scopes : $ReadOnlyArray<string>,
-    responseType : string,
-    billingOptions : BillingOptions,
-    state? : string,
-    cspNonce? : {|
-        nonce? : string
-    |}
-   |};
-
-export type ButtonPropsInputs = {|
-    clientID : string,
-    fundingSource? : $Values<typeof FUNDING>,
-    style? : ButtonStyleInputs | void,
-    locale? : $PropertyType<ButtonProps, 'locale'> | void,
-    env? : $PropertyType<ButtonProps, 'env'> | void,
-    stage? : $PropertyType<ButtonProps, 'stage'> | void,
-    stageUrl? : $PropertyType<ButtonProps, 'stageUrl'> | void,
-    platform? : $PropertyType<ButtonProps, 'platform'> | void,
-    authButtonSessionID? : $PropertyType<ButtonProps, 'sessionID'> | void,
-    sessionID? : $PropertyType<ButtonProps, 'sessionID'> | void,
-    nonce : string,
-    responseType : string,
-    csp? : {|
-        nonce? : string
-    |},
-    displayLabel? : boolean,
-    customLabel : string,
-    onClick? : OnClick
-  |};
+    |};
 
 
 export const DEFAULT_PROPS = {
@@ -177,7 +86,7 @@ const ALLOWED_COLORS = [ BUTTON_COLOR.BLACK, BUTTON_COLOR.BLUE, BUTTON_COLOR.DAR
 const COUNTRIES = values(COUNTRY);
 const PLATFORMS = values(PLATFORM);
 
-const allowedBackgroundColors = (buttonBackgroundColor, fundingSource = FUNDING.PAYPAL) => {
+const allowedBackgroundColors = (buttonBackgroundColor, fundingSource : string  = FUNDING.PAYPAL) => {
     const defaultButtonBackgroundColor = fundingSource === FUNDING.CREDIT ? BUTTON_COLOR.DARKBLUE : BUTTON_COLOR.BLUE;
     const colors = {
         base: ALLOWED_COLORS,
@@ -188,7 +97,7 @@ const allowedBackgroundColors = (buttonBackgroundColor, fundingSource = FUNDING.
     return ac.includes(buttonBackgroundColor || defaultButtonBackgroundColor);
 }
 
-export function validateButtonStyle(props : ?ButtonPropsInputs, style : ButtonStyleInputs) : ButtonStyle {
+export function validateButtonStyle(style : ButtonStyleInputs, fundingSource : string = FUNDING.PAYPAL) : ButtonStyleType {
 
     if (!style) {
         throw new Error(`Expected props.style to be set`);
@@ -200,14 +109,12 @@ export function validateButtonStyle(props : ?ButtonPropsInputs, style : ButtonSt
         height = 35,
     } = style;
 
-    const { inputLabel} = props;
-
-    if (!allowedBackgroundColors(color, props.fundingSource)) {
-        throw new Error(`Unexpected style.color for ${ props.fundingSource } button: ${ color }, expected ${ ALLOWED_COLORS.join(', ') }`);
+    if (!allowedBackgroundColors(color, fundingSource)) {
+        throw new Error(`Unexpected style.color for ${ fundingSource } button: ${ color }, expected ${ ALLOWED_COLORS.join(', ') }`);
     }
 
     if (!ALLOWED_SHAPES.includes(shape)) {
-        throw new Error(`Unexpected style.shape for ${ props.fundingSource } button: ${ shape }, expected ${ ALLOWED_SHAPES.join(', ') }`);
+        throw new Error(`Unexpected style.shape for ${ fundingSource } button: ${ shape }, expected ${ ALLOWED_SHAPES.join(', ') }`);
     }
 
     if (height !== undefined) {
@@ -221,21 +128,18 @@ export function validateButtonStyle(props : ?ButtonPropsInputs, style : ButtonSt
             throw new Error(`Expected style.height to be between ${ minHeight }px and ${ maxHeight }px - got ${ height }px`);
         }
     }
-    return { inputLabel, color, shape, height };
+    return { color, shape, height };
 }
 
-export function validateButtonProps(props : ?ButtonPropsInputs) : RenderButtonProps {
+export function validateButtonProps(props : ?ValidateButtonPropsInput) : ValidateButtonPropsReturnValue {
     if (!props) {
         throw new Error(`Expected props`);
     }
     const {
-        fundingSource,
+        fundingSource = FUNDING.PAYPAL,
         style,
-        csp = {},
         nonce,
         content = '',
-        responseType,
-        customLabel,
         platform = DEFAULT_PROPS.PLATFORM,
         locale = DEFAULT_PROPS.LOCALE
     } = props;
@@ -260,15 +164,12 @@ export function validateButtonProps(props : ?ButtonPropsInputs) : RenderButtonPr
     }
 
     return {
-        ...props,
+        fundingSource: props.fundingSource,
         buttonText: selectLocalizedText({ inputLabel: props.inputLabel, locale: `${locale.lang}-${locale.country}`}),
-        style: validateButtonStyle(props, style),
+        style: validateButtonStyle(style, props.fundingSource),
         platform,
-        sessionID: props.sessionID || uniqueID(),
-        authButtonSessionID: props.authButtonSessionID || uniqueID(),
-        nonce: csp.nonce || nonce,
+        nonce,
         content,
-        customLabel,
-        responseType,
+        env: 'production',
     };
 }

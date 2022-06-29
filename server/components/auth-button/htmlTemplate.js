@@ -2,16 +2,16 @@
 /** @jsx node */
 
 import { html } from '@krakenjs/jsx-pragmatic';
+import { FUNDING } from '@paypal/sdk-constants/src';
 
 import { AuthButton } from './button';
 
 export type htmlTemplateProps = {|
-    AuthButton : Function,
+    fundingSource : ?$Values<typeof FUNDING>,
+    inputLabel : string,
     locale : Object,
-    buttonType : string,
     cspNonce : string,
     style : Object,
-    customLabel : string,
     clientID : string,
     scopes : string,
     returnUrl : string,
@@ -20,9 +20,9 @@ export type htmlTemplateProps = {|
 |};
 
 export const htmlTemplate = ({
-    inputLabel,
+    fundingSource,
     locale,
-    buttonType = 'logIn',
+    inputLabel = 'logIn',
     cspNonce,
     style,
     clientID,
@@ -36,9 +36,9 @@ export const htmlTemplate = ({
     ${ sdkMeta.getSDKLoader({ nonce: cspNonce }) }
     </head>
     <body data-nonce="${ cspNonce }" data-client-version="1.1.1" data-render-version="1.1.1">
-    ${ AuthButton({ inputLabel, style , nonce: cspNonce, locale, buttonType }).render(html()) }
+    ${ AuthButton({ style , nonce: cspNonce, locale, inputLabel, fundingSource }).render(html()) }
     <script nonce="${ cspNonce }">
-    document.querySelector('.paypal-auth-button').addEventListener('click', function () {
+     function mClickHandler () {
              function onApproveHandler(data) {
                  // call windows.xprops.onApprove and close the window
                  window.xprops.onApprove(data).then(function() {
@@ -66,7 +66,16 @@ export const htmlTemplate = ({
         // save the pop-up "method" into local var
         var popUpClose = authWindow.close;
         authWindow.renderTo(window.parent);
-    });
+    }
+    document.querySelector('.paypal-auth-button').addEventListener('click', mClickHandler);
+    document.querySelector('.paypal-auth-button').addEventListener('keydown', function (event) {
+             if (event.isComposing || event.keyCode === 229) {
+                   return;
+             }
+           if (event.keyCode === 13 || event.keyCode === 32) {
+              mClickHandler(event);
+           }
+    }
         </script>
     </body>
     `

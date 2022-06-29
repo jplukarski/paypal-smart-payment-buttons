@@ -1,19 +1,24 @@
 /* @flow */
 /** @jsx node */
 
-import { node, type ElementNode, type ComponentNode } from '@krakenjs/jsx-pragmatic';
+import { node, type ElementNode } from '@krakenjs/jsx-pragmatic';
 import {  LOGO_COLOR, PPLogo } from '@paypal/sdk-logos';
+import { FUNDING } from '@paypal/sdk-constants/src';
 
-import { validateButtonProps, type ButtonStyleType, type ButtonPropsInputs } from './props';
+import { validateButtonProps, type ButtonStyleInputs } from './props';
 import { componentStyle } from './styles';
 import { CLASS } from './constants';
 
-type ButtonProps = ButtonPropsInputs & {|
-    onClick? : Function
+type ButtonProps = {|
+    fundingSource : ?$Values<typeof FUNDING>,
+    inputLabel : string,
+    style : ButtonStyleInputs,
+    locale : {| country: string, lang: string |},
+    nonce : string,
 |};
 
 type LogoProps = {|
-    buttonBackgroundColor : ButtonStyleType
+    buttonBackgroundColor : string
 |};
 
 const ATTRIBUTE = {
@@ -22,36 +27,24 @@ const ATTRIBUTE = {
 };
 
 // function to render the "PP" abreviated logo
-function PPSymbol({ buttonBackgroundColor = 'blue' } : LogoProps) : ComponentNode<LogoProps> {
+function getPPLogoColor({ buttonBackgroundColor = 'blue' } : LogoProps) : string {
 
     if (buttonBackgroundColor === 'blue' || buttonBackgroundColor === 'darkblue' || buttonBackgroundColor === 'black') {
-        return <PPLogo logoColor={ LOGO_COLOR.WHITE } />;
+        return LOGO_COLOR.WHITE;
     }
 
     if (buttonBackgroundColor === 'gold' || buttonBackgroundColor === 'white' || buttonBackgroundColor === 'silver') {
-        return <PPLogo logoColor={ LOGO_COLOR.BLUE } />;
+        return LOGO_COLOR.BLUE;
     }
 
     throw new Error(`Unsupported color (PP logo): ${ buttonBackgroundColor }`);
 
 }
 
+// $FlowFixMe
 export function AuthButton(props : ButtonProps) : ElementNode {
-    const { fundingSource, style,  env, nonce, buttonText, onClick } = validateButtonProps(props);
+    const { fundingSource, style,  env, nonce, buttonText } = validateButtonProps(props);
     const { shape, color } = style;
-    const clickHandler = (event, opts) => {
-        event.preventDefault();
-        event.stopPropagation();
-        event.target.blur();
-
-        onClick(event, { fundingSource, ...opts });
-    };
-
-    const keypressHandler = (event, opts) => {
-        if (event.keyCode === 13 || event.keyCode === 32) {
-            clickHandler(event, opts);
-        }
-    };
     return (
         <div class={ [
             CLASS.CONTAINER,
@@ -72,11 +65,9 @@ export function AuthButton(props : ButtonProps) : ElementNode {
                  `${ CLASS.COLOR }-${ color }`,
                  `${ CLASS.TEXT_COLOR }-white`
              ].join(' ') }
-             onClick={ clickHandler }
-             onKeyPress={ keypressHandler }
              tabindex='0'>
                 <div class={ CLASS.BUTTON_LABEL }>
-                    <PPSymbol buttonBackgroundColor={color} />
+                    <PPLogo logoColor={ getPPLogoColor({ buttonBackgroundColor: color }) } />
                     <span class={CLASS.TEXT}>{ buttonText }</span>
                 </div>
             </div>

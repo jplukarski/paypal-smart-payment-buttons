@@ -5,7 +5,6 @@ import type { LoggerType, CacheType } from '../../types';
 
 import { htmlTemplate } from './htmlTemplate';
 
-
 type AuthButtonMiddlewareOptions = {|
     logger : LoggerType,
     cache : CacheType,
@@ -15,18 +14,21 @@ export function getAuthButtonMiddleware({
     logger = defaultLogger,
     cache,
 } : AuthButtonMiddlewareOptions) : ExpressMiddleware {
-    return sdkMiddleware({ logger, cache }, {
+    const locationInformation = {
+        cdnHostName:  'string',
+        paypalDomain: 'string'
+    };
+    return sdkMiddleware({ logger, cache, locationInformation }, {
         app: ({ req, res, params, meta }) => {
             try {
                 const cspNonce = getCSPNonce(res);
                 const {
+                    fundingSource,
                     inputLabel,
                     scopes,
-                    buttonType,
                     responseType,
                     clientID,
                     returnurl,
-                    customLabel,
                     style = {}
                 } = params;
 
@@ -41,12 +43,11 @@ export function getAuthButtonMiddleware({
                 }
                 logger.info(req, `auth_button clientID: ${clientID}`);
                 const pageHTML = htmlTemplate({
+                    fundingSource,
                     inputLabel,
                     locale,
-                    buttonType,
                     cspNonce,
                     style,
-                    customLabel,
                     clientID,
                     scopes,
                     returnUrl: returnurl,
