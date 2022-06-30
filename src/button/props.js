@@ -168,7 +168,8 @@ type ServiceDataOptions = {|
     sdkMeta : string,
     content : ContentType,
     eligibility : {|
-        cardFields : boolean
+        cardFields : boolean,
+        inlinePaymentFields : boolean
     |},
     cookies : string,
     personalization : PersonalizationType
@@ -187,9 +188,11 @@ export function getServiceData({ facilitatorAccessToken, sdkMeta, content, buyer
         buyerAccessToken,
         facilitatorAccessToken,
         eligibility:  eligibility ? {
-            cardForm: eligibility.cardFields || false
+            cardForm: eligibility.cardFields || false,
+            paymentFields: eligibility.inlinePaymentFields || false
         } : {
-            cardForm: false
+            cardForm: false,
+            paymentFields: false
         },
         cookies,
         personalization
