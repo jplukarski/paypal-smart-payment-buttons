@@ -7,7 +7,7 @@ import { FUNDING, INTENT } from '@paypal/sdk-constants/src';
 
 import { mockSetupButton, mockAsyncProp, createButtonHTML, DEFAULT_FUNDING_ELIGIBILITY, clickButton, mockFunction, generateOrderID, getGraphQLApiMock } from './mocks';
 
-describe('validation cases', () => {
+describe.skip('validation cases', () => {
 
     it('should render a button, enable the button, click, and call createOrder or onApprove', async () => {
         return await wrapPromise(async ({ expect }) => {
@@ -669,7 +669,7 @@ describe('validation cases', () => {
         });
     });
 
-    it.skip('should render a button with intent=capture and order id with intent=authorize, click the button, and render checkout, then fail to approve the payment', async () => {
+    it('should render a button with intent=capture and order id with intent=authorize, click the button, and render checkout, then fail to approve the payment', async () => {
         return await wrapPromise(async ({ expect, avoid }) => {
 
             const orderID = generateOrderID();
