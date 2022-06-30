@@ -29,8 +29,10 @@ function getRenderWindow() : Object {
 }
 
 let paymentFieldsOpen = false;
-function isPaymentFieldsEligible({ props } : IsEligibleOptions) : boolean {
+function isPaymentFieldsEligible({ props, serviceData } : IsEligibleOptions) : boolean {
     const { vault, onShippingChange, experience } = props;
+    const { eligibility } = serviceData;
+    console.log(' +++++++++ eligibility +++++++++ ', eligibility);
     const componentsList = window.xprops.components || [];
 
     if (experience === EXPERIENCE.INLINE && !isCrossSiteTrackingEnabled('enforce_policy')) {
@@ -49,7 +51,7 @@ function isPaymentFieldsEligible({ props } : IsEligibleOptions) : boolean {
         return false;
     }
 
-    return true;
+    return eligibility.paymentFields;
 }
 
 function isPaymentFieldsPaymentEligible({ payment } : IsPaymentEligibleOptions) : boolean {
