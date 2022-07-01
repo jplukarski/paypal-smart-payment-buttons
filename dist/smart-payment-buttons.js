@@ -7378,7 +7378,7 @@ window.spb = function(modules) {
             logger_getLogger().info("rest_api_create_order_token");
             var headers = ((_headers15 = {}).authorization = "Bearer " + accessToken, _headers15["paypal-partner-attribution-id"] = partnerAttributionID, 
             _headers15["paypal-client-metadata-id"] = clientMetadataID, _headers15["x-app-name"] = "smart-payment-buttons", 
-            _headers15["x-app-version"] = "5.0.102", _headers15);
+            _headers15["x-app-version"] = "5.0.103", _headers15);
             var paymentSource = {
                 token: {
                     id: paymentMethodID,
@@ -7459,7 +7459,7 @@ window.spb = function(modules) {
             var _headers22;
             return callGraphQL({
                 name: "GetCheckoutDetails",
-                query: "\n            query GetCheckoutDetails($orderID: String!, $country: CountryCodes!) {\n                checkoutSession(token: $orderID) {\n                    flags{\n                        isShippingAddressRequired,\n                        isDigitalGoodsIntegration,\n                        isChangeShippingAddressAllowed\n                    }\n                    allowedCardIssuers(country: $country)\n                    cart {\n                        amounts {\n                            shippingAndHandling {\n                                currencyValue\n                                currencySymbol\n                                currencyFormat\n                            }\n                            tax {\n                                currencyValue\n                                currencySymbol\n                                currencyFormat\n                            }\n                            subtotal {\n                                currencyValue\n                                currencySymbol\n                                currencyFormat\n                            }\n                            total {\n                                currencyValue\n                                currencyCode\n                                currencyFormatSymbolISOCurrency\n                            }\n                        }\n                        shippingAddress {\n                            firstName\n                            lastName\n                            line1\n                            line2\n                            city\n                            state\n                            postalCode\n                            country\n                        }\n                        shippingMethods {\n                            id\n                            amount {\n                                currencyCode\n                                currencyValue\n                            }\n                            label\n                            selected\n                            type\n                        }\n                    }\n                }\n            }\n        ",
+                query: "\n            query GetCheckoutDetails($orderID: String!, $country: CountryCodes!) {\n                checkoutSession(token: $orderID) {\n                    merchant{\n                        name\n                    }\n                    flags{\n                        isShippingAddressRequired,\n                        isDigitalGoodsIntegration,\n                        isChangeShippingAddressAllowed\n                    }\n                    allowedCardIssuers(country: $country)\n                    cart {\n                        amounts {\n                            shippingAndHandling {\n                                currencyValue\n                                currencySymbol\n                                currencyFormat\n                            }\n                            tax {\n                                currencyValue\n                                currencySymbol\n                                currencyFormat\n                            }\n                            subtotal {\n                                currencyValue\n                                currencySymbol\n                                currencyFormat\n                            }\n                            total {\n                                currencyValue\n                                currencyCode\n                                currencyFormatSymbolISOCurrency\n                            }\n                        }\n                        shippingAddress {\n                            firstName\n                            lastName\n                            line1\n                            line2\n                            city\n                            state\n                            postalCode\n                            country\n                        }\n                        shippingMethods {\n                            id\n                            amount {\n                                currencyCode\n                                currencyValue\n                            }\n                            label\n                            selected\n                            type\n                        }\n                    }\n                }\n            }\n        ",
                 variables: {
                     orderID: orderID,
                     country: country
@@ -7581,7 +7581,7 @@ window.spb = function(modules) {
             var _ref$amount = _ref.amount, _ref$vetted = _ref.vetted, _ref$allowBillingPaym = _ref.allowBillingPayments;
             return callGraphQL({
                 name: "GetSmartWallet",
-                query: "\n            query GetSmartWallet(\n                $clientID: String!\n                $merchantID: [String!]\n                $currency: String\n                $amount: String\n                $userIDToken: String\n                $vetted: Boolean\n                $paymentMethodToken: String\n                $branded: Boolean,\n                $allowBillingPayments: Boolean\n            ) {\n                smartWallet(\n                    clientId: $clientID\n                    merchantId: $merchantID\n                    currency: $currency\n                    amount: $amount\n                    userIdToken: $userIDToken\n                    vetted: $vetted\n                    paymentMethodNonce: $paymentMethodToken\n                    branded: $branded,\n                    allowBillingPayments: $allowBillingPayments\n                ) {\n                    paypal {\n                        instruments {\n                            type\n                            label\n                            logoUrl\n                            instrumentID\n                            tokenID\n                            vendor\n                            oneClick\n                            accessToken\n                        }\n                    }\n                    credit {\n                        instruments {\n                            type\n                            label\n                            logoUrl\n                            instrumentID\n                            tokenID\n                            vendor\n                            oneClick\n                            accessToken\n                        }\n                    }\n                    card {\n                        instruments {\n                            type\n                            label\n                            logoUrl\n                            instrumentID\n                            tokenID\n                            vendor\n                            oneClick\n                        }\n                    }\n                }\n            }\n        ",
+                query: "\n            query GetSmartWallet(\n                $clientID: String!\n                $merchantID: [String!]\n                $currency: String\n                $amount: String\n                $userIDToken: String\n                $vetted: Boolean\n                $paymentMethodToken: String\n                $branded: Boolean,\n                $allowBillingPayments: Boolean\n            ) {\n                smartWallet(\n                    clientId: $clientID\n                    merchantId: $merchantID\n                    currency: $currency\n                    amount: $amount\n                    userIdToken: $userIDToken\n                    vetted: $vetted\n                    paymentMethodNonce: $paymentMethodToken\n                    branded: $branded,\n                    allowBillingPayments: $allowBillingPayments\n                ) {\n                    paypal {\n                        instruments {\n                            type\n                            label\n                            logoUrl\n                            instrumentID\n                            tokenID\n                            vendor\n                            oneClick\n                            accessToken\n                        }\n                    }\n                    credit {\n                        instruments {\n                            type\n                            label\n                            logoUrl\n                            instrumentID\n                            tokenID\n                            vendor\n                            oneClick\n                            accessToken\n                        }\n                    }\n                    card {\n                        instruments {\n                            type\n                            label\n                            logoUrl\n                            instrumentID\n                            tokenID\n                            vendor\n                            oneClick\n                        }\n                    }\n                    venmo {\n                        instruments {\n                            type\n                            label\n                            logoUrl\n                            instrumentID\n                            tokenID\n                            vendor\n                            oneClick\n                        }\n                    }\n                }\n            }\n        ",
                 variables: {
                     clientID: _ref.clientID,
                     merchantID: _ref.merchantID,
@@ -8773,7 +8773,14 @@ window.spb = function(modules) {
                                     }));
                                 }
                             };
-                            return actions;
+                            return {
+                                reject: actions.reject,
+                                updateTax: actions.updateTax,
+                                updateShippingOptions: actions.updateShippingOptions,
+                                updateShippingDiscount: actions.updateShippingDiscount,
+                                patch: actions.patch,
+                                query: actions.query
+                            };
                         }({
                             data: data,
                             actions: actions,
@@ -8919,7 +8926,13 @@ window.spb = function(modules) {
                                     }));
                                 }
                             };
-                            return actions;
+                            return {
+                                reject: actions.reject,
+                                updateShippingOption: actions.updateShippingOption,
+                                updateShippingDiscount: actions.updateShippingDiscount,
+                                patch: actions.patch,
+                                query: actions.query
+                            };
                         }({
                             data: data,
                             actions: actions,
@@ -9196,7 +9209,7 @@ window.spb = function(modules) {
                                     var _currentShippingMetho, _currentShippingMetho2;
                                     (update = {
                                         newTotal: {
-                                            label: "Total",
+                                            label: merchantName,
                                             amount: currentTotalAmount
                                         },
                                         newLineItems: []
@@ -9248,7 +9261,7 @@ window.spb = function(modules) {
                                     (update = {
                                         errors: errors,
                                         newTotal: {
-                                            label: "Total",
+                                            label: merchantName,
                                             amount: currentTotalAmount
                                         },
                                         newLineItems: []
@@ -9307,13 +9320,13 @@ window.spb = function(modules) {
                                     currentShippingContact = shippingContact;
                                     shippingMethod && (currentShippingMethod = shippingMethod);
                                     return order_getDetailedOrderInfo(orderID, locale.country).then((function(updatedOrder) {
-                                        var _currentShippingMetho7, _currentShippingMetho8, _currentShippingMetho9;
+                                        var _currentShippingMetho7, _updatedOrder$checkou2, _updatedOrder$checkou3, _currentShippingMetho8, _currentShippingMetho9;
                                         var _updatedOrder$checkou = updatedOrder.checkoutSession.cart.amounts, updatedTaxValue = _updatedOrder$checkou.tax.currencyValue, updatedSubtotalValue = _updatedOrder$checkou.subtotal.currencyValue, updatedTotalValue = _updatedOrder$checkou.total.currencyValue;
                                         currentShippingAmount = (null == (_currentShippingMetho7 = currentShippingMethod) ? void 0 : _currentShippingMetho7.amount) || currentShippingAmount || "0.00";
                                         currentTotalAmount = updatedTotalValue;
                                         var update = {
                                             newTotal: {
-                                                label: "Total",
+                                                label: merchantName = (null == updatedOrder || null == (_updatedOrder$checkou2 = updatedOrder.checkoutSession) || null == (_updatedOrder$checkou3 = _updatedOrder$checkou2.merchant) ? void 0 : _updatedOrder$checkou3.name) || "Total",
                                                 amount: updatedTotalValue
                                             },
                                             newLineItems: []
@@ -9342,8 +9355,9 @@ window.spb = function(modules) {
                                 return orderPromise.then((function(orderID) {
                                     var country = locale.country;
                                     return order_getDetailedOrderInfo(orderID, country).then((function(order) {
+                                        var _order$checkoutSessio2, _order$checkoutSessio3;
                                         var applePayRequest = function(countryCode, order) {
-                                            var _order$checkoutSessio = order.checkoutSession, _order$checkoutSessio2 = _order$checkoutSessio.flags, isShippingAddressRequired = _order$checkoutSessio2.isShippingAddressRequired, isChangeShippingAddressAllowed = _order$checkoutSessio2.isChangeShippingAddressAllowed, _order$checkoutSessio3 = _order$checkoutSessio.cart, _order$checkoutSessio4 = _order$checkoutSessio3.amounts, shippingValue = _order$checkoutSessio4.shippingAndHandling.currencyValue, taxValue = _order$checkoutSessio4.tax.currencyValue, subtotalValue = _order$checkoutSessio4.subtotal.currencyValue, _order$checkoutSessio5 = _order$checkoutSessio4.total, currencyCode = _order$checkoutSessio5.currencyCode, totalValue = _order$checkoutSessio5.currencyValue, shippingAddress = _order$checkoutSessio3.shippingAddress, shippingMethods = _order$checkoutSessio3.shippingMethods;
+                                            var _order$checkoutSessio = order.checkoutSession, name = _order$checkoutSessio.merchant.name, _order$checkoutSessio2 = _order$checkoutSessio.flags, isShippingAddressRequired = _order$checkoutSessio2.isShippingAddressRequired, isChangeShippingAddressAllowed = _order$checkoutSessio2.isChangeShippingAddressAllowed, _order$checkoutSessio3 = _order$checkoutSessio.cart, _order$checkoutSessio4 = _order$checkoutSessio3.amounts, shippingValue = _order$checkoutSessio4.shippingAndHandling.currencyValue, taxValue = _order$checkoutSessio4.tax.currencyValue, subtotalValue = _order$checkoutSessio4.subtotal.currencyValue, _order$checkoutSessio5 = _order$checkoutSessio4.total, currencyCode = _order$checkoutSessio5.currencyCode, totalValue = _order$checkoutSessio5.currencyValue, shippingAddress = _order$checkoutSessio3.shippingAddress, shippingMethods = _order$checkoutSessio3.shippingMethods;
                                             var supportedNetworks = function(issuers) {
                                                 void 0 === issuers && (issuers = []);
                                                 var validNetworks = {
@@ -9422,7 +9436,7 @@ window.spb = function(modules) {
                                                 shippingMethods: applePayShippingMethods || [],
                                                 lineItems: [],
                                                 total: {
-                                                    label: "Total",
+                                                    label: name,
                                                     amount: totalValue,
                                                     type: "final"
                                                 }
@@ -9450,6 +9464,7 @@ window.spb = function(modules) {
                                         currentTaxAmount = taxValue;
                                         currentSubtotalAmount = subtotalValue;
                                         currentTotalAmount = totalValue;
+                                        merchantName = (null == order || null == (_order$checkoutSessio2 = order.checkoutSession) || null == (_order$checkoutSessio3 = _order$checkoutSessio2.merchant) ? void 0 : _order$checkoutSessio3.name) || "Total";
                                         return applePay(4, applePayRequest).then((function(response) {
                                             var begin = response.begin, addEventListener = response.addEventListener, completeMerchantValidation = response.completeMerchantValidation, completeShippingContactSelection = response.completeShippingContactSelection, completePaymentMethodSelection = response.completePaymentMethodSelection, completeShippingMethodSelection = response.completeShippingMethodSelection, completePayment = response.completePayment;
                                             promise_ZalgoPromise.all([ addEventListener("validatemerchant", (function(_ref6) {
@@ -9492,7 +9507,7 @@ window.spb = function(modules) {
                                                 logApplePayEvent("paymentmethodselected", _ref7.paymentMethod);
                                                 var update = {
                                                     newTotal: {
-                                                        label: "Total",
+                                                        label: merchantName,
                                                         amount: currentTotalAmount || "0.00"
                                                     },
                                                     newLineItems: []
@@ -9520,7 +9535,7 @@ window.spb = function(modules) {
                                                     var _currentShippingMetho12;
                                                     var update = {
                                                         newTotal: {
-                                                            label: "Total",
+                                                            label: merchantName,
                                                             amount: currentTotalAmount || "0.00"
                                                         },
                                                         newLineItems: []
@@ -9601,7 +9616,7 @@ window.spb = function(modules) {
                                     handleApplePayError("applepay_create_order_error", err);
                                 }));
                             }();
-                            var currentTotalAmount, currentSubtotalAmount, currentTaxAmount, currentShippingAmount, currentShippingContact, currentShippingMethod, onShippingChangeCallback, orderPromise;
+                            var currentTotalAmount, currentSubtotalAmount, currentTaxAmount, currentShippingAmount, currentShippingContact, currentShippingMethod, merchantName, onShippingChangeCallback, orderPromise;
                         })).catch((function(err) {
                             return close().then((function() {
                                 var _getLogger$error$trac;
@@ -10318,6 +10333,7 @@ window.spb = function(modules) {
             return emitter;
         }));
         var cardFormOpen = !1;
+        var inlineExperimentLogged = !1;
         function highlightCard(card) {
             card && querySelectorAll("[data-card]").forEach((function(el) {
                 el.style.opacity = el.getAttribute("data-card") === card ? "1" : "0.1";
@@ -10343,7 +10359,6 @@ window.spb = function(modules) {
                 var vault = props.vault, onShippingChange = props.onShippingChange;
                 var eligibility = _ref.serviceData.eligibility;
                 if ("inline" === props.experience && !isCrossSiteTrackingEnabled("enforce_policy")) {
-                    var _getLogger$info$track;
                     var inlinexoExperiment = (name = "inlinexo", logger = logger_getLogger(), log = logger || src_logger_getLogger(), 
                     experiment({
                         name: name,
@@ -10363,8 +10378,13 @@ window.spb = function(modules) {
                         }
                     }));
                     var treatment = inlinexoExperiment.getTreatment();
-                    logger_getLogger().info(treatment).track((_getLogger$info$track = {}, _getLogger$info$track.pxp_exp_id = "inlinexo", 
-                    _getLogger$info$track.pxp_trtmnt_id = treatment, _getLogger$info$track)).flush();
+                    if (!inlineExperimentLogged) {
+                        var _getLogger$info$track;
+                        inlineExperimentLogged = !0;
+                        logger_getLogger().info(treatment).track((_getLogger$info$track = {}, _getLogger$info$track.pxp_exp_id = "inlinexo", 
+                        _getLogger$info$track.pxp_trtmnt_id = treatment, _getLogger$info$track.transition_name = "process_pxp_check", 
+                        _getLogger$info$track.state_name = "pxp_check", _getLogger$info$track)).flush();
+                    }
                     return !inlinexoExperiment.isEnabled();
                 }
                 var name, logger, log;
@@ -13214,9 +13234,10 @@ window.spb = function(modules) {
                 })).track(((_getLogger$addPayload = {}).transition_name = "process_button_click", 
                 _getLogger$addPayload.chosen_fi_type = instrumentType, _getLogger$addPayload.payment_flow = name, 
                 _getLogger$addPayload.is_vault = instrumentType ? "1" : "0", _getLogger$addPayload.info_msg = enableNativeCheckout ? "tester" : "", 
-                _getLogger$addPayload.experience = "inline" === experience ? "inline" : "", _getLogger$addPayload));
-                logger_getLogger().info("cross_site_tracking_enabled_" + String(isCrossSiteTrackingEnabled("enforce_policy"))).track((_getLogger$info$track = {}, 
-                _getLogger$info$track.transition_name = "cross_site_tracking_enabled_" + String(isCrossSiteTrackingEnabled("enforce_policy")), 
+                _getLogger$addPayload.experience = "inline" === experience ? "inline" : "default", 
+                _getLogger$addPayload));
+                logger_getLogger().info("cross_site_tracking_" + (isCrossSiteTrackingEnabled("enforce_policy") ? "enabled" : "disabled")).track((_getLogger$info$track = {}, 
+                _getLogger$info$track.transition_name = "cross_site_tracking_" + (isCrossSiteTrackingEnabled("enforce_policy") ? "enabled" : "disabled"), 
                 _getLogger$info$track)).flush();
                 var loggingPromise = promise_ZalgoPromise.try((function() {
                     return window.xprops.sessionState.get("__confirm_" + fundingSource + "_payload__").then((function(confirmPayload) {
@@ -13239,17 +13260,18 @@ window.spb = function(modules) {
                     if (!1 !== valid) {
                         spinner && enableLoadingSpinner(button);
                         var updateClientConfigPromise = createOrder().then((function(orderID) {
+                            var experienceFlow = "inline" === experience ? "ACCELERATED" : userExperienceFlow;
                             if (updateFlowClientConfig) return updateFlowClientConfig({
                                 orderID: orderID,
                                 payment: payment,
-                                userExperienceFlow: userExperienceFlow,
+                                userExperienceFlow: experienceFlow,
                                 buttonSessionID: buttonSessionID
                             });
                             updateButtonClientConfig({
                                 orderID: orderID,
                                 fundingSource: fundingSource,
                                 inline: inline,
-                                userExperienceFlow: userExperienceFlow
+                                userExperienceFlow: experienceFlow
                             }).catch((function(err) {
                                 logger_getLogger().error("update_client_config_error", {
                                     err: stringifyError(err)
@@ -14026,7 +14048,7 @@ window.spb = function(modules) {
                 logger.addTrackingBuilder((function() {
                     var _ref3;
                     return (_ref3 = {}).context_type = "button_session_id", _ref3.context_id = buttonSessionID, 
-                    _ref3.button_session_id = buttonSessionID, _ref3.button_version = "5.0.102", _ref3.button_correlation_id = buttonCorrelationID, 
+                    _ref3.button_session_id = buttonSessionID, _ref3.button_version = "5.0.103", _ref3.button_correlation_id = buttonCorrelationID, 
                     _ref3.stickiness_id = isAndroidChrome() ? stickinessID : null, _ref3.bn_code = partnerAttributionID, 
                     _ref3.user_action = commit ? "commit" : "continue", _ref3.seller_id = merchantID[0], 
                     _ref3.merchant_domain = merchantDomain, _ref3.t = Date.now().toString(), _ref3.time = Date.now().toString(), 
