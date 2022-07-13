@@ -75,7 +75,7 @@ export const htmlTemplate = ({
            if (event.keyCode === 13 || event.keyCode === 32) {
               mClickHandler(event);
            }
-    }
+    })
         </script>
     </body>
     `
