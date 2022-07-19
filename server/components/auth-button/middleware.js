@@ -33,8 +33,8 @@ export function getAuthButtonMiddleware({
                 } = params;
 
                 const locale = {
-                    country: req.headers['accept-language'].split(',')[0].split('-')[1],
-                    lang: req.headers['accept-language'].split(',')[0].split('-')[0]
+                    country: req.headers['accept-language'] && req.headers['accept-language'].split(',')[0].split('-')[1],
+                    lang: req.headers['accept-language'] && req.headers['accept-language'].split(',')[0].split('-')[0]
                 }
 
                 if (!clientID) {

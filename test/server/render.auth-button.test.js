@@ -47,7 +47,6 @@ test('should do a basic button render and succeed', async () => {
     const status = res.getStatus();
     const contentType = res.getHeader('content-type');
     const html = res.getBody();
-
     if (status !== 200) {
         throw new Error(`Expected response status to be 200, got ${ status }`);
     }
@@ -95,14 +94,12 @@ test('Should pass the props correctly to the window handler.', async () => {
 
     // These are considered valid (validateButtonProps pass)
     const query = {
-        style: {
-            label: 'Log in'
-        },
         scopes: 'testscope',
         returnurl: 'testredirecturi',
         responseType: 'testresponsetype',
         clientID:           'xyz',
     };
+
     const req = mockReq({
         query
     });
@@ -124,9 +121,58 @@ test('Should pass the props correctly to the window handler.', async () => {
     }
 
     const tests = Object.entries(query) // $FlowFixMe
-                        .map(([k, v]) => ({ k, v: html.includes(typeof v === 'object' ? v.label : v) }))
+                        .map(([k, v]) => ({ k, v: html.includes(v) }))
 
     if (tests.some(({ v }) => !v)) {
         throw new Error(`Expected ${tests.filter(({ v }) => !v).map(({ k }) => k).join(',')} query parameters to be passed to the Auth clcik handler`);
     }
+});
+
+test('Should render the correct message based on inputlabel.', async () => {
+
+    const authButtonMiddleware = getAuthButtonMiddleware({
+        cache,
+        // $FlowFixMe
+        logger,
+    });
+
+    // These are considered valid (validateButtonProps pass)
+    const query = (inputLabel) => ({
+        inputLabel,
+        scopes: 'testscope',
+        returnurl: 'testredirecturi',
+        responseType: 'testresponsetype',
+        clientID:           'xyz',
+    });
+
+    const labels = {
+        connect: "Connect with PayPal",
+        login: "Log in with PayPal",
+        signup: "Sign up with PayPal",
+        continue: "Continue with PayPal"
+    };
+
+    const req = (inputLabel) => mockReq({
+        query: query(inputLabel)
+    });
+
+    await Promise.all(Object.keys(labels).map(async label => {
+        const res = mockRes();
+        // $FlowFixMe
+        await authButtonMiddleware(req(label), res);
+        const status = res.getStatus();
+        const html = res.getBody();
+
+        if(!html) {
+            throw new Error(`Error generating button html null or undefined status: ${ status }`);
+        }
+
+        if(status !== 200) {
+            throw new Error(`Expected status code to be 200, got ${ status }`);
+        }
+
+        if(!html.includes(labels[label])) {
+            throw new Error(`Expected button text to be ${ labels[label] }`);
+        }
+    }));
 });

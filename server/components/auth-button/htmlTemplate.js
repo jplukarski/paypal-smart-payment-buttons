@@ -22,7 +22,7 @@ export type htmlTemplateProps = {|
 export const htmlTemplate = ({
     fundingSource,
     locale,
-    inputLabel = 'logIn',
+    inputLabel = 'login',
     cspNonce,
     style,
     clientID,
