@@ -2,7 +2,7 @@
 
 import { ZalgoPromise } from '@krakenjs/zalgo-promise/src';
 import { FUNDING } from '@paypal/sdk-constants/src';
-import { memoize, querySelectorAll, debounce, noop, isCrossSiteTrackingEnabled } from '@krakenjs/belter/src';
+import { memoize, querySelectorAll, debounce, noop } from '@krakenjs/belter/src';
 import { getParent, getTop } from '@krakenjs/cross-domain-utils/src';
 import { EXPERIENCE } from '@paypal/checkout-components/src/constants/button';
 
@@ -29,12 +29,12 @@ function getRenderWindow() : Object {
 }
 
 let paymentFieldsOpen = false;
-function isPaymentFieldsEligible({ props, serviceData } : IsEligibleOptions) : boolean {
+function isPaymentFieldsEligible({ props } : IsEligibleOptions) : boolean {
     const { vault, onShippingChange, experience } = props;
-    const { eligibility } = serviceData;
+    // const { eligibility } = serviceData;
     const componentsList = window.xprops.components || [];
 
-    if (experience === EXPERIENCE.INLINE && !isCrossSiteTrackingEnabled('enforce_policy')) {
+    if (experience === EXPERIENCE.INLINE) {
         return false;
     }
 
@@ -49,8 +49,8 @@ function isPaymentFieldsEligible({ props, serviceData } : IsEligibleOptions) : b
     if (componentsList.includes('marks')){
         return false;
     }
-
-    return eligibility.paymentFields;
+    return true;
+    // return eligibility.paymentFields;
 }
 
 function isPaymentFieldsPaymentEligible({ payment } : IsPaymentEligibleOptions) : boolean {

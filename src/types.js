@@ -2,10 +2,13 @@
 
 import type { CrossDomainWindowType } from '@krakenjs/cross-domain-utils/src';
 import type { ZalgoPromise } from '@krakenjs/zalgo-promise/src';
-import { COUNTRY, LANG, CARD, WALLET_INSTRUMENT, FUNDING } from '@paypal/sdk-constants/src';
+import { COUNTRY, LANG, CARD, CURRENCY, WALLET_INSTRUMENT, FUNDING } from '@paypal/sdk-constants/src';
 import type { ProxyWindow as _ProxyWindow } from '@krakenjs/post-robot/src';
 
 import { CONTEXT, QRCODE_STATE } from './constants';
+import type { OnShippingChangeData } from './props/onShippingChange';
+import type { OnShippingAddressChangeData } from './props/onShippingAddressChange';
+import type { OnShippingOptionsChangeData } from './props/onShippingOptionsChange';
 import type { ConfirmData } from './api/order';
 
 // export something to force webpack to see this as an ES module
@@ -46,9 +49,11 @@ export type CheckoutProps = {|
     createOrder : () => ZalgoPromise<string>,
     onApprove : ({| payerID : string, paymentID : ?string, billingToken : ?string, subscriptionID : ?string, authCode : ?string |}) => ZalgoPromise<void> | void,
     onComplete? : () => ZalgoPromise<void> | void,
-    onAuth : ({| accessToken : string, doLSATCapture? : boolean |}) => ZalgoPromise<void> | void,
+    onAuth : ({| accessToken : string |}) => ZalgoPromise<void> | void,
     onCancel : () => ZalgoPromise<void> | void,
-    onShippingChange? : ?({| |}, {| resolve : () => ZalgoPromise<void>, reject : () => ZalgoPromise<void> |}) => ZalgoPromise<void> | void,
+    onShippingChange? : ?(data : OnShippingChangeData, {| resolve : () => ZalgoPromise<void>, reject : (string) => ZalgoPromise<void> |}) => ZalgoPromise<void> | void,
+    onShippingAddressChange : ?(data : OnShippingAddressChangeData, {| resolve : () => ZalgoPromise<void>, reject : (string) => ZalgoPromise<void> |}) => ZalgoPromise<void> | void,
+    onShippingOptionsChange : ?(data : OnShippingOptionsChangeData, {| resolve : () => ZalgoPromise<void>, reject : (string) => ZalgoPromise<void> |}) => ZalgoPromise<void> | void,
     onError : (mixed) => ZalgoPromise<void> | void,
     onClose : () => ZalgoPromise<void> | void,
     fundingSource : FundingType,
@@ -244,4 +249,41 @@ export type PersonalizationType = {|
             click : string
         |}
     |}
+|};
+
+export type Breakdown = {|
+    item_total? : {|
+        currency_code : $Values<typeof CURRENCY>,
+        value : string
+    |},
+    shipping? : {|
+        currency_code : $Values<typeof CURRENCY>,
+        value : string
+    |},
+    handling? : {|
+        currency_code : $Values<typeof CURRENCY>,
+        value : string
+    |},
+    tax_total? : {|
+        currency_code : $Values<typeof CURRENCY>,
+        value : string
+    |},
+    insurance? : {|
+        currency_code : $Values<typeof CURRENCY>,
+        value : string
+    |},
+    shipping_discount? : {|
+        currency_code : $Values<typeof CURRENCY>,
+        value : string
+    |},
+    discount? : {|
+        currency_code : $Values<typeof CURRENCY>,
+        value : string
+    |}
+|};
+
+export type OrderAmount = {|
+    breakdown? : Breakdown,
+    currency_code : $Values<typeof CURRENCY>,
+    value : string
 |};

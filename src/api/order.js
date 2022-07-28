@@ -245,9 +245,7 @@ export function authorizeOrder(orderID : string, { facilitatorAccessToken, buyer
     });
 }
 
-type PatchData = {|
-
-|};
+type PatchData = mixed;
 
 export function patchOrder(orderID : string, data : PatchData, { facilitatorAccessToken, buyerAccessToken, partnerAttributionID, forceRestAPI = false } : OrderAPIOptions) : ZalgoPromise<OrderResponse> {
     getLogger().info(`patch_order_lsat_upgrade_${ getLsatUpgradeCalled() ? 'called' : 'not_called' }`);
@@ -303,17 +301,26 @@ export function patchOrder(orderID : string, data : PatchData, { facilitatorAcce
         return patchData;
     });
 }
+type ConfirmPaymentSource = {|
+    [$Values<typeof FUNDING>] : {|
+        country_code? : string | null,
+        name? : string | null,
+        email? : string | null,
+        bic? : string | null,
+        bank_id? : string | null,
+        type?: string | 'NONCE',
+        id?: string
+    |}
+|}
+type LimitedNonceSource = {|
+    token : {|
+        id : string,
+        type : 'NONCE'
+    |},
+|}
 
 export type ConfirmData = {|
-    payment_source : {
-        [$Values<typeof FUNDING>] : {|
-            country_code? : string | null,
-            name? : string | null,
-            email? : string | null,
-            bic? : string | null,
-            bank_id? : string | null
-        |}
-      }
+    payment_source : ConfirmPaymentSource | LimitedNonceSource
 |};
 
 export function confirmOrderAPI(orderID : string, data : ConfirmData, { facilitatorAccessToken, partnerAttributionID } : OrderAPIOptions) : ZalgoPromise<OrderConfirmResponse> {
@@ -358,6 +365,17 @@ export type ValidatePaymentMethodResponse = {|
         description? : string
     |}>
 |};
+
+
+export function buildPaymentSource(tokenID: string): LimitedNonceSource {
+    const paymentSource = {
+        token: {
+            id:   tokenID,
+            type: 'NONCE'
+        }
+    };
+    return paymentSource;
+}
 
 type PaymentSource = {|
     token : {|
@@ -438,20 +456,29 @@ export function subscriptionIdToCartId(subscriptionID : string) : ZalgoPromise<s
     });
 }
 
-export function enableVault({ orderID, clientAccessToken } : {| orderID : string, clientAccessToken : string |}) : ZalgoPromise<mixed> {
+export function enableVault({ orderID, clientAccessToken, fundingSource, integrationArtifact, userExperienceFlow, productFlow, buttonSessionID } : {| orderID : string, clientAccessToken : string, fundingSource : string, integrationArtifact : string, userExperienceFlow : string, productFlow : string, buttonSessionID : string |}) : ZalgoPromise<mixed> {
+    const clientConfig = {
+        fundingSource,
+        integrationArtifact,
+        userExperienceFlow,
+        productFlow,
+        buttonSessionID,
+    }
     return callGraphQL({
         name:  'EnableVault',
         query: `
             mutation EnableVault(
-                $orderID : String!
+                $orderID : String!,
+                $clientConfig: ClientConfigInput!
             ) {
                 enableVault(
-                    token: $orderID
+                    token: $orderID,
+                    clientConfig: $clientConfig
                 )
             }
         `,
         variables: {
-            orderID
+            orderID, clientConfig
         },
         headers: {
             [ HEADERS.ACCESS_TOKEN ]:   clientAccessToken,
@@ -646,6 +673,71 @@ export const getSupplementalOrderInfo : GetSupplementalOrderInfo = memoize(order
     return callGraphQL({
         name:  'GetCheckoutDetails',
         query: `
+        query GetCheckoutDetails($orderID: String!) {
+            checkoutSession(token: $orderID) {
+                cart {
+                    billingType
+                    intent
+                    paymentId
+                    billingToken
+                    amounts {
+                        total {
+                            currencyValue
+                            currencyCode
+                            currencyFormatSymbolISOCurrency
+                        }
+                    }
+                    supplementary {
+                        initiationIntent
+                    }
+                    category
+                }
+                flags {
+                    isChangeShippingAddressAllowed
+                }
+                payees {
+                    merchantId
+                    email {
+                        stringValue
+                    }
+                }
+            }
+        }
+        `,
+        variables: { orderID },
+        headers:   {
+            [HEADERS.CLIENT_CONTEXT]: orderID
+        }
+    });
+});
+type ShippingOrderInfo = {|
+    checkoutSession : {|
+        cart : {|
+            amounts : {|
+                total : {|
+                    currencyFormatSymbolISOCurrency : string,
+                    currencyValue : string,
+                    currencyCode : string
+                |}
+            |},
+            shippingAddress? : ShippingAddress,
+            shippingMethods? : $ReadOnlyArray<ShippingMethod>
+        |},
+        buyer? : {|
+            userId? : string
+        |},
+        flags : {|
+            isChangeShippingAddressAllowed? : boolean
+        |}
+    |}
+|};
+
+export type GetShippingOrderInfo = (string) => ZalgoPromise<ShippingOrderInfo>;
+
+export const getShippingOrderInfo : GetShippingOrderInfo = orderID => {
+    return callGraphQL({
+        name:  'GetCheckoutDetails',
+        query: `
             query GetCheckoutDetails($orderID: String!) {
                 checkoutSession(token: $orderID) {
                     cart {
@@ -664,6 +756,26 @@ export const getSupplementalOrderInfo : GetSupplementalOrderInfo = memoize(order
                             initiationIntent
                         }
                         category
+                        shippingAddress {
+                            firstName
+                            lastName
+                            line1
+                            line2
+                            city
+                            state
+                            postalCode
+                            country
+                        }
+                        shippingMethods {
+                            id
+                            amount {
+                                currencyCode
+                                currencyValue
+                            }
+                            label
+                            selected
+                            type
+                        }
                     }
                     flags {
                         isChangeShippingAddressAllowed
@@ -682,10 +794,13 @@ export const getSupplementalOrderInfo : GetSupplementalOrderInfo = memoize(order
             [HEADERS.CLIENT_CONTEXT]: orderID
         }
     });
-});
+};
 
 export type DetailedOrderInfo = {|
     checkoutSession : {|
+        merchant : {|
+            name : string
+        |},
         flags : {|
             isShippingAddressRequired : boolean,
             isDigitalGoodsIntegration : boolean,
@@ -732,6 +847,9 @@ export const getDetailedOrderInfo : GetDetailedOrderInfo = (orderID, country) =>
         query: `
             query GetCheckoutDetails($orderID: String!, $country: CountryCodes!) {
                 checkoutSession(token: $orderID) {
+                    merchant{
+                        name
+                    }
                     flags{
                         isShippingAddressRequired,
                         isDigitalGoodsIntegration,
