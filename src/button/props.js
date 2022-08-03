@@ -6,7 +6,7 @@ import type { CustomStyle } from '@paypal/checkout-components/src/types';
 import { EXPERIENCE } from '@paypal/checkout-components/src/constants/button';
 
 import type { ContentType, ProxyWindow, Wallet, CheckoutFlowType, CardFormFlowType,
-    ThreeDomainSecureFlowType, MenuFlowType, PersonalizationType, QRCodeType, PaymentFieldsFlowType } from '../types';
+    ThreeDomainSecureFlowType, MenuFlowType, PersonalizationType, QRCodeType, PaymentFieldsFlowType, InlinePaymentFieldsEligibility } from '../types';
 import { type FirebaseConfig } from '../api';
 import { getNonce } from '../lib';
 import { getProps, type XProps, type Props } from '../props/props';
@@ -152,7 +152,8 @@ export type ServiceData = {|
     buyerAccessToken : ?string,
     content : ContentType,
     eligibility : {|
-        cardForm : boolean
+        cardForm : boolean,
+        paymentFields : InlinePaymentFieldsEligibility
     |},
     cookies : string,
     personalization : PersonalizationType
@@ -169,7 +170,7 @@ type ServiceDataOptions = {|
     content : ContentType,
     eligibility : {|
         cardFields : boolean,
-        inlinePaymentFields : boolean
+        inlinePaymentFields : InlinePaymentFieldsEligibility
     |},
     cookies : string,
     personalization : PersonalizationType
@@ -189,10 +190,16 @@ export function getServiceData({ facilitatorAccessToken, sdkMeta, content, buyer
         facilitatorAccessToken,
         eligibility:  eligibility ? {
             cardForm: eligibility.cardFields || false,
-            paymentFields: eligibility.inlinePaymentFields || false
+            paymentFields: eligibility.inlinePaymentFields || {
+                inlineEligibleAPMs : [],
+                isInlineEnabled : false
+            }
         } : {
             cardForm: false,
-            paymentFields: false
+            paymentFields: {
+                inlineEligibleAPMs : [],
+                isInlineEnabled : false
+            }
         },
         cookies,
         personalization

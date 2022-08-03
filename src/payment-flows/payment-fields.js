@@ -4,9 +4,8 @@ import { ZalgoPromise } from '@krakenjs/zalgo-promise/src';
 import { FUNDING } from '@paypal/sdk-constants/src';
 import { memoize, querySelectorAll, debounce, noop } from '@krakenjs/belter/src';
 import { getParent, getTop } from '@krakenjs/cross-domain-utils/src';
-import { EXPERIENCE } from '@paypal/checkout-components/src/constants/button';
 
-import { DATA_ATTRIBUTES, TARGET_ELEMENT, CONTEXT, INLINE_PAYMENT_FIELDS_APM_LIST } from '../constants';
+import { DATA_ATTRIBUTES, TARGET_ELEMENT, CONTEXT } from '../constants';
 import { unresolvedPromise, promiseNoop } from '../lib';
 import { getConfirmOrder } from '../props';
 import type { ConfirmData } from '../api';
@@ -29,14 +28,10 @@ function getRenderWindow() : Object {
 }
 
 let paymentFieldsOpen = false;
-function isPaymentFieldsEligible({ props } : IsEligibleOptions) : boolean {
-    const { vault, onShippingChange, experience } = props;
-    // const { eligibility } = serviceData;
+function isPaymentFieldsEligible({ props, serviceData } : IsEligibleOptions) : boolean {
+    const { vault, onShippingChange } = props;
+    const { eligibility } = serviceData;
     const componentsList = window.xprops.components || [];
-
-    if (experience === EXPERIENCE.INLINE) {
-        return false;
-    }
 
     if (vault) {
         return false;
@@ -49,18 +44,20 @@ function isPaymentFieldsEligible({ props } : IsEligibleOptions) : boolean {
     if (componentsList.includes('marks')){
         return false;
     }
-    return true;
-    // return eligibility.paymentFields;
+
+    return eligibility.paymentFields.isInlineEnabled;
 }
 
-function isPaymentFieldsPaymentEligible({ payment } : IsPaymentEligibleOptions) : boolean {
+function isPaymentFieldsPaymentEligible({ payment, serviceData } : IsPaymentEligibleOptions) : boolean {
     const { win, fundingSource } = payment || {};
+    const { eligibility } = serviceData;
+    const inlineEligibleAPMs = eligibility.paymentFields.inlineEligibleAPMs || [];
 
     if (win) {
         return false;
     }
 
-    if (fundingSource && !INLINE_PAYMENT_FIELDS_APM_LIST.includes(fundingSource)) {
+    if (fundingSource && !inlineEligibleAPMs.includes(fundingSource)) {
         return false;
     }
 
@@ -93,7 +90,7 @@ function unhighlightFundingSources() {
 const getElements = (fundingSource : ?$Values<typeof FUNDING>) : {| buttonsContainer : HTMLElement, fundingSourceButtonsContainer : HTMLElement, paymentFieldsContainer : HTMLElement |} => {
     const buttonsContainer = document.querySelector('#buttons-container');
     let fundingSourceButtonsContainer;
-    if(fundingSource){
+    if (fundingSource) {
         fundingSourceButtonsContainer = document.querySelector(`[${ DATA_ATTRIBUTES.FUNDING_SOURCE }="${ fundingSource }"]`);
     }
     const paymentFieldsContainer = document.querySelector('#payment-fields-container');
@@ -130,9 +127,8 @@ const slideUpButtons = (fundingSource : ?$Values<typeof FUNDING>) => {
     recalculateMargin();
 };
 
-const slideDownButtons = () => {
-    const { buttonsContainer } = getElements();
-
+const slideDownButtons = (fundingSource : ?$Values<typeof FUNDING>) => {
+    const { buttonsContainer } = getElements(fundingSource);
     unhighlightFundingSources();
     window.removeEventListener('resize', resizeListener);
     buttonsContainer.style.removeProperty('transition-duration');
@@ -175,7 +171,6 @@ function initPaymentFields({ props, components, payment, serviceData, config } :
     const { render, close: closePaymentFields } = PaymentFields({
         createOrder,
         fundingSource,
-        // fieldsSessionID,
         onContinue: (data : ConfirmData, orderID: string) => {
             return getConfirmOrder({
                 orderID, payload: data, partnerAttributionID
@@ -229,7 +224,7 @@ function initPaymentFields({ props, components, payment, serviceData, config } :
         onFieldsClose: () => {
             return closePaymentFields().then(() => {
                 paymentFieldsOpen = false;
-                slideDownButtons();
+                slideDownButtons(fundingSource);
             })
         },
         onError,
@@ -254,10 +249,10 @@ function initPaymentFields({ props, components, payment, serviceData, config } :
         return closePaymentFields().then(() => {
             forceClosed = true;
             paymentFieldsOpen = false;
-            if(instance) {
+            if (instance) {
                 instance.close();
             }
-            slideDownButtons();
+            slideDownButtons(fundingSource);
         });
     };
 

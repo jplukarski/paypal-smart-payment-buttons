@@ -149,7 +149,7 @@ export function getButtonMiddleware({
             const experiments = await getExperimentsPromise;
             const eligibility = {
                 cardFields: experiments.isCardFieldsExperimentEnabled,
-                inlinePaymentFields: experiments.isInlinePaymentFieldsExperimentEnabled
+                inlinePaymentFields: experiments.isInlinePaymentFieldsEligibleExperiment
             };
 
             logger.info(req, `button_render_version_${ sdkVersion }`);

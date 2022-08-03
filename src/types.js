@@ -52,8 +52,8 @@ export type CheckoutProps = {|
     onAuth : ({| accessToken : string |}) => ZalgoPromise<void> | void,
     onCancel : () => ZalgoPromise<void> | void,
     onShippingChange? : ?(data : OnShippingChangeData, {| resolve : () => ZalgoPromise<void>, reject : (string) => ZalgoPromise<void> |}) => ZalgoPromise<void> | void,
-    onShippingAddressChange : ?(data : OnShippingAddressChangeData, {| resolve : () => ZalgoPromise<void>, reject : (string) => ZalgoPromise<void> |}) => ZalgoPromise<void> | void,
-    onShippingOptionsChange : ?(data : OnShippingOptionsChangeData, {| resolve : () => ZalgoPromise<void>, reject : (string) => ZalgoPromise<void> |}) => ZalgoPromise<void> | void,
+    onShippingAddressChange? : ?(data : OnShippingAddressChangeData, {| resolve : () => ZalgoPromise<void>, reject : (string) => ZalgoPromise<void> |}) => ZalgoPromise<void> | void,
+    onShippingOptionsChange? : ?(data : OnShippingOptionsChangeData, {| resolve : () => ZalgoPromise<void>, reject : (string) => ZalgoPromise<void> |}) => ZalgoPromise<void> | void,
     onError : (mixed) => ZalgoPromise<void> | void,
     onClose : () => ZalgoPromise<void> | void,
     fundingSource : FundingType,
@@ -162,6 +162,11 @@ export type ContentType = {|
 export type PostRobot = {|
 
 |};
+
+export type InlinePaymentFieldsEligibility = {|
+    inlineEligibleAPMs : $ReadOnlyArray<string>,
+    isInlineEnabled : boolean
+|}
 
 export type PaymentFieldsProps = {|
     window? : ?(ProxyWindow | CrossDomainWindowType),
