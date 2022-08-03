@@ -423,6 +423,9 @@ window.smartCard = function(modules) {
         __webpack_require__.d(__webpack_exports__, "isApplePaySupported", (function() {
             return isApplePaySupported;
         }));
+        __webpack_require__.d(__webpack_exports__, "isCrossSiteTrackingEnabled", (function() {
+            return isCrossSiteTrackingEnabled;
+        }));
         __webpack_require__.d(__webpack_exports__, "getBody", (function() {
             return getBody;
         }));
@@ -1169,6 +1172,9 @@ window.smartCard = function(modules) {
                 return !1;
             }
             return !1;
+        }
+        function isCrossSiteTrackingEnabled(expectedCookieKey) {
+            return -1 === window.document.cookie.indexOf(expectedCookieKey);
         }
         function _setPrototypeOf(o, p) {
             return (_setPrototypeOf = Object.setPrototypeOf || function(o, p) {
@@ -4046,7 +4052,7 @@ window.smartCard = function(modules) {
     }([ function(E, N, S) {
         "use strict";
         S.r(N), S.d(N, "DEFAULT_COUNTRY", (function() {
-            return C;
+            return Z;
         })), S.d(N, "DEFAULT_CURRENCY", (function() {
             return a;
         })), S.d(N, "DEFAULT_INTENT", (function() {
@@ -4054,17 +4060,17 @@ window.smartCard = function(modules) {
         })), S.d(N, "DEFAULT_COMMIT", (function() {
             return L;
         })), S.d(N, "DEFAULT_SALE_COMMIT", (function() {
-            return d;
-        })), S.d(N, "DEFAULT_NONSALE_COMMIT", (function() {
             return P;
+        })), S.d(N, "DEFAULT_NONSALE_COMMIT", (function() {
+            return d;
         })), S.d(N, "DEFAULT_VAULT", (function() {
             return c;
         })), S.d(N, "DEFAULT_COMPONENTS", (function() {
             return U;
         })), S.d(N, "DEFAULT_DEBUG", (function() {
-            return G;
-        })), S.d(N, "ENV", (function() {
             return s;
+        })), S.d(N, "ENV", (function() {
+            return G;
         })), S.d(N, "MOBILE_ENV", (function() {
             return B;
         })), S.d(N, "ERROR_CODE", (function() {
@@ -4072,9 +4078,9 @@ window.smartCard = function(modules) {
         })), S.d(N, "FPTI_KEY", (function() {
             return p;
         })), S.d(N, "FPTI_USER_ACTION", (function() {
-            return f;
-        })), S.d(N, "FPTI_DATA_SOURCE", (function() {
             return l;
+        })), S.d(N, "FPTI_DATA_SOURCE", (function() {
+            return f;
         })), S.d(N, "FPTI_FEED", (function() {
             return Y;
         })), S.d(N, "FPTI_SDK_NAME", (function() {
@@ -4082,9 +4088,9 @@ window.smartCard = function(modules) {
         })), S.d(N, "FUNDING", (function() {
             return m;
         })), S.d(N, "FUNDING_BRAND_LABEL", (function() {
-            return y;
-        })), S.d(N, "CARD", (function() {
             return b;
+        })), S.d(N, "CARD", (function() {
+            return y;
         })), S.d(N, "WALLET_INSTRUMENT", (function() {
             return W;
         })), S.d(N, "FUNDING_PRODUCTS", (function() {
@@ -4094,9 +4100,9 @@ window.smartCard = function(modules) {
         })), S.d(N, "LANG", (function() {
             return t;
         })), S.d(N, "COUNTRY_LANGS", (function() {
-            return T;
-        })), S.d(N, "INTENT", (function() {
             return e;
+        })), S.d(N, "INTENT", (function() {
+            return T;
         })), S.d(N, "COMMIT", (function() {
             return n;
         })), S.d(N, "VAULT", (function() {
@@ -4104,9 +4110,9 @@ window.smartCard = function(modules) {
         })), S.d(N, "CURRENCY", (function() {
             return r;
         })), S.d(N, "SDK_PATH", (function() {
-            return F;
-        })), S.d(N, "SDK_SETTINGS", (function() {
             return _;
+        })), S.d(N, "SDK_SETTINGS", (function() {
+            return F;
         })), S.d(N, "SDK_QUERY_KEYS", (function() {
             return D;
         })), S.d(N, "COMPONENTS", (function() {
@@ -4122,7 +4128,7 @@ window.smartCard = function(modules) {
         })), S.d(N, "PAGE_TYPES", (function() {
             return M;
         })), S.d(N, "MERCHANT_ID_MAX", (function() {
-            return Z;
+            return C;
         })), S.d(N, "PLATFORM", (function() {
             return h;
         })), S.d(N, "TYPES", (function() {
@@ -4370,7 +4376,7 @@ window.smartCard = function(modules) {
             VI: "vi",
             ZH: "zh",
             ZH_HANT: "zh_Hant"
-        }, T = {
+        }, e = {
             AD: [ t.EN, t.FR, t.ES, t.ZH ],
             AE: [ t.EN, t.FR, t.ES, t.ZH, t.AR ],
             AG: [ t.EN, t.FR, t.ES, t.ZH ],
@@ -4574,7 +4580,7 @@ window.smartCard = function(modules) {
             ZA: [ t.EN, t.FR, t.ES, t.ZH ],
             ZM: [ t.EN, t.FR, t.ES, t.ZH ],
             ZW: [ t.EN ]
-        }, e = {
+        }, T = {
             CAPTURE: "capture",
             AUTHORIZE: "authorize",
             ORDER: "order",
@@ -4689,7 +4695,7 @@ window.smartCard = function(modules) {
             XAF: "XAF",
             XCD: "XCD",
             YER: "YER"
-        }, F = "/sdk/js", _ = {
+        }, _ = "/sdk/js", F = {
             NAMESPACE: "data-namespace",
             CLIENT_TOKEN: "data-client-token",
             MERCHANT_ID: "data-merchant-id",
@@ -4747,7 +4753,7 @@ window.smartCard = function(modules) {
             SEARCH_RESULTS: "search-results",
             PRODUCT_DETAILS: "product-details",
             MINI_CART: "mini-cart"
-        }, Z = 10, C = R.US, a = r.USD, u = e.CAPTURE, L = n.TRUE, d = n.TRUE, P = n.TRUE, c = A.FALSE, U = H.BUTTONS, G = I.FALSE, s = {
+        }, C = 10, Z = R.US, a = r.USD, u = T.CAPTURE, L = n.TRUE, P = n.TRUE, d = n.TRUE, c = A.FALSE, U = H.BUTTONS, s = I.FALSE, G = {
             LOCAL: "local",
             STAGE: "stage",
             SANDBOX: "sandbox",
@@ -4762,6 +4768,7 @@ window.smartCard = function(modules) {
             FEED: "feed_name",
             STATE: "state_name",
             TRANSITION: "transition_name",
+            PAGE: "page_name",
             BUTTON_TYPE: "button_type",
             SESSION_UID: "page_session_id",
             BUTTON_SESSION_UID: "button_session_id",
@@ -4817,11 +4824,14 @@ window.smartCard = function(modules) {
             TIMESTAMP: "t",
             OPTION_SELECTED: "optsel",
             USER_IDENTITY_METHOD: "user_identity_method",
-            FIELDS_COMPONENT_SESSION_ID: "fields_component_session_id"
-        }, f = {
+            FIELDS_COMPONENT_SESSION_ID: "fields_component_session_id",
+            CPL_COMP_METRICS: "cpl_comp_metrics",
+            CPL_CHUNK_METRICS: "cpl_chunk_metrics",
+            CPL_QUERY_METRICS: "cpl_query_metrics"
+        }, l = {
             COMMIT: "commit",
             CONTINUE: "continue"
-        }, l = {
+        }, f = {
             PAYMENTS_SDK: "checkout"
         }, Y = {
             PAYMENTS_SDK: "payments_sdk"
@@ -4851,13 +4861,14 @@ window.smartCard = function(modules) {
             MAXIMA: "maxima",
             OXXO: "oxxo",
             BOLETO: "boleto",
+            BOLETOBANCARIO: "boletobancario",
             WECHATPAY: "wechatpay",
             MERCADOPAGO: "mercadopago",
             MULTIBANCO: "multibanco"
-        }, y = {
+        }, b = {
             PAYPAL: "PayPal",
             CREDIT: "PayPal Credit"
-        }, b = {
+        }, y = {
             VISA: "visa",
             MASTERCARD: "mastercard",
             AMEX: "amex",
@@ -4926,23 +4937,23 @@ window.smartCard = function(modules) {
             return target;
         }).apply(this, arguments);
     }
-    var n, l, preact_module_u, preact_module_t, preact_module_o, preact_module_r, preact_module_e = {}, c = [], s = /acit|ex(?:s|g|n|p|$)|rph|grid|ows|mnc|ntw|ine[ch]|zoo|^ord|itera/i;
-    function preact_module_a(n, l) {
+    var n, l, preact_module_u, preact_module_t, preact_module_o, f = {}, preact_module_e = [], c = /acit|ex(?:s|g|n|p|$)|rph|grid|ows|mnc|ntw|ine[ch]|zoo|^ord|itera/i;
+    function s(n, l) {
         for (var u in l) n[u] = l[u];
         return n;
     }
-    function h(n) {
+    function preact_module_a(n) {
         var l = n.parentNode;
         l && l.removeChild(n);
     }
-    function v(l, u, i) {
+    function h(l, u, i) {
         var t, o, r, f = {};
         for (r in u) "key" == r ? t = u[r] : "ref" == r ? o = u[r] : f[r] = u[r];
         if (arguments.length > 2 && (f.children = arguments.length > 3 ? n.call(arguments, 2) : i), 
         "function" == typeof l && null != l.defaultProps) for (r in l.defaultProps) void 0 === f[r] && (f[r] = l.defaultProps[r]);
-        return y(l, f, t, o, null);
+        return v(l, f, t, o, null);
     }
-    function y(n, i, t, o, r) {
+    function v(n, i, t, o, r) {
         var f = {
             type: n,
             props: i,
@@ -4960,66 +4971,66 @@ window.smartCard = function(modules) {
         };
         return null == r && null != l.vnode && l.vnode(f), f;
     }
-    function preact_module_d(n) {
+    function p(n) {
         return n.children;
     }
-    function _(n, l) {
+    function preact_module_d(n, l) {
         this.props = n, this.context = l;
     }
-    function k(n, l) {
-        if (null == l) return n.__ ? k(n.__, n.__.__k.indexOf(n) + 1) : null;
+    function _(n, l) {
+        if (null == l) return n.__ ? _(n.__, n.__.__k.indexOf(n) + 1) : null;
         for (var u; l < n.__k.length; l++) if (null != (u = n.__k[l]) && null != u.__e) return u.__e;
-        return "function" == typeof n.type ? k(n) : null;
+        return "function" == typeof n.type ? _(n) : null;
     }
-    function b(n) {
+    function k(n) {
         var l, u;
         if (null != (n = n.__) && null != n.__c) {
             for (n.__e = n.__c.base = null, l = 0; l < n.__k.length; l++) if (null != (u = n.__k[l]) && null != u.__e) {
                 n.__e = n.__c.base = u.__e;
                 break;
             }
-            return b(n);
+            return k(n);
         }
     }
-    function m(n) {
-        (!n.__d && (n.__d = !0) && preact_module_t.push(n) && !g.__r++ || preact_module_r !== l.debounceRendering) && ((preact_module_r = l.debounceRendering) || preact_module_o)(g);
+    function b(n) {
+        (!n.__d && (n.__d = !0) && preact_module_t.push(n) && !g.__r++ || preact_module_o !== l.debounceRendering) && ((preact_module_o = l.debounceRendering) || setTimeout)(g);
     }
     function g() {
         for (var n; g.__r = preact_module_t.length; ) n = preact_module_t.sort((function(n, l) {
             return n.__v.__b - l.__v.__b;
         })), preact_module_t = [], n.some((function(n) {
             var l, u, i, t, o, r;
-            n.__d && (o = (t = (l = n).__v).__e, (r = l.__P) && (u = [], (i = preact_module_a({}, t)).__v = t.__v + 1, 
-            j(r, t, i, l.__n, void 0 !== r.ownerSVGElement, null != t.__h ? [ o ] : null, u, null == o ? k(t) : o, t.__h), 
-            z(u, t), t.__e != o && b(t)));
+            n.__d && (o = (t = (l = n).__v).__e, (r = l.__P) && (u = [], (i = s({}, t)).__v = t.__v + 1, 
+            j(r, t, i, l.__n, void 0 !== r.ownerSVGElement, null != t.__h ? [ o ] : null, u, null == o ? _(t) : o, t.__h), 
+            z(u, t), t.__e != o && k(t)));
         }));
     }
-    function w(n, l, u, i, t, o, r, f, s, a) {
-        var h, v, p, _, b, m, g, w = i && i.__k || c, A = w.length;
-        for (u.__k = [], h = 0; h < l.length; h++) if (null != (_ = u.__k[h] = null == (_ = l[h]) || "boolean" == typeof _ ? null : "string" == typeof _ || "number" == typeof _ || "bigint" == typeof _ ? y(null, _, null, null, _) : Array.isArray(_) ? y(preact_module_d, {
-            children: _
-        }, null, null, null) : _.__b > 0 ? y(_.type, _.props, _.key, null, _.__v) : _)) {
-            if (_.__ = u, _.__b = u.__b + 1, null === (p = w[h]) || p && _.key == p.key && _.type === p.type) w[h] = void 0; else for (v = 0; v < A; v++) {
-                if ((p = w[v]) && _.key == p.key && _.type === p.type) {
-                    w[v] = void 0;
+    function w(n, l, u, i, t, o, r, c, s, a) {
+        var h, y, d, k, b, g, w, x = i && i.__k || preact_module_e, C = x.length;
+        for (u.__k = [], h = 0; h < l.length; h++) if (null != (k = u.__k[h] = null == (k = l[h]) || "boolean" == typeof k ? null : "string" == typeof k || "number" == typeof k || "bigint" == typeof k ? v(null, k, null, null, k) : Array.isArray(k) ? v(p, {
+            children: k
+        }, null, null, null) : k.__b > 0 ? v(k.type, k.props, k.key, null, k.__v) : k)) {
+            if (k.__ = u, k.__b = u.__b + 1, null === (d = x[h]) || d && k.key == d.key && k.type === d.type) x[h] = void 0; else for (y = 0; y < C; y++) {
+                if ((d = x[y]) && k.key == d.key && k.type === d.type) {
+                    x[y] = void 0;
                     break;
                 }
-                p = null;
+                d = null;
             }
-            j(n, _, p = p || preact_module_e, t, o, r, f, s, a), b = _.__e, (v = _.ref) && p.ref != v && (g || (g = []), 
-            p.ref && g.push(p.ref, null, _), g.push(v, _.__c || b, _)), null != b ? (null == m && (m = b), 
-            "function" == typeof _.type && _.__k === p.__k ? _.__d = s = x(_, s, n) : s = P(n, _, p, w, b, s), 
-            "function" == typeof u.type && (u.__d = s)) : s && p.__e == s && s.parentNode != n && (s = k(p));
+            j(n, k, d = d || f, t, o, r, c, s, a), b = k.__e, (y = k.ref) && d.ref != y && (w || (w = []), 
+            d.ref && w.push(d.ref, null, k), w.push(y, k.__c || b, k)), null != b ? (null == g && (g = b), 
+            "function" == typeof k.type && k.__k === d.__k ? k.__d = s = m(k, s, n) : s = A(n, k, d, x, b, s), 
+            "function" == typeof u.type && (u.__d = s)) : s && d.__e == s && s.parentNode != n && (s = _(d));
         }
-        for (u.__e = m, h = A; h--; ) null != w[h] && ("function" == typeof u.type && null != w[h].__e && w[h].__e == u.__d && (u.__d = k(i, h + 1)), 
-        N(w[h], w[h]));
-        if (g) for (h = 0; h < g.length; h++) M(g[h], g[++h], g[++h]);
+        for (u.__e = g, h = C; h--; ) null != x[h] && ("function" == typeof u.type && null != x[h].__e && x[h].__e == u.__d && (u.__d = _(i, h + 1)), 
+        N(x[h], x[h]));
+        if (w) for (h = 0; h < w.length; h++) M(w[h], w[++h], w[++h]);
     }
-    function x(n, l, u) {
-        for (var i, t = n.__k, o = 0; t && o < t.length; o++) (i = t[o]) && (i.__ = n, l = "function" == typeof i.type ? x(i, l, u) : P(u, i, i, t, i.__e, l));
+    function m(n, l, u) {
+        for (var i, t = n.__k, o = 0; t && o < t.length; o++) (i = t[o]) && (i.__ = n, l = "function" == typeof i.type ? m(i, l, u) : A(u, i, i, t, i.__e, l));
         return l;
     }
-    function P(n, l, u, i, t, o) {
+    function A(n, l, u, i, t, o) {
         var r, f, e;
         if (void 0 !== l.__d) r = l.__d, l.__d = void 0; else if (null == u || t != o || null == t.parentNode) n: if (null == o || o.parentNode !== n) n.appendChild(t), 
         r = null; else {
@@ -5029,7 +5040,7 @@ window.smartCard = function(modules) {
         return void 0 !== r ? r : t.nextSibling;
     }
     function $(n, l, u) {
-        "-" === l[0] ? n.setProperty(l, u) : n[l] = null == u ? "" : "number" != typeof u || s.test(l) ? u : u + "px";
+        "-" === l[0] ? n.setProperty(l, u) : n[l] = null == u ? "" : "number" != typeof u || c.test(l) ? u : u + "px";
     }
     function H(n, l, u, i, t) {
         var o;
@@ -5053,39 +5064,41 @@ window.smartCard = function(modules) {
         this.l[n.type + !0](l.event ? l.event(n) : n);
     }
     function j(n, u, i, t, o, r, f, e, c) {
-        var s, h, v, y, p, k, b, m, g, x, A, P = u.type;
+        var a, h, v, y, _, k, b, g, m, x, A, C, $, H = u.type;
         if (void 0 !== u.constructor) return null;
-        null != i.__h && (c = i.__h, e = u.__e = i.__e, u.__h = null, r = [ e ]), (s = l.__b) && s(u);
+        null != i.__h && (c = i.__h, e = u.__e = i.__e, u.__h = null, r = [ e ]), (a = l.__b) && a(u);
         try {
-            n: if ("function" == typeof P) {
-                if (m = u.props, g = (s = P.contextType) && t[s.__c], x = s ? g ? g.props.value : s.__ : t, 
-                i.__c ? b = (h = u.__c = i.__c).__ = h.__E : ("prototype" in P && P.prototype.render ? u.__c = h = new P(m, x) : (u.__c = h = new _(m, x), 
-                h.constructor = P, h.render = O), g && g.sub(h), h.props = m, h.state || (h.state = {}), 
+            n: if ("function" == typeof H) {
+                if (g = u.props, m = (a = H.contextType) && t[a.__c], x = a ? m ? m.props.value : a.__ : t, 
+                i.__c ? b = (h = u.__c = i.__c).__ = h.__E : ("prototype" in H && H.prototype.render ? u.__c = h = new H(g, x) : (u.__c = h = new preact_module_d(g, x), 
+                h.constructor = H, h.render = O), m && m.sub(h), h.props = g, h.state || (h.state = {}), 
                 h.context = x, h.__n = t, v = h.__d = !0, h.__h = []), null == h.__s && (h.__s = h.state), 
-                null != P.getDerivedStateFromProps && (h.__s == h.state && (h.__s = preact_module_a({}, h.__s)), 
-                preact_module_a(h.__s, P.getDerivedStateFromProps(m, h.__s))), y = h.props, p = h.state, 
-                v) null == P.getDerivedStateFromProps && null != h.componentWillMount && h.componentWillMount(), 
+                null != H.getDerivedStateFromProps && (h.__s == h.state && (h.__s = s({}, h.__s)), 
+                s(h.__s, H.getDerivedStateFromProps(g, h.__s))), y = h.props, _ = h.state, v) null == H.getDerivedStateFromProps && null != h.componentWillMount && h.componentWillMount(), 
                 null != h.componentDidMount && h.__h.push(h.componentDidMount); else {
-                    if (null == P.getDerivedStateFromProps && m !== y && null != h.componentWillReceiveProps && h.componentWillReceiveProps(m, x), 
-                    !h.__e && null != h.shouldComponentUpdate && !1 === h.shouldComponentUpdate(m, h.__s, x) || u.__v === i.__v) {
-                        h.props = m, h.state = h.__s, u.__v !== i.__v && (h.__d = !1), h.__v = u, u.__e = i.__e, 
+                    if (null == H.getDerivedStateFromProps && g !== y && null != h.componentWillReceiveProps && h.componentWillReceiveProps(g, x), 
+                    !h.__e && null != h.shouldComponentUpdate && !1 === h.shouldComponentUpdate(g, h.__s, x) || u.__v === i.__v) {
+                        h.props = g, h.state = h.__s, u.__v !== i.__v && (h.__d = !1), h.__v = u, u.__e = i.__e, 
                         u.__k = i.__k, u.__k.forEach((function(n) {
                             n && (n.__ = u);
                         })), h.__h.length && f.push(h);
                         break n;
                     }
-                    null != h.componentWillUpdate && h.componentWillUpdate(m, h.__s, x), null != h.componentDidUpdate && h.__h.push((function() {
-                        h.componentDidUpdate(y, p, k);
+                    null != h.componentWillUpdate && h.componentWillUpdate(g, h.__s, x), null != h.componentDidUpdate && h.__h.push((function() {
+                        h.componentDidUpdate(y, _, k);
                     }));
                 }
-                h.context = x, h.props = m, h.state = h.__s, (s = l.__r) && s(u), h.__d = !1, h.__v = u, 
-                h.__P = n, s = h.render(h.props, h.state, h.context), h.state = h.__s, null != h.getChildContext && (t = preact_module_a(preact_module_a({}, t), h.getChildContext())), 
-                v || null == h.getSnapshotBeforeUpdate || (k = h.getSnapshotBeforeUpdate(y, p)), 
-                A = null != s && s.type === preact_module_d && null == s.key ? s.props.children : s, 
-                w(n, Array.isArray(A) ? A : [ A ], u, i, t, o, r, f, e, c), h.base = u.__e, u.__h = null, 
-                h.__h.length && f.push(h), b && (h.__E = h.__ = null), h.__e = !1;
+                if (h.context = x, h.props = g, h.__v = u, h.__P = n, A = l.__r, C = 0, "prototype" in H && H.prototype.render) h.state = h.__s, 
+                h.__d = !1, A && A(u), a = h.render(h.props, h.state, h.context); else do {
+                    h.__d = !1, A && A(u), a = h.render(h.props, h.state, h.context), h.state = h.__s;
+                } while (h.__d && ++C < 25);
+                h.state = h.__s, null != h.getChildContext && (t = s(s({}, t), h.getChildContext())), 
+                v || null == h.getSnapshotBeforeUpdate || (k = h.getSnapshotBeforeUpdate(y, _)), 
+                $ = null != a && a.type === p && null == a.key ? a.props.children : a, w(n, Array.isArray($) ? $ : [ $ ], u, i, t, o, r, f, e, c), 
+                h.base = u.__e, u.__h = null, h.__h.length && f.push(h), b && (h.__E = h.__ = null), 
+                h.__e = !1;
             } else null == r && u.__v === i.__v ? (u.__k = i.__k, u.__e = i.__e) : u.__e = L(i.__e, u, i, t, o, r, f, c);
-            (s = l.diffed) && s(u);
+            (a = l.diffed) && a(u);
         } catch (n) {
             u.__v = null, (c || null != r) && (u.__e = e, u.__h = !!c, r[r.indexOf(e)] = null), 
             l.__e(n, u, i);
@@ -5102,10 +5115,10 @@ window.smartCard = function(modules) {
             }
         }));
     }
-    function L(l, u, i, t, o, r, f, c) {
-        var s, a, v, y = i.props, p = u.props, d = u.type, _ = 0;
-        if ("svg" === d && (o = !0), null != r) for (;_ < r.length; _++) if ((s = r[_]) && "setAttribute" in s == !!d && (d ? s.localName === d : 3 === s.nodeType)) {
-            l = s, r[_] = null;
+    function L(l, u, i, t, o, r, e, c) {
+        var s, h, v, y = i.props, p = u.props, d = u.type, k = 0;
+        if ("svg" === d && (o = !0), null != r) for (;k < r.length; k++) if ((s = r[k]) && "setAttribute" in s == !!d && (d ? s.localName === d : 3 === s.nodeType)) {
+            l = s, r[k] = null;
             break;
         }
         if (null == l) {
@@ -5114,19 +5127,19 @@ window.smartCard = function(modules) {
             r = null, c = !1;
         }
         if (null === d) y === p || c && l.data === p || (l.data = p); else {
-            if (r = r && n.call(l.childNodes), a = (y = i.props || preact_module_e).dangerouslySetInnerHTML, 
+            if (r = r && n.call(l.childNodes), h = (y = i.props || f).dangerouslySetInnerHTML, 
             v = p.dangerouslySetInnerHTML, !c) {
-                if (null != r) for (y = {}, _ = 0; _ < l.attributes.length; _++) y[l.attributes[_].name] = l.attributes[_].value;
-                (v || a) && (v && (a && v.__html == a.__html || v.__html === l.innerHTML) || (l.innerHTML = v && v.__html || ""));
+                if (null != r) for (y = {}, k = 0; k < l.attributes.length; k++) y[l.attributes[k].name] = l.attributes[k].value;
+                (v || h) && (v && (h && v.__html == h.__html || v.__html === l.innerHTML) || (l.innerHTML = v && v.__html || ""));
             }
             if (function(n, l, u, i, t) {
                 var o;
                 for (o in u) "children" === o || "key" === o || o in l || H(n, o, null, u[o], i);
                 for (o in l) t && "function" != typeof l[o] || "children" === o || "key" === o || "value" === o || "checked" === o || u[o] === l[o] || H(n, o, l[o], u[o], i);
-            }(l, p, y, o, c), v) u.__k = []; else if (_ = u.props.children, w(l, Array.isArray(_) ? _ : [ _ ], u, i, t, o && "foreignObject" !== d, r, f, r ? r[0] : i.__k && k(i, 0), c), 
-            null != r) for (_ = r.length; _--; ) null != r[_] && h(r[_]);
-            c || ("value" in p && void 0 !== (_ = p.value) && (_ !== l.value || "progress" === d && !_ || "option" === d && _ !== y.value) && H(l, "value", _, y.value, !1), 
-            "checked" in p && void 0 !== (_ = p.checked) && _ !== l.checked && H(l, "checked", _, y.checked, !1));
+            }(l, p, y, o, c), v) u.__k = []; else if (k = u.props.children, w(l, Array.isArray(k) ? k : [ k ], u, i, t, o && "foreignObject" !== d, r, e, r ? r[0] : i.__k && _(i, 0), c), 
+            null != r) for (k = r.length; k--; ) null != r[k] && preact_module_a(r[k]);
+            c || ("value" in p && void 0 !== (k = p.value) && (k !== l.value || "progress" === d && !k || "option" === d && k !== y.value) && H(l, "value", k, y.value, !1), 
+            "checked" in p && void 0 !== (k = p.checked) && k !== l.checked && H(l, "checked", k, y.checked, !1));
         }
         return l;
     }
@@ -5149,12 +5162,12 @@ window.smartCard = function(modules) {
             t.base = t.__P = null;
         }
         if (t = n.__k) for (o = 0; o < t.length; o++) t[o] && N(t[o], u, "function" != typeof n.type);
-        i || null == n.__e || h(n.__e), n.__e = n.__d = void 0;
+        i || null == n.__e || preact_module_a(n.__e), n.__e = n.__d = void 0;
     }
     function O(n, l, u) {
         return this.constructor(n, u);
     }
-    n = c.slice, l = {
+    n = preact_module_e.slice, l = {
         __e: function(n, l, u, i) {
             for (var t, o, r; l = l.__; ) if ((t = l.__c) && !t.__) try {
                 if ((o = t.constructor) && null != o.getDerivedStateFromError && (t.setState(o.getDerivedStateFromError(n)), 
@@ -5165,107 +5178,115 @@ window.smartCard = function(modules) {
             }
             throw n;
         }
-    }, preact_module_u = 0, _.prototype.setState = function(n, l) {
+    }, preact_module_u = 0, preact_module_d.prototype.setState = function(n, l) {
         var u;
-        u = null != this.__s && this.__s !== this.state ? this.__s : this.__s = preact_module_a({}, this.state), 
-        "function" == typeof n && (n = n(preact_module_a({}, u), this.props)), n && preact_module_a(u, n), 
-        null != n && this.__v && (l && this.__h.push(l), m(this));
-    }, _.prototype.forceUpdate = function(n) {
-        this.__v && (this.__e = !0, n && this.__h.push(n), m(this));
-    }, _.prototype.render = preact_module_d, preact_module_t = [], preact_module_o = "function" == typeof Promise ? Promise.prototype.then.bind(Promise.resolve()) : setTimeout, 
-    g.__r = 0;
-    var hooks_module_t, hooks_module_u, hooks_module_r, hooks_module_o = 0, hooks_module_i = [], hooks_module_c = l.__b, hooks_module_f = l.__r, hooks_module_e = l.diffed, hooks_module_a = l.__c, hooks_module_v = l.unmount;
-    function hooks_module_l(t, r) {
-        l.__h && l.__h(hooks_module_u, t, hooks_module_o || r), hooks_module_o = 0;
-        var i = hooks_module_u.__H || (hooks_module_u.__H = {
+        u = null != this.__s && this.__s !== this.state ? this.__s : this.__s = s({}, this.state), 
+        "function" == typeof n && (n = n(s({}, u), this.props)), n && s(u, n), null != n && this.__v && (l && this.__h.push(l), 
+        b(this));
+    }, preact_module_d.prototype.forceUpdate = function(n) {
+        this.__v && (this.__e = !0, n && this.__h.push(n), b(this));
+    }, preact_module_d.prototype.render = p, preact_module_t = [], g.__r = 0;
+    var hooks_module_t, hooks_module_u, hooks_module_r, hooks_module_o, hooks_module_i = 0, hooks_module_c = [], hooks_module_f = [], hooks_module_e = l.__b, hooks_module_a = l.__r, hooks_module_v = l.diffed, hooks_module_l = l.__c, hooks_module_m = l.unmount;
+    function hooks_module_p(t, r) {
+        l.__h && l.__h(hooks_module_u, t, hooks_module_i || r), hooks_module_i = 0;
+        var o = hooks_module_u.__H || (hooks_module_u.__H = {
             __: [],
             __h: []
         });
-        return t >= i.__.length && i.__.push({}), i.__[t];
+        return t >= o.__.length && o.__.push({
+            __V: hooks_module_f
+        }), o.__[t];
     }
-    function hooks_module_m(n) {
-        return hooks_module_o = 1, function(n, r, o) {
-            var i = hooks_module_l(hooks_module_t++, 2);
-            return i.t = n, i.__c || (i.__ = [ hooks_module_w(void 0, r), function(n) {
+    function hooks_module_y(n) {
+        return hooks_module_i = 1, function(n, r, o) {
+            var i = hooks_module_p(hooks_module_t++, 2);
+            return i.t = n, i.__c || (i.__ = [ hooks_module_z(void 0, r), function(n) {
                 var t = i.t(i.__[0], n);
                 i.__[0] !== t && (i.__ = [ t, i.__[1] ], i.__c.setState({}));
             } ], i.__c = hooks_module_u), i.__;
-        }(hooks_module_w, n);
+        }(hooks_module_z, n);
     }
-    function hooks_module_y(r, o) {
-        var i = hooks_module_l(hooks_module_t++, 3);
-        !l.__s && hooks_module_k(i.__H, o) && (i.__ = r, i.__H = o, hooks_module_u.__H.__h.push(i));
+    function hooks_module_(r, o) {
+        var i = hooks_module_p(hooks_module_t++, 3);
+        !l.__s && hooks_module_w(i.__H, o) && (i.__ = r, i.u = o, hooks_module_u.__H.__h.push(i));
     }
-    function hooks_module_h(n) {
-        return hooks_module_o = 5, function(n, u) {
-            var r = hooks_module_l(hooks_module_t++, 7);
-            return hooks_module_k(r.__H, u) && (r.__ = n(), r.__H = u, r.__h = n), r.__;
+    function hooks_module_s(n) {
+        return hooks_module_i = 5, function(n, u) {
+            var r = hooks_module_p(hooks_module_t++, 7);
+            return hooks_module_w(r.__H, u) ? (r.__V = n(), r.u = u, r.__h = n, r.__V) : r.__;
         }((function() {
             return {
                 current: n
             };
         }), []);
     }
-    function hooks_module_x() {
-        for (var t; t = hooks_module_i.shift(); ) if (t.__P) try {
-            t.__H.__h.forEach(hooks_module_g), t.__H.__h.forEach(hooks_module_j), t.__H.__h = [];
+    function hooks_module_b() {
+        for (var t; t = hooks_module_c.shift(); ) if (t.__P) try {
+            t.__H.__h.forEach(hooks_module_j), t.__H.__h.forEach(hooks_module_k), t.__H.__h = [];
         } catch (u) {
             t.__H.__h = [], l.__e(u, t.__v);
         }
     }
     l.__b = function(n) {
-        hooks_module_u = null, hooks_module_c && hooks_module_c(n);
+        hooks_module_u = null, hooks_module_e && hooks_module_e(n);
     }, l.__r = function(n) {
-        hooks_module_f && hooks_module_f(n), hooks_module_t = 0;
-        var r = (hooks_module_u = n.__c).__H;
-        r && (r.__h.forEach(hooks_module_g), r.__h.forEach(hooks_module_j), r.__h = []);
+        hooks_module_a && hooks_module_a(n), hooks_module_t = 0;
+        var o = (hooks_module_u = n.__c).__H;
+        o && (hooks_module_r === hooks_module_u ? (o.__h = [], hooks_module_u.__h = [], 
+        o.__.forEach((function(n) {
+            n.__V = hooks_module_f, n.u = void 0;
+        }))) : (o.__h.forEach(hooks_module_j), o.__h.forEach(hooks_module_k), o.__h = [])), 
+        hooks_module_r = hooks_module_u;
     }, l.diffed = function(t) {
-        hooks_module_e && hooks_module_e(t);
-        var o = t.__c;
-        o && o.__H && o.__H.__h.length && (1 !== hooks_module_i.push(o) && hooks_module_r === l.requestAnimationFrame || ((hooks_module_r = l.requestAnimationFrame) || function(n) {
+        hooks_module_v && hooks_module_v(t);
+        var i = t.__c;
+        i && i.__H && (i.__H.__h.length && (1 !== hooks_module_c.push(i) && hooks_module_o === l.requestAnimationFrame || ((hooks_module_o = l.requestAnimationFrame) || function(n) {
             var t, u = function() {
-                clearTimeout(r), hooks_module_b && cancelAnimationFrame(t), setTimeout(n);
+                clearTimeout(r), hooks_module_g && cancelAnimationFrame(t), setTimeout(n);
             }, r = setTimeout(u, 100);
-            hooks_module_b && (t = requestAnimationFrame(u));
-        })(hooks_module_x)), hooks_module_u = null;
+            hooks_module_g && (t = requestAnimationFrame(u));
+        })(hooks_module_b)), i.__H.__.forEach((function(n) {
+            n.u && (n.__H = n.u), n.__V !== hooks_module_f && (n.__ = n.__V), n.u = void 0, 
+            n.__V = hooks_module_f;
+        }))), hooks_module_r = hooks_module_u = null;
     }, l.__c = function(t, u) {
         u.some((function(t) {
             try {
-                t.__h.forEach(hooks_module_g), t.__h = t.__h.filter((function(n) {
-                    return !n.__ || hooks_module_j(n);
+                t.__h.forEach(hooks_module_j), t.__h = t.__h.filter((function(n) {
+                    return !n.__ || hooks_module_k(n);
                 }));
             } catch (r) {
                 u.some((function(n) {
                     n.__h && (n.__h = []);
                 })), u = [], l.__e(r, t.__v);
             }
-        })), hooks_module_a && hooks_module_a(t, u);
+        })), hooks_module_l && hooks_module_l(t, u);
     }, l.unmount = function(t) {
-        hooks_module_v && hooks_module_v(t);
+        hooks_module_m && hooks_module_m(t);
         var u, r = t.__c;
         r && r.__H && (r.__H.__.forEach((function(n) {
             try {
-                hooks_module_g(n);
+                hooks_module_j(n);
             } catch (n) {
                 u = n;
             }
         })), u && l.__e(u, r.__v));
     };
-    var hooks_module_b = "function" == typeof requestAnimationFrame;
-    function hooks_module_g(n) {
+    var hooks_module_g = "function" == typeof requestAnimationFrame;
+    function hooks_module_j(n) {
         var t = hooks_module_u, r = n.__c;
         "function" == typeof r && (n.__c = void 0, r()), hooks_module_u = t;
     }
-    function hooks_module_j(n) {
+    function hooks_module_k(n) {
         var t = hooks_module_u;
         n.__c = n.__(), hooks_module_u = t;
     }
-    function hooks_module_k(n, t) {
+    function hooks_module_w(n, t) {
         return !n || n.length !== t.length || t.some((function(t, u) {
             return t !== n[u];
         }));
     }
-    function hooks_module_w(n, t) {
+    function hooks_module_z(n, t) {
         return "function" == typeof t ? t(n) : t;
     }
     function utils_isPromise(item) {
@@ -6598,7 +6619,8 @@ window.smartCard = function(modules) {
     }
     function getSDKStorage() {
         return getStorage({
-            name: "paypal"
+            name: "paypal",
+            lifetime: 36e5
         });
     }
     var belter = __webpack_require__(1);
@@ -7055,6 +7077,63 @@ window.smartCard = function(modules) {
     var getLsatUpgradeError = function() {
         return lsatUpgradeError;
     };
+    function getOrder(orderID, _ref2) {
+        var _headers4;
+        var facilitatorAccessToken = _ref2.facilitatorAccessToken, buyerAccessToken = _ref2.buyerAccessToken, partnerAttributionID = _ref2.partnerAttributionID, _ref2$forceRestAPI = _ref2.forceRestAPI, forceRestAPI = void 0 !== _ref2$forceRestAPI && _ref2$forceRestAPI;
+        getLogger().info("get_order_lsat_upgrade_" + (getLsatUpgradeCalled() ? "called" : "not_called"));
+        getLogger().info("get_order_lsat_upgrade_" + (getLsatUpgradeError() ? "errored" : "did_not_error"), {
+            err: stringifyError(getLsatUpgradeError())
+        });
+        if (forceRestAPI && !getLsatUpgradeError()) {
+            var _headers2;
+            return callRestAPI({
+                accessToken: facilitatorAccessToken,
+                url: "/v2/checkout/orders/" + orderID,
+                eventName: "v2_checkout_orders_get",
+                headers: (_headers2 = {}, _headers2["paypal-partner-attribution-id"] = partnerAttributionID || "", 
+                _headers2.prefer = "return=representation", _headers2)
+            }).catch((function(err) {
+                var _headers3;
+                var restCorrID = getErrorResponseCorrelationID(err);
+                getLogger().warn("get_order_call_rest_api_error", {
+                    restCorrID: restCorrID,
+                    orderID: orderID,
+                    err: stringifyError(err)
+                });
+                return callSmartAPI({
+                    accessToken: buyerAccessToken,
+                    url: "/smart/api/order/" + orderID,
+                    eventName: "order_get",
+                    headers: (_headers3 = {}, _headers3["paypal-client-context"] = orderID, _headers3)
+                }).then((function(res) {
+                    var smartCorrID = getResponseCorrelationID(res);
+                    getLogger().info("get_order_smart_fallback_success", {
+                        smartCorrID: smartCorrID,
+                        restCorrID: restCorrID,
+                        orderID: orderID
+                    });
+                    return res.data;
+                })).catch((function(smartErr) {
+                    var smartCorrID = getErrorResponseCorrelationID(err);
+                    getLogger().error("get_order_smart_fallback_error", {
+                        smartCorrID: smartCorrID,
+                        restCorrID: restCorrID,
+                        orderID: orderID,
+                        err: stringifyError(smartErr)
+                    });
+                    throw smartErr;
+                }));
+            }));
+        }
+        return callSmartAPI({
+            accessToken: buyerAccessToken,
+            url: "/smart/api/order/" + orderID,
+            eventName: "order_get",
+            headers: (_headers4 = {}, _headers4["paypal-client-context"] = orderID, _headers4)
+        }).then((function(_ref3) {
+            return _ref3.data;
+        }));
+    }
     function isProcessorDeclineError(err) {
         var _err$response, _err$response$body, _err$response$body$da, _err$response$body$da2;
         return Boolean(null == err || null == (_err$response = err.response) || null == (_err$response$body = _err$response.body) || null == (_err$response$body$da = _err$response$body.data) || null == (_err$response$body$da2 = _err$response$body$da.details) ? void 0 : _err$response$body$da2.some((function(detail) {
@@ -7139,14 +7218,25 @@ window.smartCard = function(modules) {
             return _ref9.data;
         }));
     }
+    function patchShipping(_ref10) {
+        return callGraphQL({
+            name: "UpdateShipping",
+            query: "\n            mutation UpdateShipping(\n                $clientID: String!\n                $patch: [JSON]!\n                $token: String!\n            ) {\n                updateShipping(\n                    clientID: $clientID,\n                    patch: $patch,\n                    token: $token,\n                )\n            }\n        ",
+            variables: {
+                clientID: _ref10.clientID,
+                patch: _ref10.data,
+                token: _ref10.orderID
+            }
+        });
+    }
     function billingTokenToOrderID(billingToken) {
         return callSmartAPI({
             authenticated: !1,
             method: "post",
             eventName: "payment_ectoken",
             url: "/smart/api/payment/" + billingToken + "/ectoken"
-        }).then((function(_ref13) {
-            return _ref13.data.token;
+        }).then((function(_ref14) {
+            return _ref14.data.token;
         }));
     }
     function subscriptionIdToCartId(subscriptionID) {
@@ -7155,21 +7245,32 @@ window.smartCard = function(modules) {
             method: "post",
             eventName: "billagmt_subscriptions_cartid",
             url: "/smart/api/billagmt/subscriptions/" + subscriptionID + "/cartid"
-        }).then((function(_ref14) {
-            return _ref14.data.token;
+        }).then((function(_ref15) {
+            return _ref15.data.token;
         }));
     }
     var getSupplementalOrderInfo = memoize((function(orderID) {
         var _headers21;
         return callGraphQL({
             name: "GetCheckoutDetails",
-            query: "\n            query GetCheckoutDetails($orderID: String!) {\n                checkoutSession(token: $orderID) {\n                    cart {\n                        billingType\n                        intent\n                        paymentId\n                        billingToken\n                        amounts {\n                            total {\n                                currencyValue\n                                currencyCode\n                                currencyFormatSymbolISOCurrency\n                            }\n                        }\n                        supplementary {\n                            initiationIntent\n                        }\n                        category\n                    }\n                    flags {\n                        isChangeShippingAddressAllowed\n                    }\n                    payees {\n                        merchantId\n                        email {\n                            stringValue\n                        }\n                    }\n                }\n            }\n        ",
+            query: "\n        query GetCheckoutDetails($orderID: String!) {\n            checkoutSession(token: $orderID) {\n                cart {\n                    billingType\n                    intent\n                    paymentId\n                    billingToken\n                    amounts {\n                        total {\n                            currencyValue\n                            currencyCode\n                            currencyFormatSymbolISOCurrency\n                        }\n                    }\n                    supplementary {\n                        initiationIntent\n                    }\n                    category\n                }\n                flags {\n                    isChangeShippingAddressAllowed\n                }\n                payees {\n                    merchantId\n                    email {\n                        stringValue\n                    }\n                }\n            }\n        }\n        ",
             variables: {
                 orderID: orderID
             },
             headers: (_headers21 = {}, _headers21["paypal-client-context"] = orderID, _headers21)
         });
     }));
+    var order_getShippingOrderInfo = function(orderID) {
+        var _headers22;
+        return callGraphQL({
+            name: "GetCheckoutDetails",
+            query: "\n            query GetCheckoutDetails($orderID: String!) {\n                checkoutSession(token: $orderID) {\n                    cart {\n                        billingType\n                        intent\n                        paymentId\n                        billingToken\n                        amounts {\n                            total {\n                                currencyValue\n                                currencyCode\n                                currencyFormatSymbolISOCurrency\n                            }\n                        }\n                        supplementary {\n                            initiationIntent\n                        }\n                        category\n                        shippingAddress {\n                            firstName\n                            lastName\n                            line1\n                            line2\n                            city\n                            state\n                            postalCode\n                            country\n                        }\n                        shippingMethods {\n                            id\n                            amount {\n                                currencyCode\n                                currencyValue\n                            }\n                            label\n                            selected\n                            type\n                        }\n                    }\n                    flags {\n                        isChangeShippingAddressAllowed\n                    }\n                    payees {\n                        merchantId\n                        email {\n                            stringValue\n                        }\n                    }\n                }\n            }\n        ",
+            variables: {
+                orderID: orderID
+            },
+            headers: (_headers22 = {}, _headers22["paypal-client-context"] = orderID, _headers22)
+        });
+    };
     function createRequest(accessToken, subscriptionPayload, partnerAttributionID, eventName) {
         return request({
             method: "post",
@@ -7424,13 +7525,90 @@ window.smartCard = function(modules) {
         if (isProcessorDeclineError(err)) return restart().then(unresolvedPromise);
         throw err;
     };
+    var onComplete_redirect = function(url) {
+        if (!url) throw new Error("Expected redirect url");
+        if (-1 === url.indexOf("://")) {
+            getLogger().warn("redir_url_non_scheme", {
+                url: url
+            }).flush();
+            throw new Error("Invalid redirect url: " + url + " - must be fully qualified url");
+        }
+        url.match(/^https?:\/\//) || getLogger().warn("redir_url_non_http", {
+            url: url
+        }).flush();
+        return dom_redirect(url, window.top);
+    };
+    function _objectWithoutPropertiesLoose(source, excluded) {
+        if (null == source) return {};
+        var target = {};
+        var sourceKeys = Object.keys(source);
+        var key, i;
+        for (i = 0; i < sourceKeys.length; i++) excluded.indexOf(key = sourceKeys[i]) >= 0 || (target[key] = source[key]);
+        return target;
+    }
     var _excluded = [ "buyerAccessToken", "forceRestAPI" ];
+    var ON_SHIPPING_CHANGE_PATHS_AMOUNT = "/purchase_units/@reference_id=='default'/amount", ON_SHIPPING_CHANGE_PATHS_OPTIONS = "/purchase_units/@reference_id=='default'/shipping/options";
+    var SHIPPING_ADDRESS_ERROR_MESSAGES = {
+        ADDRESS_ERROR: "Your order can't be shipped to this address.",
+        COUNTRY_ERROR: "Your order can't be shipped to this country.",
+        STATE_ERROR: "Your order can't be shipped to this state.",
+        ZIP_ERROR: "Your order can't be shipped to this zip."
+    };
+    var SHIPPING_OPTIONS_ERROR_MESSAGES = {
+        METHOD_UNAVAILABLE: "The shipping method you chose is unavailable. To continue, choose another way to get your order.",
+        STORE_UNAVAILABLE: "Part of your order isn't available at this store."
+    };
+    var calculateTotalFromShippingBreakdownAmounts = function(_ref) {
+        var breakdown = _ref.breakdown, updatedAmounts = _ref.updatedAmounts;
+        var newAmount = 0;
+        var updatedAmountKeys = Object.keys(updatedAmounts) || [];
+        var discountKeys = [ "shipping_discount", "discount" ];
+        Object.keys(breakdown).forEach((function(item) {
+            if (-1 !== updatedAmountKeys.indexOf(item)) discountKeys.includes(item) ? newAmount -= Math.abs(parseFloat(updatedAmounts[item])) : newAmount += parseFloat(updatedAmounts[item]); else if (discountKeys.includes(item)) {
+                var _breakdown$item;
+                newAmount -= Math.abs(parseFloat(null == (_breakdown$item = breakdown[item]) ? void 0 : _breakdown$item.value));
+            } else {
+                var _breakdown$item2;
+                newAmount += parseFloat(null == (_breakdown$item2 = breakdown[item]) ? void 0 : _breakdown$item2.value);
+            }
+        }));
+        updatedAmountKeys.forEach((function(key) {
+            breakdown[key] || updatedAmounts[key] && (discountKeys.includes(key) ? newAmount -= Math.abs(parseFloat(updatedAmounts[key])) : newAmount += parseFloat(updatedAmounts[key]));
+        }));
+        return newAmount.toFixed(2);
+    };
+    var buildBreakdown = function(_ref2) {
+        var _Object$values$;
+        var _ref2$breakdown = _ref2.breakdown, breakdown = void 0 === _ref2$breakdown ? {} : _ref2$breakdown, _ref2$updatedAmounts = _ref2.updatedAmounts, updatedAmounts = void 0 === _ref2$updatedAmounts ? {} : _ref2$updatedAmounts;
+        var discountKeys = [ "shipping_discount", "discount" ];
+        var updatedAmountKeys = Object.keys(updatedAmounts);
+        var currency_code = null == (_Object$values$ = Object.values(breakdown)[0]) ? void 0 : _Object$values$.currency_code;
+        updatedAmountKeys.forEach((function(key) {
+            breakdown[key] ? breakdown[key].value = updatedAmounts[key] : updatedAmounts[key] && (breakdown[key] = {
+                currency_code: currency_code,
+                value: updatedAmounts[key] && discountKeys.includes(key) ? Math.abs(parseFloat(updatedAmounts[key])).toFixed(2) : updatedAmounts[key]
+            });
+        }));
+        return breakdown;
+    };
+    var convertQueriesToArray = function(_ref3) {
+        return Object.values(_ref3.queries) || [];
+    };
+    var utils_updateOperationForShippingOptions = function(_ref5) {
+        var queries = _ref5.queries;
+        queries[ON_SHIPPING_CHANGE_PATHS_OPTIONS] && (queries[ON_SHIPPING_CHANGE_PATHS_OPTIONS].op = "replace");
+        return convertQueriesToArray({
+            queries: queries
+        });
+    };
+    var onShippingAddressChange_excluded = [ "amount", "buyerAccessToken", "event", "forceRestAPI", "shipping_address" ];
+    var onShippingOptionsChange_excluded = [ "amount", "buyerAccessToken", "event", "forceRestAPI", "options", "selected_shipping_option" ];
     function getProps(_ref) {
         var facilitatorAccessToken = _ref.facilitatorAccessToken, branded = _ref.branded, paymentSource = _ref.paymentSource;
         var xprops = window.xprops;
         var uid = xprops.uid, env = xprops.env, _xprops$vault = xprops.vault, vault = void 0 !== _xprops$vault && _xprops$vault, commit = xprops.commit, locale = xprops.locale, platform = xprops.platform, sessionID = xprops.sessionID, clientID = xprops.clientID, partnerAttributionID = xprops.partnerAttributionID, merchantRequestedPopupsDisabled = xprops.merchantRequestedPopupsDisabled, clientMetadataID = xprops.clientMetadataID, sdkCorrelationID = xprops.sdkCorrelationID, getParentDomain = xprops.getParentDomain, clientAccessToken = xprops.clientAccessToken, getPopupBridge = xprops.getPopupBridge, getPrerenderDetails = xprops.getPrerenderDetails, getPageUrl = xprops.getPageUrl, enableThreeDomainSecure = xprops.enableThreeDomainSecure, enableVaultInstallments = xprops.enableVaultInstallments, _xprops$enableNativeC = xprops.enableNativeCheckout, enableNativeCheckout = void 0 !== _xprops$enableNativeC && _xprops$enableNativeC, _xprops$experience = xprops.experience, experience = void 0 === _xprops$experience ? "" : _xprops$experience, rememberFunding = xprops.remember, stageHost = xprops.stageHost, apiStageHost = xprops.apiStageHost, getParent = xprops.getParent, fundingSource = xprops.fundingSource, currency = xprops.currency, connect = xprops.connect, intent = xprops.intent, merchantID = xprops.merchantID, amount = xprops.amount, userIDToken = xprops.userIDToken, enableFunding = xprops.enableFunding, disableFunding = xprops.disableFunding, disableCard = xprops.disableCard, disableAutocomplete = xprops.disableAutocomplete, wallet = xprops.wallet, _xprops$paymentMethod = xprops.paymentMethodToken, paymentMethodToken = void 0 === _xprops$paymentMethod ? xprops.paymentMethodNonce : _xprops$paymentMethod, _xprops$getQueriedEli = xprops.getQueriedEligibleFunding, getQueriedEligibleFunding = void 0 === _xprops$getQueriedEli ? function() {
             return promise_ZalgoPromise.resolve([]);
-        } : _xprops$getQueriedEli, storageID = xprops.storageID, applePay = xprops.applePay, userExperienceFlow = xprops.userExperienceFlow, allowBillingPayments = xprops.allowBillingPayments;
+        } : _xprops$getQueriedEli, storageID = xprops.storageID, applePay = xprops.applePay, userExperienceFlow = xprops.userExperienceFlow, allowBillingPayments = xprops.allowBillingPayments, paymentRequest = xprops.paymentRequest;
         var onInit = function(_ref) {
             var onInit = _ref.onInit;
             return function(data) {
@@ -7761,7 +7939,7 @@ window.smartCard = function(modules) {
                 if (!onApprove) throw new Error("Expected onApprove");
                 var upgradeLSAT = -1 === LSAT_UPGRADE_EXCLUDED_MERCHANTS.indexOf(clientID);
                 return memoize((function(_ref8, _ref9) {
-                    var payerID = _ref8.payerID, paymentID = _ref8.paymentID, billingToken = _ref8.billingToken, buyerAccessToken = _ref8.buyerAccessToken, authCode = _ref8.authCode, _ref8$forceRestAPI = _ref8.forceRestAPI, forceRestAPI = void 0 === _ref8$forceRestAPI ? upgradeLSAT : _ref8$forceRestAPI;
+                    var _ref8$accelerated = _ref8.accelerated, accelerated = void 0 !== _ref8$accelerated && _ref8$accelerated, payerID = _ref8.payerID, paymentID = _ref8.paymentID, billingToken = _ref8.billingToken, buyerAccessToken = _ref8.buyerAccessToken, authCode = _ref8.authCode, _ref8$forceRestAPI = _ref8.forceRestAPI, forceRestAPI = void 0 === _ref8$forceRestAPI ? upgradeLSAT : _ref8$forceRestAPI;
                     var restart = _ref9.restart;
                     return createOrder().then((function(orderID) {
                         var _getLogger$info$track;
@@ -7773,6 +7951,7 @@ window.smartCard = function(modules) {
                         }).flush();
                         return getSupplementalOrderInfo(orderID).then((function(supplementalData) {
                             var data = {
+                                accelerated: accelerated,
                                 orderID: orderID,
                                 payerID: payerID,
                                 paymentID: paymentID = paymentID || supplementalData && supplementalData.checkoutSession && supplementalData.checkoutSession.cart && supplementalData.checkoutSession.cart.paymentId,
@@ -7786,63 +7965,7 @@ window.smartCard = function(modules) {
                                 var order = function(_ref) {
                                     var intent = _ref.intent, orderID = _ref.orderID, restart = _ref.restart, facilitatorAccessToken = _ref.facilitatorAccessToken, buyerAccessToken = _ref.buyerAccessToken, partnerAttributionID = _ref.partnerAttributionID, forceRestAPI = _ref.forceRestAPI, onError = _ref.onError;
                                     var get = memoize((function() {
-                                        return function(orderID, _ref2) {
-                                            var _headers4;
-                                            var facilitatorAccessToken = _ref2.facilitatorAccessToken, buyerAccessToken = _ref2.buyerAccessToken, partnerAttributionID = _ref2.partnerAttributionID, _ref2$forceRestAPI = _ref2.forceRestAPI, forceRestAPI = void 0 !== _ref2$forceRestAPI && _ref2$forceRestAPI;
-                                            getLogger().info("get_order_lsat_upgrade_" + (getLsatUpgradeCalled() ? "called" : "not_called"));
-                                            getLogger().info("get_order_lsat_upgrade_" + (getLsatUpgradeError() ? "errored" : "did_not_error"), {
-                                                err: stringifyError(getLsatUpgradeError())
-                                            });
-                                            if (forceRestAPI && !getLsatUpgradeError()) {
-                                                var _headers2;
-                                                return callRestAPI({
-                                                    accessToken: facilitatorAccessToken,
-                                                    url: "/v2/checkout/orders/" + orderID,
-                                                    eventName: "v2_checkout_orders_get",
-                                                    headers: (_headers2 = {}, _headers2["paypal-partner-attribution-id"] = partnerAttributionID || "", 
-                                                    _headers2.prefer = "return=representation", _headers2)
-                                                }).catch((function(err) {
-                                                    var _headers3;
-                                                    var restCorrID = getErrorResponseCorrelationID(err);
-                                                    getLogger().warn("get_order_call_rest_api_error", {
-                                                        restCorrID: restCorrID,
-                                                        orderID: orderID,
-                                                        err: stringifyError(err)
-                                                    });
-                                                    return callSmartAPI({
-                                                        accessToken: buyerAccessToken,
-                                                        url: "/smart/api/order/" + orderID,
-                                                        eventName: "order_get",
-                                                        headers: (_headers3 = {}, _headers3["paypal-client-context"] = orderID, _headers3)
-                                                    }).then((function(res) {
-                                                        var smartCorrID = getResponseCorrelationID(res);
-                                                        getLogger().info("get_order_smart_fallback_success", {
-                                                            smartCorrID: smartCorrID,
-                                                            restCorrID: restCorrID,
-                                                            orderID: orderID
-                                                        });
-                                                        return res.data;
-                                                    })).catch((function(smartErr) {
-                                                        var smartCorrID = getErrorResponseCorrelationID(err);
-                                                        getLogger().error("get_order_smart_fallback_error", {
-                                                            smartCorrID: smartCorrID,
-                                                            restCorrID: restCorrID,
-                                                            orderID: orderID,
-                                                            err: stringifyError(smartErr)
-                                                        });
-                                                        throw smartErr;
-                                                    }));
-                                                }));
-                                            }
-                                            return callSmartAPI({
-                                                accessToken: buyerAccessToken,
-                                                url: "/smart/api/order/" + orderID,
-                                                eventName: "order_get",
-                                                headers: (_headers4 = {}, _headers4["paypal-client-context"] = orderID, _headers4)
-                                            }).then((function(_ref3) {
-                                                return _ref3.data;
-                                            }));
-                                        }(orderID, {
+                                        return getOrder(orderID, {
                                             facilitatorAccessToken: facilitatorAccessToken,
                                             buyerAccessToken: buyerAccessToken,
                                             partnerAttributionID: partnerAttributionID,
@@ -8167,6 +8290,62 @@ window.smartCard = function(modules) {
             createOrder: createOrder,
             paymentSource: paymentSource
         });
+        var onComplete = function(_ref2) {
+            var intent = _ref2.intent, onComplete = _ref2.onComplete, partnerAttributionID = _ref2.partnerAttributionID, onError = _ref2.onError, facilitatorAccessToken = _ref2.facilitatorAccessToken, createOrder = _ref2.createOrder;
+            if (!onComplete) return promiseNoop;
+            var upgradeLSAT = -1 === LSAT_UPGRADE_EXCLUDED_MERCHANTS.indexOf(_ref2.clientID);
+            return memoize((function(_ref3) {
+                var buyerAccessToken = _ref3.buyerAccessToken, _ref3$forceRestAPI = _ref3.forceRestAPI, forceRestAPI = void 0 === _ref3$forceRestAPI ? upgradeLSAT : _ref3$forceRestAPI;
+                return createOrder().then((function(orderID) {
+                    var _getLogger$info$track;
+                    getLogger().info("button_complete").track((_getLogger$info$track = {}, _getLogger$info$track.transition_name = "process_checkout_complete", 
+                    _getLogger$info$track.context_type = "EC-Token", _getLogger$info$track.token = orderID, 
+                    _getLogger$info$track.context_id = orderID, _getLogger$info$track)).flush();
+                    var actions = function(_ref) {
+                        var orderID = _ref.orderID, facilitatorAccessToken = _ref.facilitatorAccessToken, buyerAccessToken = _ref.buyerAccessToken, partnerAttributionID = _ref.partnerAttributionID, forceRestAPI = _ref.forceRestAPI;
+                        var get = memoize((function() {
+                            return getOrder(orderID, {
+                                facilitatorAccessToken: facilitatorAccessToken,
+                                buyerAccessToken: buyerAccessToken,
+                                partnerAttributionID: partnerAttributionID,
+                                forceRestAPI: forceRestAPI
+                            }).finally(get.reset);
+                        }));
+                        return {
+                            order: {
+                                get: get
+                            },
+                            redirect: onComplete_redirect
+                        };
+                    }({
+                        orderID: orderID,
+                        facilitatorAccessToken: facilitatorAccessToken,
+                        buyerAccessToken: buyerAccessToken,
+                        partnerAttributionID: partnerAttributionID,
+                        forceRestAPI: forceRestAPI,
+                        onError: onError
+                    });
+                    return onComplete({
+                        orderID: orderID,
+                        intent: intent
+                    }, actions).catch((function(err) {
+                        return promise_ZalgoPromise.try((function() {
+                            return onError(err);
+                        })).then((function() {
+                            throw err;
+                        }));
+                    }));
+                }));
+            }));
+        }({
+            intent: intent,
+            onComplete: xprops.onComplete,
+            partnerAttributionID: partnerAttributionID,
+            onError: onError,
+            clientID: clientID,
+            facilitatorAccessToken: facilitatorAccessToken,
+            createOrder: createOrder
+        });
         var onCancel = function(_ref2, _ref3) {
             var _ref2$onCancel = _ref2.onCancel, onCancel = void 0 === _ref2$onCancel ? promiseNoop : _ref2$onCancel, onError = _ref2.onError;
             var createOrder = _ref3.createOrder;
@@ -8210,14 +8389,7 @@ window.smartCard = function(modules) {
             var facilitatorAccessToken = _ref3.facilitatorAccessToken, createOrder = _ref3.createOrder;
             var upgradeLSAT = -1 === LSAT_UPGRADE_EXCLUDED_MERCHANTS.indexOf(_ref2.clientID);
             if (onShippingChange) return function(_ref4, actions) {
-                var buyerAccessToken = _ref4.buyerAccessToken, _ref4$forceRestAPI = _ref4.forceRestAPI, forceRestAPI = void 0 === _ref4$forceRestAPI ? upgradeLSAT : _ref4$forceRestAPI, data = function(source, excluded) {
-                    if (null == source) return {};
-                    var target = {};
-                    var sourceKeys = Object.keys(source);
-                    var key, i;
-                    for (i = 0; i < sourceKeys.length; i++) excluded.indexOf(key = sourceKeys[i]) >= 0 || (target[key] = source[key]);
-                    return target;
-                }(_ref4, _excluded);
+                var buyerAccessToken = _ref4.buyerAccessToken, _ref4$forceRestAPI = _ref4.forceRestAPI, forceRestAPI = void 0 === _ref4$forceRestAPI ? upgradeLSAT : _ref4$forceRestAPI, data = _objectWithoutPropertiesLoose(_ref4, _excluded);
                 return createOrder().then((function(orderID) {
                     var _getLogger$info$track;
                     getLogger().info("button_shipping_change").track((_getLogger$info$track = {}, _getLogger$info$track.transition_name = "process_checkout_shipping_change", 
@@ -8263,6 +8435,323 @@ window.smartCard = function(modules) {
             clientID: clientID
         }, {
             facilitatorAccessToken: facilitatorAccessToken,
+            createOrder: createOrder
+        });
+        var onShippingAddressChange = function(_ref5, _ref6) {
+            var onShippingAddressChange = _ref5.onShippingAddressChange, clientID = _ref5.clientID;
+            var createOrder = _ref6.createOrder;
+            if (onShippingAddressChange) return function(_ref7, actions) {
+                var data = _extends({}, _ref7);
+                return createOrder().then((function(orderID) {
+                    var _getLogger$info$track;
+                    getLogger().info("button_shipping_address_change").track((_getLogger$info$track = {}, 
+                    _getLogger$info$track.transition_name = "process_checkout_shipping_address_change", 
+                    _getLogger$info$track.context_type = "EC-Token", _getLogger$info$track.token = orderID, 
+                    _getLogger$info$track.context_id = orderID, _getLogger$info$track.shipping_callback_invoked = "1", 
+                    _getLogger$info$track)).flush();
+                    return onShippingAddressChange(function(data) {
+                        var shippingAddress = data.shipping_address, rest = _objectWithoutPropertiesLoose(data, onShippingAddressChange_excluded);
+                        return _extends({
+                            errors: SHIPPING_ADDRESS_ERROR_MESSAGES,
+                            shippingAddress: shippingAddress
+                        }, rest);
+                    }(data), function(_ref) {
+                        var _data$amount;
+                        var clientID = _ref.clientID, data = _ref.data, passedActions = _ref.actions, orderID = _ref.orderID;
+                        var patchQueries = {};
+                        var newAmount;
+                        var breakdown = (null == (_data$amount = data.amount) ? void 0 : _data$amount.breakdown) || {};
+                        if (0 === Object.keys(breakdown).length) throw new Error("Must pass amount with breakdown into data attribute for onShippingAddressChange callback.");
+                        var actions = {
+                            reject: passedActions.reject || function() {
+                                throw new Error("Missing reject action callback");
+                            },
+                            updateTax: function(_ref2) {
+                                var _data$amount2;
+                                var tax = _ref2.tax;
+                                breakdown = buildBreakdown({
+                                    breakdown: breakdown,
+                                    updatedAmounts: {
+                                        tax_total: tax
+                                    }
+                                });
+                                newAmount = calculateTotalFromShippingBreakdownAmounts({
+                                    breakdown: breakdown,
+                                    updatedAmounts: {
+                                        tax_total: tax
+                                    }
+                                });
+                                patchQueries[ON_SHIPPING_CHANGE_PATHS_AMOUNT] = {
+                                    op: "replace",
+                                    path: ON_SHIPPING_CHANGE_PATHS_AMOUNT,
+                                    value: {
+                                        value: "" + newAmount,
+                                        currency_code: null == data || null == (_data$amount2 = data.amount) ? void 0 : _data$amount2.currency_code,
+                                        breakdown: breakdown
+                                    }
+                                };
+                                return actions;
+                            },
+                            updateShippingOptions: function(_ref3) {
+                                var options = _ref3.options;
+                                if (options && options.length > 0) {
+                                    var _selectedShippingOpti, _selectedShippingOpti2, _data$amount3;
+                                    var selectedShippingOption = options.filter((function(option) {
+                                        return !0 === option.selected;
+                                    }));
+                                    var selectedShippingOptionAmount = selectedShippingOption && (null == (_selectedShippingOpti = selectedShippingOption[0]) || null == (_selectedShippingOpti2 = _selectedShippingOpti.amount) ? void 0 : _selectedShippingOpti2.value);
+                                    breakdown = buildBreakdown({
+                                        breakdown: breakdown,
+                                        updatedAmounts: {
+                                            shipping: selectedShippingOptionAmount
+                                        }
+                                    });
+                                    newAmount = calculateTotalFromShippingBreakdownAmounts({
+                                        breakdown: breakdown,
+                                        updatedAmounts: {
+                                            shipping: selectedShippingOptionAmount
+                                        }
+                                    });
+                                    patchQueries[ON_SHIPPING_CHANGE_PATHS_AMOUNT] = {
+                                        op: "replace",
+                                        path: ON_SHIPPING_CHANGE_PATHS_AMOUNT,
+                                        value: {
+                                            value: "" + newAmount,
+                                            currency_code: null == data || null == (_data$amount3 = data.amount) ? void 0 : _data$amount3.currency_code,
+                                            breakdown: breakdown
+                                        }
+                                    };
+                                    patchQueries[ON_SHIPPING_CHANGE_PATHS_OPTIONS] = {
+                                        op: (null == data ? void 0 : data.event) || "replace",
+                                        path: ON_SHIPPING_CHANGE_PATHS_OPTIONS,
+                                        value: options
+                                    };
+                                }
+                                return actions;
+                            },
+                            updateShippingDiscount: function(_ref4) {
+                                var _data$amount4;
+                                var discount = _ref4.discount;
+                                newAmount = calculateTotalFromShippingBreakdownAmounts({
+                                    breakdown: breakdown,
+                                    updatedAmounts: {
+                                        shipping_discount: discount
+                                    }
+                                });
+                                breakdown = buildBreakdown({
+                                    breakdown: breakdown,
+                                    updatedAmounts: {
+                                        shipping_discount: discount
+                                    }
+                                });
+                                patchQueries[ON_SHIPPING_CHANGE_PATHS_AMOUNT] = {
+                                    op: "replace",
+                                    path: ON_SHIPPING_CHANGE_PATHS_AMOUNT,
+                                    value: {
+                                        value: "" + newAmount,
+                                        currency_code: null == data || null == (_data$amount4 = data.amount) ? void 0 : _data$amount4.currency_code,
+                                        breakdown: breakdown
+                                    }
+                                };
+                                return actions;
+                            },
+                            patch: function() {
+                                return order_getShippingOrderInfo(orderID).then((function(sessionData) {
+                                    var _sessionData$checkout, _sessionData$checkout2;
+                                    var queries;
+                                    var shippingMethods = (null == sessionData || null == (_sessionData$checkout = sessionData.checkoutSession) || null == (_sessionData$checkout2 = _sessionData$checkout.cart) ? void 0 : _sessionData$checkout2.shippingMethods) || [];
+                                    queries = Boolean(shippingMethods.length > 0) ? utils_updateOperationForShippingOptions({
+                                        queries: patchQueries
+                                    }) : convertQueriesToArray({
+                                        queries: patchQueries
+                                    });
+                                    return patchShipping({
+                                        clientID: clientID,
+                                        orderID: orderID,
+                                        data: queries
+                                    }).catch((function() {
+                                        throw new Error("Order could not be patched");
+                                    }));
+                                }));
+                            },
+                            query: function() {
+                                return order_getShippingOrderInfo(orderID).then((function(sessionData) {
+                                    var _sessionData$checkout3, _sessionData$checkout4;
+                                    var shippingMethods = (null == sessionData || null == (_sessionData$checkout3 = sessionData.checkoutSession) || null == (_sessionData$checkout4 = _sessionData$checkout3.cart) ? void 0 : _sessionData$checkout4.shippingMethods) || [];
+                                    return Boolean(shippingMethods.length > 0) ? utils_updateOperationForShippingOptions({
+                                        queries: patchQueries
+                                    }) : convertQueriesToArray({
+                                        queries: patchQueries
+                                    });
+                                }));
+                            }
+                        };
+                        return actions;
+                    }({
+                        clientID: clientID,
+                        data: data,
+                        actions: actions,
+                        orderID: orderID
+                    }));
+                }));
+            };
+        }({
+            onShippingAddressChange: xprops.onShippingAddressChange,
+            clientID: clientID
+        }, {
+            createOrder: createOrder
+        });
+        var onShippingOptionsChange = function(_ref4, _ref5) {
+            var onShippingOptionsChange = _ref4.onShippingOptionsChange, clientID = _ref4.clientID;
+            var createOrder = _ref5.createOrder;
+            if (onShippingOptionsChange) return function(_ref6, actions) {
+                var data = _extends({}, _ref6);
+                return createOrder().then((function(orderID) {
+                    var _getLogger$info$track;
+                    getLogger().info("button_shipping_options_change").track((_getLogger$info$track = {}, 
+                    _getLogger$info$track.transition_name = "process_checkout_shipping_options_change", 
+                    _getLogger$info$track.context_type = "EC-Token", _getLogger$info$track.token = orderID, 
+                    _getLogger$info$track.context_id = orderID, _getLogger$info$track.shipping_callback_invoked = "1", 
+                    _getLogger$info$track)).flush();
+                    return onShippingOptionsChange(function(data) {
+                        var selectedShippingOption = data.selected_shipping_option, rest = _objectWithoutPropertiesLoose(data, onShippingOptionsChange_excluded);
+                        return _extends({
+                            errors: SHIPPING_OPTIONS_ERROR_MESSAGES,
+                            selectedShippingOption: selectedShippingOption
+                        }, rest);
+                    }(data), function(_ref) {
+                        var _data$amount;
+                        var clientID = _ref.clientID, data = _ref.data, passedActions = _ref.actions, orderID = _ref.orderID;
+                        var patchQueries = {};
+                        var newAmount;
+                        var breakdown = (null == (_data$amount = data.amount) ? void 0 : _data$amount.breakdown) || {};
+                        if (0 === Object.keys(breakdown).length) throw new Error("Must pass breakdown into data attribute for onShippingAddressChange callback.");
+                        var actions = {
+                            reject: passedActions.reject || function() {
+                                throw new Error("Missing reject action callback");
+                            },
+                            updateShippingOption: function(_ref2) {
+                                var option = _ref2.option;
+                                if (option && data.options) {
+                                    var _option$amount, _data$amount2, _data$amount3;
+                                    var selectedShippingOptionAmount = null == option || null == (_option$amount = option.amount) ? void 0 : _option$amount.value;
+                                    var options = function(_ref4) {
+                                        var option = _ref4.option;
+                                        var updatedOptions = [];
+                                        _ref4.options.forEach((function(opt) {
+                                            if (!opt.id) throw new Error("Must provide an id with each shipping option.");
+                                            if (opt.id === option.id) {
+                                                opt.selected = !0;
+                                                updatedOptions.push(opt);
+                                            } else {
+                                                opt.selected = !1;
+                                                updatedOptions.push(opt);
+                                            }
+                                        }));
+                                        return updatedOptions;
+                                    }({
+                                        option: option,
+                                        options: data.options
+                                    });
+                                    newAmount = calculateTotalFromShippingBreakdownAmounts({
+                                        breakdown: (null == data || null == (_data$amount2 = data.amount) ? void 0 : _data$amount2.breakdown) || {},
+                                        updatedAmounts: {
+                                            shipping: selectedShippingOptionAmount
+                                        }
+                                    });
+                                    breakdown = buildBreakdown({
+                                        breakdown: breakdown,
+                                        updatedAmounts: {
+                                            shipping: selectedShippingOptionAmount
+                                        }
+                                    });
+                                    options && options.length > 0 && (patchQueries[ON_SHIPPING_CHANGE_PATHS_OPTIONS] = {
+                                        op: (null == data ? void 0 : data.event) || "replace",
+                                        path: ON_SHIPPING_CHANGE_PATHS_OPTIONS,
+                                        value: options
+                                    });
+                                    patchQueries[ON_SHIPPING_CHANGE_PATHS_AMOUNT] = {
+                                        op: "replace",
+                                        path: ON_SHIPPING_CHANGE_PATHS_AMOUNT,
+                                        value: {
+                                            value: "" + newAmount,
+                                            currency_code: null == data || null == (_data$amount3 = data.amount) ? void 0 : _data$amount3.currency_code,
+                                            breakdown: breakdown
+                                        }
+                                    };
+                                }
+                                return actions;
+                            },
+                            updateShippingDiscount: function(_ref3) {
+                                var _data$amount4, _data$amount5;
+                                var discount = _ref3.discount;
+                                newAmount = calculateTotalFromShippingBreakdownAmounts({
+                                    breakdown: (null == data || null == (_data$amount4 = data.amount) ? void 0 : _data$amount4.breakdown) || {},
+                                    updatedAmounts: {
+                                        shipping_discount: discount
+                                    }
+                                });
+                                breakdown = buildBreakdown({
+                                    breakdown: breakdown,
+                                    updatedAmounts: {
+                                        shipping_discount: discount
+                                    }
+                                });
+                                patchQueries[ON_SHIPPING_CHANGE_PATHS_AMOUNT] = {
+                                    op: "replace",
+                                    path: ON_SHIPPING_CHANGE_PATHS_AMOUNT,
+                                    value: {
+                                        value: "" + newAmount,
+                                        currency_code: null == data || null == (_data$amount5 = data.amount) ? void 0 : _data$amount5.currency_code,
+                                        breakdown: breakdown
+                                    }
+                                };
+                                return actions;
+                            },
+                            patch: function() {
+                                return order_getShippingOrderInfo(orderID).then((function(sessionData) {
+                                    var _sessionData$checkout, _sessionData$checkout2;
+                                    var queries;
+                                    var shippingMethods = (null == sessionData || null == (_sessionData$checkout = sessionData.checkoutSession) || null == (_sessionData$checkout2 = _sessionData$checkout.cart) ? void 0 : _sessionData$checkout2.shippingMethods) || [];
+                                    queries = Boolean(shippingMethods.length > 0) ? utils_updateOperationForShippingOptions({
+                                        queries: patchQueries
+                                    }) : convertQueriesToArray({
+                                        queries: patchQueries
+                                    });
+                                    return patchShipping({
+                                        clientID: clientID,
+                                        orderID: orderID,
+                                        data: queries
+                                    }).catch((function() {
+                                        throw new Error("Order could not be patched");
+                                    }));
+                                }));
+                            },
+                            query: function() {
+                                return order_getShippingOrderInfo(orderID).then((function(sessionData) {
+                                    var _sessionData$checkout3, _sessionData$checkout4;
+                                    var shippingMethods = (null == sessionData || null == (_sessionData$checkout3 = sessionData.checkoutSession) || null == (_sessionData$checkout4 = _sessionData$checkout3.cart) ? void 0 : _sessionData$checkout4.shippingMethods) || [];
+                                    return Boolean(shippingMethods.length > 0) ? utils_updateOperationForShippingOptions({
+                                        queries: patchQueries
+                                    }) : convertQueriesToArray({
+                                        queries: patchQueries
+                                    });
+                                }));
+                            }
+                        };
+                        return actions;
+                    }({
+                        clientID: clientID,
+                        data: data,
+                        actions: actions,
+                        orderID: orderID
+                    }));
+                }));
+            };
+        }({
+            onShippingOptionsChange: xprops.onShippingOptionsChange,
+            clientID: clientID
+        }, {
             createOrder: createOrder
         });
         var onAuth = function(_ref) {
@@ -8359,8 +8848,11 @@ window.smartCard = function(modules) {
             createBillingAgreement: createBillingAgreement,
             createSubscription: createSubscription,
             onApprove: onApprove,
+            onComplete: onComplete,
             onCancel: onCancel,
             onShippingChange: onShippingChange,
+            onShippingAddressChange: onShippingAddressChange,
+            onShippingOptionsChange: onShippingOptionsChange,
             onAuth: onAuth,
             standaloneFundingSource: fundingSource,
             paymentMethodToken: paymentMethodToken,
@@ -8368,7 +8860,9 @@ window.smartCard = function(modules) {
             stickinessID: stickinessID,
             applePay: applePay,
             userExperienceFlow: userExperienceFlow,
-            allowBillingPayments: allowBillingPayments
+            allowBillingPayments: allowBillingPayments,
+            paymentRequest: paymentRequest,
+            merchantID: merchantID
         };
     }
     function getCardProps(_ref) {
@@ -8506,8 +9000,8 @@ window.smartCard = function(modules) {
                 var restart = function() {
                     throw new Error("Restart not implemented for card fields flow");
                 };
-                return intent === sdk_constants.INTENT.TOKENIZE ? function(_ref23) {
-                    var card = _ref23.card;
+                return intent === sdk_constants.INTENT.TOKENIZE ? function(_ref24) {
+                    var card = _ref24.card;
                     return promise_ZalgoPromise.try((function() {
                         console.info("Card Tokenize GQL mutation not yet implemented", {
                             card: card
@@ -8531,7 +9025,7 @@ window.smartCard = function(modules) {
                         securityCode: card.cvv
                     }, extraFields);
                     card.name && (cardObject.name = card.name);
-                    return (_ref24 = {
+                    return (_ref25 = {
                         card: cardObject,
                         orderID: orderID,
                         vault: vault,
@@ -8541,10 +9035,10 @@ window.smartCard = function(modules) {
                         name: "ProcessPayment",
                         query: '\n            mutation ProcessPayment(\n                $orderID: String!\n                $clientID: String!\n                $card: CardInput!\n                $branded: Boolean!\n            ) {\n                processPayment(\n                    clientID: $clientID\n                    paymentMethod: { type: CARD, card: $card }\n                    branded: $branded\n                    orderID: $orderID\n                    buttonSessionID: "f7r7367r4"\n                )\n            }\n        ',
                         variables: {
-                            orderID: _ref24.orderID,
-                            clientID: _ref24.clientID,
-                            card: _ref24.card,
-                            branded: _ref24.branded
+                            orderID: _ref25.orderID,
+                            clientID: _ref25.clientID,
+                            card: _ref25.card,
+                            branded: _ref25.branded
                         },
                         returnErrorObject: !0
                     }).then((function(gqlResult) {
@@ -8587,7 +9081,7 @@ window.smartCard = function(modules) {
                             errors: errors
                         };
                     }));
-                    var _ref24;
+                    var _ref25;
                 })).then((function() {
                     return onApprove({
                         payerID: uniqueID(),
@@ -8601,10 +9095,10 @@ window.smartCard = function(modules) {
     }
     function CardNumber(_ref2) {
         var _ref2$name = _ref2.name, name = void 0 === _ref2$name ? "number" : _ref2$name, _ref2$autocomplete = _ref2.autocomplete, autocomplete = void 0 === _ref2$autocomplete ? "cc-number" : _ref2$autocomplete, _ref2$navigation = _ref2.navigation, navigation = void 0 === _ref2$navigation ? defaultNavigation : _ref2$navigation, _ref2$allowNavigation = _ref2.allowNavigation, allowNavigation = void 0 !== _ref2$allowNavigation && _ref2$allowNavigation, state = _ref2.state, ref = _ref2.ref, type = _ref2.type, className = _ref2.className, placeholder = _ref2.placeholder, style = _ref2.style, maxLength = _ref2.maxLength, onChange = _ref2.onChange, onFocus = _ref2.onFocus, onBlur = _ref2.onBlur, onValidityChange = _ref2.onValidityChange;
-        var _useState = hooks_module_m(DEFAULT_CARD_TYPE), cardType = _useState[0], setCardType = _useState[1];
-        var _useState2 = hooks_module_m(_extends({}, defaultInputState, state)), inputState = _useState2[0], setInputState = _useState2[1];
+        var _useState = hooks_module_y(DEFAULT_CARD_TYPE), cardType = _useState[0], setCardType = _useState[1];
+        var _useState2 = hooks_module_y(_extends({}, defaultInputState, state)), inputState = _useState2[0], setInputState = _useState2[1];
         var inputValue = inputState.inputValue, maskedInputValue = inputState.maskedInputValue, cursorStart = inputState.cursorStart, cursorEnd = inputState.cursorEnd, keyStrokeCount = inputState.keyStrokeCount, isValid = inputState.isValid, isPotentiallyValid = inputState.isPotentiallyValid, contentPasted = inputState.contentPasted;
-        hooks_module_y((function() {
+        hooks_module_((function() {
             var validity = function(value, cardType) {
                 var trimmedValue = removeSpaces(value);
                 var lengths = cardType.lengths;
@@ -8622,7 +9116,7 @@ window.smartCard = function(modules) {
                 return _extends({}, newState, validity);
             }));
         }), [ inputValue, maskedInputValue ]);
-        hooks_module_y((function() {
+        hooks_module_((function() {
             "function" == typeof onValidityChange && onValidityChange({
                 isValid: isValid,
                 isPotentiallyValid: isPotentiallyValid
@@ -8635,7 +9129,7 @@ window.smartCard = function(modules) {
                 inputState: inputState
             }) && navigation.next();
         }), [ isValid, isPotentiallyValid ]);
-        return v("input", {
+        return h("input", {
             name: name,
             autocomplete: autocomplete,
             inputmode: "numeric",
@@ -8722,9 +9216,9 @@ window.smartCard = function(modules) {
     }
     function CardExpiry(_ref) {
         var _ref$name = _ref.name, name = void 0 === _ref$name ? "expiry" : _ref$name, _ref$autocomplete = _ref.autocomplete, autocomplete = void 0 === _ref$autocomplete ? "cc-exp" : _ref$autocomplete, _ref$navigation = _ref.navigation, navigation = void 0 === _ref$navigation ? defaultNavigation : _ref$navigation, ref = _ref.ref, type = _ref.type, className = _ref.className, placeholder = _ref.placeholder, style = _ref.style, maxLength = _ref.maxLength, onChange = _ref.onChange, onFocus = _ref.onFocus, onBlur = _ref.onBlur, onValidityChange = _ref.onValidityChange, _ref$allowNavigation = _ref.allowNavigation, allowNavigation = void 0 !== _ref$allowNavigation && _ref$allowNavigation;
-        var _useState = hooks_module_m(_extends({}, defaultInputState, _ref.state)), inputState = _useState[0], setInputState = _useState[1];
+        var _useState = hooks_module_y(_extends({}, defaultInputState, _ref.state)), inputState = _useState[0], setInputState = _useState[1];
         var maskedInputValue = inputState.maskedInputValue, keyStrokeCount = inputState.keyStrokeCount, isValid = inputState.isValid, isPotentiallyValid = inputState.isPotentiallyValid, contentPasted = inputState.contentPasted;
-        hooks_module_y((function() {
+        hooks_module_((function() {
             var validity = {
                 isValid: (0, card_validator_dist_default.a.expirationDate)(maskedInputValue).isValid,
                 isPotentiallyValid: !0
@@ -8733,14 +9227,14 @@ window.smartCard = function(modules) {
                 return _extends({}, newState, validity);
             }));
         }), [ inputState.inputValue, maskedInputValue ]);
-        hooks_module_y((function() {
+        hooks_module_((function() {
             "function" == typeof onValidityChange && onValidityChange({
                 isValid: isValid,
                 isPotentiallyValid: isPotentiallyValid
             });
             allowNavigation && maskedInputValue && isValid && navigation.next();
         }), [ isValid, isPotentiallyValid ]);
-        return v("input", {
+        return h("input", {
             name: name,
             autocomplete: autocomplete,
             inputmode: "numeric",
@@ -8824,9 +9318,9 @@ window.smartCard = function(modules) {
     }
     function CardCVV(_ref) {
         var _ref$name = _ref.name, name = void 0 === _ref$name ? "cvv" : _ref$name, _ref$autocomplete = _ref.autocomplete, autocomplete = void 0 === _ref$autocomplete ? "cc-csc" : _ref$autocomplete, _ref$navigation = _ref.navigation, navigation = void 0 === _ref$navigation ? defaultNavigation : _ref$navigation, _ref$allowNavigation = _ref.allowNavigation, allowNavigation = void 0 !== _ref$allowNavigation && _ref$allowNavigation, ref = _ref.ref, type = _ref.type, className = _ref.className, placeholder = _ref.placeholder, style = _ref.style, maxLength = _ref.maxLength, onChange = _ref.onChange, onFocus = _ref.onFocus, onBlur = _ref.onBlur, onValidityChange = _ref.onValidityChange, cardType = _ref.cardType;
-        var _useState = hooks_module_m(_extends({}, defaultInputState, _ref.state)), inputState = _useState[0], setInputState = _useState[1];
+        var _useState = hooks_module_y(_extends({}, defaultInputState, _ref.state)), inputState = _useState[0], setInputState = _useState[1];
         var inputValue = inputState.inputValue, keyStrokeCount = inputState.keyStrokeCount, isValid = inputState.isValid, isPotentiallyValid = inputState.isPotentiallyValid;
-        hooks_module_y((function() {
+        hooks_module_((function() {
             var validity = function(value, cardType) {
                 var isValid = !1;
                 value.length === getCvvLength(cardType) && (isValid = !0);
@@ -8839,14 +9333,14 @@ window.smartCard = function(modules) {
                 return _extends({}, newState, validity);
             }));
         }), [ inputValue ]);
-        hooks_module_y((function() {
+        hooks_module_((function() {
             "function" == typeof onValidityChange && onValidityChange({
                 isValid: isValid,
                 isPotentiallyValid: isPotentiallyValid
             });
             allowNavigation && inputValue && isValid && navigation.next();
         }), [ isValid, isPotentiallyValid ]);
-        return v("input", {
+        return h("input", {
             name: name,
             autocomplete: autocomplete,
             inputmode: "numeric",
@@ -8892,9 +9386,9 @@ window.smartCard = function(modules) {
     }
     function CardName(_ref) {
         var _ref$name = _ref.name, name = void 0 === _ref$name ? "name" : _ref$name, _ref$navigation = _ref.navigation, navigation = void 0 === _ref$navigation ? defaultNavigation : _ref$navigation, _ref$allowNavigation = _ref.allowNavigation, allowNavigation = void 0 !== _ref$allowNavigation && _ref$allowNavigation, ref = _ref.ref, type = _ref.type, className = _ref.className, placeholder = _ref.placeholder, style = _ref.style, maxLength = _ref.maxLength, onChange = _ref.onChange, onFocus = _ref.onFocus, onBlur = _ref.onBlur, onValidityChange = _ref.onValidityChange;
-        var _useState = hooks_module_m(_extends({}, defaultInputState, _ref.state)), inputState = _useState[0], setInputState = _useState[1];
+        var _useState = hooks_module_y(_extends({}, defaultInputState, _ref.state)), inputState = _useState[0], setInputState = _useState[1];
         var inputValue = inputState.inputValue, keyStrokeCount = inputState.keyStrokeCount, isValid = inputState.isValid, isPotentiallyValid = inputState.isPotentiallyValid;
-        hooks_module_y((function() {
+        hooks_module_((function() {
             var validity = function(value) {
                 var isValid = !1;
                 value.length >= 1 && value.length <= 255 && (isValid = !0);
@@ -8907,14 +9401,14 @@ window.smartCard = function(modules) {
                 return _extends({}, newState, validity);
             }));
         }), [ inputValue ]);
-        hooks_module_y((function() {
+        hooks_module_((function() {
             "function" == typeof onValidityChange && onValidityChange({
                 isValid: isValid,
                 isPotentiallyValid: isPotentiallyValid
             });
             allowNavigation && inputValue && isValid && navigation.next();
         }), [ isValid, isPotentiallyValid ]);
-        return v("input", {
+        return h("input", {
             name: name,
             inputmode: "text",
             ref: ref,
@@ -8960,18 +9454,18 @@ window.smartCard = function(modules) {
     function CardField(_ref) {
         var _placeholder$number, _placeholder$expiry, _placeholder$cvv;
         var cspNonce = _ref.cspNonce, onChange = _ref.onChange, _ref$styleObject = _ref.styleObject, styleObject = void 0 === _ref$styleObject ? {} : _ref$styleObject, _ref$placeholder = _ref.placeholder, placeholder = void 0 === _ref$placeholder ? {} : _ref$placeholder, _ref$gqlErrorsObject = _ref.gqlErrorsObject, gqlErrorsObject = void 0 === _ref$gqlErrorsObject ? {} : _ref$gqlErrorsObject, autoFocusRef = _ref.autoFocusRef, autocomplete = _ref.autocomplete;
-        var _useState = hooks_module_m(""), number = _useState[0], setNumber = _useState[1];
-        var _useState2 = hooks_module_m(""), cvv = _useState2[0], setCvv = _useState2[1];
-        var _useState3 = hooks_module_m(""), expiry = _useState3[0], setExpiry = _useState3[1];
-        var _useState4 = hooks_module_m(!0), isValid = _useState4[0], setIsValid = _useState4[1];
-        var _useState5 = hooks_module_m(initFieldValidity), numberValidity = _useState5[0], setNumberValidity = _useState5[1];
-        var _useState6 = hooks_module_m(initFieldValidity), expiryValidity = _useState6[0], setExpiryValidity = _useState6[1];
-        var _useState7 = hooks_module_m(initFieldValidity), cvvValidity = _useState7[0], setCvvValidity = _useState7[1];
-        var _useState8 = hooks_module_m(DEFAULT_CARD_TYPE), cardType = _useState8[0], setCardType = _useState8[1];
+        var _useState = hooks_module_y(""), number = _useState[0], setNumber = _useState[1];
+        var _useState2 = hooks_module_y(""), cvv = _useState2[0], setCvv = _useState2[1];
+        var _useState3 = hooks_module_y(""), expiry = _useState3[0], setExpiry = _useState3[1];
+        var _useState4 = hooks_module_y(!0), isValid = _useState4[0], setIsValid = _useState4[1];
+        var _useState5 = hooks_module_y(initFieldValidity), numberValidity = _useState5[0], setNumberValidity = _useState5[1];
+        var _useState6 = hooks_module_y(initFieldValidity), expiryValidity = _useState6[0], setExpiryValidity = _useState6[1];
+        var _useState7 = hooks_module_y(initFieldValidity), cvvValidity = _useState7[0], setCvvValidity = _useState7[1];
+        var _useState8 = hooks_module_y(DEFAULT_CARD_TYPE), cardType = _useState8[0], setCardType = _useState8[1];
         var _getStyles = getStyles(styleObject), generalStyle = _getStyles[0], inputStyle = _getStyles[1];
-        var numberRef = hooks_module_h();
-        var expiryRef = hooks_module_h();
-        var cvvRef = hooks_module_h();
+        var numberRef = hooks_module_s();
+        var expiryRef = hooks_module_s();
+        var cvvRef = hooks_module_s();
         var composedStyles = _extends({}, DEFAULT_STYLE, generalStyle);
         var cardNumberNavivation = {
             next: goToNextField(expiryRef),
@@ -8989,10 +9483,10 @@ window.smartCard = function(modules) {
             },
             previous: goToPreviousField(expiryRef)
         };
-        hooks_module_y((function() {
+        hooks_module_((function() {
             autoFocusRef(numberRef);
         }), []);
-        hooks_module_y((function() {
+        hooks_module_((function() {
             var field = gqlErrorsObject.field, errors = gqlErrorsObject.errors;
             "number" === field && errors.length > 0 && setNumberValidity({
                 isPotentiallyValid: !1,
@@ -9007,7 +9501,7 @@ window.smartCard = function(modules) {
                 isValid: !1
             });
         }), [ gqlErrorsObject ]);
-        hooks_module_y((function() {
+        hooks_module_((function() {
             var valid = Boolean(numberValidity.isValid && cvvValidity.isValid && expiryValidity.isValid);
             setIsValid(valid);
             var errors = setErrors({
@@ -9026,9 +9520,9 @@ window.smartCard = function(modules) {
                 errors: errors
             });
         }), [ number, cvv, expiry, isValid, numberValidity, cvvValidity, expiryValidity, cardType ]);
-        return v(preact_module_d, null, v("style", {
+        return h(p, null, h("style", {
             nonce: cspNonce
-        }, styleToString(composedStyles)), v(CardNumber, {
+        }, styleToString(composedStyles)), h(CardNumber, {
             ref: numberRef,
             autocomplete: autocomplete,
             navigation: cardNumberNavivation,
@@ -9046,7 +9540,7 @@ window.smartCard = function(modules) {
             onValidityChange: function(validity) {
                 return setNumberValidity(_extends({}, validity));
             }
-        }), v(CardExpiry, {
+        }), h(CardExpiry, {
             ref: expiryRef,
             autocomplete: autocomplete,
             navigation: cardExpiryNavivation,
@@ -9062,7 +9556,7 @@ window.smartCard = function(modules) {
             onValidityChange: function(validity) {
                 return setExpiryValidity(_extends({}, validity));
             }
-        }), v(CardCVV, {
+        }), h(CardCVV, {
             ref: cvvRef,
             autocomplete: autocomplete,
             navigation: cardCvvNavivation,
@@ -9084,24 +9578,24 @@ window.smartCard = function(modules) {
     function CardNumberField(_ref5) {
         var _placeholder$number2;
         var cspNonce = _ref5.cspNonce, onChange = _ref5.onChange, _ref5$styleObject = _ref5.styleObject, styleObject = void 0 === _ref5$styleObject ? {} : _ref5$styleObject, _ref5$placeholder = _ref5.placeholder, placeholder = void 0 === _ref5$placeholder ? {} : _ref5$placeholder, autoFocusRef = _ref5.autoFocusRef, autocomplete = _ref5.autocomplete, _ref5$gqlErrors = _ref5.gqlErrors, gqlErrors = void 0 === _ref5$gqlErrors ? [] : _ref5$gqlErrors;
-        var _useState9 = hooks_module_m(""), number = _useState9[0], setNumber = _useState9[1];
-        var _useState10 = hooks_module_m(initFieldValidity), numberValidity = _useState10[0], setNumberValidity = _useState10[1];
+        var _useState9 = hooks_module_y(""), number = _useState9[0], setNumber = _useState9[1];
+        var _useState10 = hooks_module_y(initFieldValidity), numberValidity = _useState10[0], setNumberValidity = _useState10[1];
         var _getStyles2 = getStyles(styleObject), generalStyle = _getStyles2[0], inputStyle = _getStyles2[1];
-        var numberRef = hooks_module_h();
+        var numberRef = hooks_module_s();
         var composedStyles = _extends({}, {
             input: DEFAULT_INPUT_STYLE
         }, generalStyle);
         var isValid = numberValidity.isValid, isPotentiallyValid = numberValidity.isPotentiallyValid;
-        hooks_module_y((function() {
+        hooks_module_((function() {
             autoFocusRef(numberRef);
         }), []);
-        hooks_module_y((function() {
+        hooks_module_((function() {
             gqlErrors.length > 0 && setNumberValidity({
                 isPotentiallyValid: !1,
                 isValid: !1
             });
         }), [ gqlErrors ]);
-        hooks_module_y((function() {
+        hooks_module_((function() {
             var errors = setErrors({
                 isNumberValid: numberValidity.isValid,
                 gqlErrorsObject: {
@@ -9115,9 +9609,9 @@ window.smartCard = function(modules) {
                 errors: errors
             });
         }), [ number, isValid, isPotentiallyValid ]);
-        return v(preact_module_d, null, v("style", {
+        return h(p, null, h("style", {
             nonce: cspNonce
-        }, styleToString(composedStyles)), v(CardNumber, {
+        }, styleToString(composedStyles)), h(CardNumber, {
             ref: numberRef,
             type: "text",
             autocomplete: autocomplete,
@@ -9136,24 +9630,24 @@ window.smartCard = function(modules) {
     function CardExpiryField(_ref7) {
         var _placeholder$expiry2;
         var cspNonce = _ref7.cspNonce, onChange = _ref7.onChange, _ref7$styleObject = _ref7.styleObject, styleObject = void 0 === _ref7$styleObject ? {} : _ref7$styleObject, _ref7$placeholder = _ref7.placeholder, placeholder = void 0 === _ref7$placeholder ? {} : _ref7$placeholder, autoFocusRef = _ref7.autoFocusRef, autocomplete = _ref7.autocomplete, _ref7$gqlErrors = _ref7.gqlErrors, gqlErrors = void 0 === _ref7$gqlErrors ? [] : _ref7$gqlErrors;
-        var _useState11 = hooks_module_m(""), expiry = _useState11[0], setExpiry = _useState11[1];
-        var _useState12 = hooks_module_m(initFieldValidity), expiryValidity = _useState12[0], setExpiryValidity = _useState12[1];
+        var _useState11 = hooks_module_y(""), expiry = _useState11[0], setExpiry = _useState11[1];
+        var _useState12 = hooks_module_y(initFieldValidity), expiryValidity = _useState12[0], setExpiryValidity = _useState12[1];
         var _getStyles3 = getStyles(styleObject), generalStyle = _getStyles3[0], inputStyle = _getStyles3[1];
-        var expiryRef = hooks_module_h();
+        var expiryRef = hooks_module_s();
         var composedStyles = _extends({}, {
             input: DEFAULT_INPUT_STYLE
         }, generalStyle);
         var isValid = expiryValidity.isValid, isPotentiallyValid = expiryValidity.isPotentiallyValid;
-        hooks_module_y((function() {
+        hooks_module_((function() {
             autoFocusRef(expiryRef);
         }), []);
-        hooks_module_y((function() {
+        hooks_module_((function() {
             gqlErrors.length > 0 && setExpiryValidity({
                 isPotentiallyValid: !1,
                 isValid: !1
             });
         }), [ gqlErrors ]);
-        hooks_module_y((function() {
+        hooks_module_((function() {
             var errors = setErrors({
                 isExpiryValid: expiryValidity.isValid
             });
@@ -9163,9 +9657,9 @@ window.smartCard = function(modules) {
                 errors: errors
             });
         }), [ expiry, isValid, isPotentiallyValid ]);
-        return v(preact_module_d, null, v("style", {
+        return h(p, null, h("style", {
             nonce: cspNonce
-        }, styleToString(composedStyles)), v(CardExpiry, {
+        }, styleToString(composedStyles)), h(CardExpiry, {
             ref: expiryRef,
             type: "text",
             autocomplete: autocomplete,
@@ -9184,24 +9678,24 @@ window.smartCard = function(modules) {
     function CardCVVField(_ref9) {
         var _placeholder$cvv2;
         var cspNonce = _ref9.cspNonce, onChange = _ref9.onChange, _ref9$styleObject = _ref9.styleObject, styleObject = void 0 === _ref9$styleObject ? {} : _ref9$styleObject, _ref9$placeholder = _ref9.placeholder, placeholder = void 0 === _ref9$placeholder ? {} : _ref9$placeholder, autoFocusRef = _ref9.autoFocusRef, autocomplete = _ref9.autocomplete, _ref9$gqlErrors = _ref9.gqlErrors, gqlErrors = void 0 === _ref9$gqlErrors ? [] : _ref9$gqlErrors;
-        var _useState13 = hooks_module_m(""), cvv = _useState13[0], setCvv = _useState13[1];
-        var _useState14 = hooks_module_m(initFieldValidity), cvvValidity = _useState14[0], setCvvValidity = _useState14[1];
+        var _useState13 = hooks_module_y(""), cvv = _useState13[0], setCvv = _useState13[1];
+        var _useState14 = hooks_module_y(initFieldValidity), cvvValidity = _useState14[0], setCvvValidity = _useState14[1];
         var _getStyles4 = getStyles(styleObject), generalStyle = _getStyles4[0], inputStyle = _getStyles4[1];
-        var cvvRef = hooks_module_h();
+        var cvvRef = hooks_module_s();
         var composedStyles = _extends({}, {
             input: DEFAULT_INPUT_STYLE
         }, generalStyle);
         var isValid = cvvValidity.isValid, isPotentiallyValid = cvvValidity.isPotentiallyValid;
-        hooks_module_y((function() {
+        hooks_module_((function() {
             autoFocusRef(cvvRef);
         }), []);
-        hooks_module_y((function() {
+        hooks_module_((function() {
             gqlErrors.length > 0 && setCvvValidity({
                 isPotentiallyValid: !1,
                 isValid: !1
             });
         }), [ gqlErrors ]);
-        hooks_module_y((function() {
+        hooks_module_((function() {
             var errors = setErrors({
                 isCvvValid: cvvValidity.isValid
             });
@@ -9211,9 +9705,9 @@ window.smartCard = function(modules) {
                 errors: errors
             });
         }), [ cvv, isValid, isPotentiallyValid ]);
-        return v(preact_module_d, null, v("style", {
+        return h(p, null, h("style", {
             nonce: cspNonce
-        }, styleToString(composedStyles)), v(CardCVV, {
+        }, styleToString(composedStyles)), h(CardCVV, {
             ref: cvvRef,
             type: "text",
             autocomplete: autocomplete,
@@ -9232,24 +9726,24 @@ window.smartCard = function(modules) {
     function CardNameField(_ref11) {
         var _placeholder$name;
         var cspNonce = _ref11.cspNonce, onChange = _ref11.onChange, _ref11$styleObject = _ref11.styleObject, styleObject = void 0 === _ref11$styleObject ? {} : _ref11$styleObject, _ref11$placeholder = _ref11.placeholder, placeholder = void 0 === _ref11$placeholder ? {} : _ref11$placeholder, autoFocusRef = _ref11.autoFocusRef, _ref11$gqlErrors = _ref11.gqlErrors, gqlErrors = void 0 === _ref11$gqlErrors ? [] : _ref11$gqlErrors;
-        var _useState15 = hooks_module_m(""), name = _useState15[0], setName = _useState15[1];
-        var _useState16 = hooks_module_m(initFieldValidity), nameValidity = _useState16[0], setNameValidity = _useState16[1];
+        var _useState15 = hooks_module_y(""), name = _useState15[0], setName = _useState15[1];
+        var _useState16 = hooks_module_y(initFieldValidity), nameValidity = _useState16[0], setNameValidity = _useState16[1];
         var _getStyles5 = getStyles(styleObject), generalStyle = _getStyles5[0], inputStyle = _getStyles5[1];
-        var nameRef = hooks_module_h();
+        var nameRef = hooks_module_s();
         var composedStyles = _extends({}, {
             input: DEFAULT_INPUT_STYLE
         }, generalStyle);
         var isValid = nameValidity.isValid, isPotentiallyValid = nameValidity.isPotentiallyValid;
-        hooks_module_y((function() {
+        hooks_module_((function() {
             autoFocusRef(nameRef);
         }), []);
-        hooks_module_y((function() {
+        hooks_module_((function() {
             gqlErrors.length > 0 && setNameValidity({
                 isPotentiallyValid: !1,
                 isValid: !1
             });
         }), [ gqlErrors ]);
-        hooks_module_y((function() {
+        hooks_module_((function() {
             var errors = setErrors({
                 isNameValid: nameValidity.isValid
             });
@@ -9259,9 +9753,9 @@ window.smartCard = function(modules) {
                 errors: errors
             });
         }), [ name, isValid, isPotentiallyValid ]);
-        return v(preact_module_d, null, v("style", {
+        return h(p, null, h("style", {
             nonce: cspNonce
-        }, styleToString(composedStyles)), v(CardName, {
+        }, styleToString(composedStyles)), h(CardName, {
             ref: nameRef,
             type: "text",
             className: "name " + (nameValidity.isPotentiallyValid || nameValidity.isValid ? "valid" : "invalid"),
@@ -9279,11 +9773,11 @@ window.smartCard = function(modules) {
     function Page(_ref) {
         var cspNonce = _ref.cspNonce, props = _ref.props;
         var facilitatorAccessToken = props.facilitatorAccessToken, style = props.style, disableAutocomplete = props.disableAutocomplete, placeholder = props.placeholder, type = props.type, onChange = props.onChange, xport = props.export;
-        var _useState = hooks_module_m(), fieldValue = _useState[0], setFieldValue = _useState[1];
-        var _useState2 = hooks_module_m(!1), fieldValid = _useState2[0], setFieldValid = _useState2[1];
-        var _useState3 = hooks_module_m([]), fieldErrors = _useState3[0], setFieldErrors = _useState3[1];
-        var _useState4 = hooks_module_m(), mainRef = _useState4[0], setRef = _useState4[1];
-        var _useState5 = hooks_module_m({
+        var _useState = hooks_module_y(), fieldValue = _useState[0], setFieldValue = _useState[1];
+        var _useState2 = hooks_module_y(!1), fieldValid = _useState2[0], setFieldValid = _useState2[1];
+        var _useState3 = hooks_module_y([]), fieldErrors = _useState3[0], setFieldErrors = _useState3[1];
+        var _useState4 = hooks_module_y(), mainRef = _useState4[0], setRef = _useState4[1];
+        var _useState5 = hooks_module_y({
             singleField: {},
             numberField: [],
             expiryField: [],
@@ -9327,13 +9821,13 @@ window.smartCard = function(modules) {
                 nameField: []
             });
         };
-        hooks_module_y((function() {
+        hooks_module_((function() {
             onChange({
                 isValid: fieldValid,
                 errors: fieldErrors
             });
         }), [ fieldValid, fieldErrors ]);
-        hooks_module_y((function() {
+        hooks_module_((function() {
             (input = mainRef) && window.addEventListener("focus", (function() {
                 setTimeout((function() {
                     var activeEl = document.activeElement;
@@ -9353,7 +9847,7 @@ window.smartCard = function(modules) {
             }));
             var input;
         }), [ mainRef ]);
-        hooks_module_y((function() {
+        hooks_module_((function() {
             !function(_ref) {
                 window.exports = {
                     name: _ref.name,
@@ -9393,9 +9887,9 @@ window.smartCard = function(modules) {
             setFieldValid(valid);
             resetGQLErrors();
         };
-        return v(preact_module_d, null, v("style", {
+        return h(p, null, h("style", {
             nonce: cspNonce
-        }, "\n                    * {\n                        box-sizing: border-box;\n                    }\n\n                    html, body {\n                        margin: 0;\n                        padding: 0;\n                        height: 100%;\n                    }\n\n                    body {\n                        display: inline-block;\n                        width: 100%;\n                        font-size: 100%;\n                        font-family: monospace;\n                    }\n\n                    *:focus {\n                        outline: none;\n                    }\n                "), "single" === type ? v(CardField, {
+        }, "\n                    * {\n                        box-sizing: border-box;\n                    }\n\n                    html, body {\n                        margin: 0;\n                        padding: 0;\n                        height: 100%;\n                    }\n\n                    body {\n                        display: inline-block;\n                        width: 100%;\n                        font-size: 100%;\n                        font-family: monospace;\n                    }\n\n                    *:focus {\n                        outline: none;\n                    }\n                "), "single" === type ? h(CardField, {
             gqlErrorsObject: fieldGQLErrors.singleField,
             cspNonce: cspNonce,
             autocomplete: autocomplete,
@@ -9405,7 +9899,7 @@ window.smartCard = function(modules) {
             autoFocusRef: function(ref) {
                 return setRef(ref.current.base);
             }
-        }) : null, "number" === type ? v(CardNumberField, {
+        }) : null, "number" === type ? h(CardNumberField, {
             ref: mainRef,
             gqlErrors: fieldGQLErrors.numberField,
             cspNonce: cspNonce,
@@ -9416,7 +9910,7 @@ window.smartCard = function(modules) {
             autoFocusRef: function(ref) {
                 return setRef(ref.current.base);
             }
-        }) : null, "cvv" === type ? v(CardCVVField, {
+        }) : null, "cvv" === type ? h(CardCVVField, {
             ref: mainRef,
             gqlErrors: fieldGQLErrors.cvvField,
             cspNonce: cspNonce,
@@ -9427,7 +9921,7 @@ window.smartCard = function(modules) {
             autoFocusRef: function(ref) {
                 return setRef(ref.current.base);
             }
-        }) : null, "expiry" === type ? v(CardExpiryField, {
+        }) : null, "expiry" === type ? h(CardExpiryField, {
             ref: mainRef,
             gqlErrors: fieldGQLErrors.expiryField,
             cspNonce: cspNonce,
@@ -9438,7 +9932,7 @@ window.smartCard = function(modules) {
             autoFocusRef: function(ref) {
                 return setRef(ref.current.base);
             }
-        }) : null, "name" === type ? v(CardNameField, {
+        }) : null, "name" === type ? h(CardNameField, {
             ref: mainRef,
             gqlErrors: fieldGQLErrors.nameField,
             cspNonce: cspNonce,
@@ -9451,13 +9945,13 @@ window.smartCard = function(modules) {
         }) : null);
     }
     function setupCard(_ref3) {
-        u = v(Page, {
+        u = h(Page, {
             cspNonce: _ref3.cspNonce,
             props: getCardProps({
                 facilitatorAccessToken: _ref3.facilitatorAccessToken
             })
-        }), i = util_getBody(), l.__ && l.__(u, i), r = !1 ? null : i.__k, f = [], j(i, u = i.__k = v(preact_module_d, null, [ u ]), r || preact_module_e, preact_module_e, void 0 !== i.ownerSVGElement, r ? null : i.firstChild ? n.call(i.childNodes) : null, f, r ? r.__e : i.firstChild, !1), 
-        z(f, u);
-        var u, i, r, f;
+        }), i = util_getBody(), l.__ && l.__(u, i), r = !1 ? null : i.__k, e = [], j(i, u = i.__k = h(p, null, [ u ]), r || f, f, void 0 !== i.ownerSVGElement, r ? null : i.firstChild ? n.call(i.childNodes) : null, e, r ? r.__e : i.firstChild, !1), 
+        z(e, u);
+        var u, i, r, e;
     }
 } ]);
