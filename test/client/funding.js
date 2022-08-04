@@ -175,15 +175,15 @@ describe('funding source cases', () => {
 
     it('should render a button, click the button, and render checkout with eps funding source', async () => {
         return await wrapPromise(async ({ expect }) => {
-        const fundingSource = FUNDING.EPS;
+            const fundingSource = FUNDING.EPS;
 
-            mockFunction(window.paypal, 'PaymentFields', expect('PaymentFields', ({ args: [ props ] }) => {
+            mockFunction(window.paypal, 'Checkout', expect('Checkout', ({ args: [ props ] }) => {
                 if (props.fundingSource !== fundingSource) {
                     throw new Error(`Expected fundingSource to be ${ fundingSource }, got ${ props.fundingSource }`);
                 }
 
                 return {
-                    render: promiseNoop
+                    renderTo: promiseNoop
                 };
             }));
 
@@ -195,7 +195,7 @@ describe('funding source cases', () => {
 
             createButtonHTML({ fundingEligibility });
 
-            await mockSetupButton({ merchantID: [ 'XYZ12345' ], fundingEligibility, buyerCountry: 'AT' });
+            await mockSetupButton({ merchantID: [ 'XYZ12345' ], fundingEligibility });
 
             await clickButton(fundingSource);
         });

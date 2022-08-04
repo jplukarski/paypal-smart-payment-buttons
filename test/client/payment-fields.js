@@ -8,7 +8,7 @@ import { FUNDING } from '@paypal/sdk-constants/src';
 import { mockSetupButton, generateOrderID, mockAsyncProp, createButtonHTML, mockFunction, clickButton } from './mocks';
 
 describe('payment field cases', () => {
-    it('should render a button, click the button, and render payment-fields', async () => {
+    it('should render a button, click the button, and render payment-fields iframe', async () => {
         return await wrapPromise(async ({ expect, avoid }) => {
             const orderID = generateOrderID();
 
@@ -56,7 +56,88 @@ describe('payment field cases', () => {
 
             createButtonHTML({ fundingEligibility });
 
-            await mockSetupButton({ merchantID: [ 'XYZ12345' ], fundingEligibility, buyerCountry: 'AT' });
+            await mockSetupButton({
+                merchantID: [ 'XYZ12345' ],
+                fundingEligibility,
+                buyerCountry: 'AT',
+                eligibility: {
+                    inlinePaymentFields: {
+                        inlineEligibleAPMs : ['eps'],
+                        isInlineEnabled : true
+                    }
+                }
+            });
+
+            await clickButton(FUNDING.EPS);
+        });
+    });
+
+    it('should render a button, click the button, and should NOT render payment-fields iframe instead render checkout with eps funding source', async () => {
+        return await wrapPromise(async ({ expect, avoid }) => {
+            const orderID = generateOrderID();
+            const payerID = 'AAABBBCCC';
+
+            window.xprops.createOrder = mockAsyncProp(expect('createOrder', async () => {
+                return ZalgoPromise.try(() => {
+                    return orderID;
+                });
+            }));
+
+            window.xprops.onCancel = avoid('onCancel');
+
+            window.xprops.onApprove = mockAsyncProp(expect('onApprove', async (data) => {
+                if (data.orderID !== orderID) {
+                    throw new Error(`Expected orderID to be ${ orderID }, got ${ data.orderID }`);
+                }
+
+                if (data.payerID !== payerID) {
+                    throw new Error(`Expected payerID to be ${ payerID }, got ${ data.payerID }`);
+                }
+            }));
+
+            mockFunction(window.paypal, 'Checkout', expect('Checkout', ({ original: CheckoutOriginal, args: [ props ] }) => {
+
+                mockFunction(props, 'onApprove', expect('onApprove', ({ original: onApproveOriginal, args: [ data, actions ] }) => {
+                    return onApproveOriginal({ ...data, payerID }, actions);
+                }));
+
+                const checkoutInstance = CheckoutOriginal(props);
+
+                mockFunction(checkoutInstance, 'renderTo', expect('renderTo', async ({ original: renderToOriginal, args }) => {
+                    return props.createOrder().then(id => {
+                        if (id !== orderID) {
+                            throw new Error(`Expected orderID to be ${ orderID }, got ${ id }`);
+                        }
+
+                        return renderToOriginal(...args);
+                    });
+                }));
+
+                return checkoutInstance;
+            }));
+
+            const fundingEligibility = {
+                [ FUNDING.PAYPAL ]: {
+                    eligible: true
+                },
+                [ FUNDING.EPS]: {
+                    eligible: true
+                }
+            };
+
+            createButtonHTML({ fundingEligibility });
+
+            await mockSetupButton({
+                merchantID: [ 'XYZ12345' ],
+                fundingEligibility,
+                buyerCountry: 'AT',
+                eligibility: {
+                    inlinePaymentFields: {
+                        inlineEligibleAPMs : [],
+                        isInlineEnabled : false
+                    }
+                }
+            });
 
             await clickButton(FUNDING.EPS);
         });

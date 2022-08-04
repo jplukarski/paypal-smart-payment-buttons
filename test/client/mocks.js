@@ -1624,7 +1624,11 @@ export async function mockSetupButton(overrides? : Object = {}) : Promise<void> 
         firebaseConfig:                MOCK_FIREBASE_CONFIG,
         eligibility:                   {
             cardFields: false,
-            native:     false
+            native:     false,
+            inlinePaymentFields: {
+                inlineEligibleAPMs : [],
+                isInlineEnabled : false
+            }
         },
         sdkMeta: MOCK_SDK_META,
         ...overrides
