@@ -34,7 +34,8 @@ type ButtonMiddlewareOptions = {|
     getInstanceLocationInformation : () => InstanceLocationInformation,
     getSDKLocationInformation : (req : ExpressRequest, env : string) => Promise<SDKLocationInformation>,
     getExperiments? : (req : ExpressRequest, params : GetExperimentsParams) => Promise<GetExperimentsType>,
-    sdkVersionManager: SDKVersionManager
+    sdkVersionManager: SDKVersionManager,
+    getReleaseHash: (req : ExpressRequest) => Promise<{| current: string, previous: string |}>
 |};
 
 export function getButtonMiddleware({
@@ -52,20 +53,20 @@ export function getButtonMiddleware({
     getSDKLocationInformation,
     getExperiments = getDefaultExperiments,
     sdkVersionManager,
+    getReleaseHash,
 } : ButtonMiddlewareOptions = {}) : ExpressMiddleware {
     const useLocal = !cdn;
-
+    
     const locationInformation = getInstanceLocationInformation();
 
     return sdkMiddleware({ logger, cache, locationInformation }, {
         app: async ({ req, res, params, meta, logBuffer, sdkMeta }) => {
             logger.info(req, 'smart_buttons_render');
             const middlewareStartTime = Date.now();
-
+    
             for (const name of Object.keys(req.cookies || {})) {
                 logger.info(req, `smart_buttons_cookie_${ name || 'unknown' }`);
             }
-
             tracking(req);
 
             const { env, clientID, buttonSessionID, cspNonce, debug, buyerCountry, disableFunding, disableCard, userIDToken, amount, renderedButtons,
@@ -146,10 +147,18 @@ export function getButtonMiddleware({
                     }
                     return getDefaultExperiments();
                 });
-            const experiments = await getExperimentsPromise;
+            const getReleaseHashPromise = await getReleaseHash(req)
+                .catch((err) => {
+                    logger.info(req, `GET_CURRENT_RELEASE_HASH_FAILED_${ err.message }`);
+                    return {};
+                });
+            const [experiments, releaseHash] = await Promise.all([getExperimentsPromise, getReleaseHashPromise])
             const eligibility = {
-                cardFields: experiments.isCardFieldsExperimentEnabled
+                cardFields:              experiments.isCardFieldsExperimentEnabled,
+                isServiceWorkerEligible: experiments.isServiceWorkerEligible
             };
+
+            
 
             logger.info(req, `button_render_version_${ sdkVersion }`);
             logger.info(req, `button_client_version_${ client.version }`);
@@ -179,10 +188,11 @@ export function getButtonMiddleware({
                 return clientErrorResponse(res, err.stack || err.message);
             }
             const buttonHTML = renderButton.Buttons(buttonProps).render(html());
+            const currentReleaseHash = releaseHash.current;
             const setupParams = {
                 fundingEligibility, buyerCountry, cspNonce, merchantID, sdkMeta, wallet, correlationID,
                 firebaseConfig, facilitatorAccessToken, eligibility, content, cookies, personalization,
-                brandedDefault: experiments.isFundingSourceBranded
+                brandedDefault: experiments.isFundingSourceBranded, currentReleaseHash
             };
 
             const cplCompPayload = {

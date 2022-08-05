@@ -302,3 +302,12 @@ export const APM_LIST = [
     FUNDING.MERCADOPAGO,
     FUNDING.MULTIBANCO
 ];
+
+export const SERVICE_WORKER = {
+    // SW_URL:                          'https://localhost.paypal.com:8443/checkoutweb/public/dumbledore-service-worker.js?',
+    SW_URL:                          'https://localhost.paypal.com:8443/checkoutweb/public/dumbledore-service-worker.js?',
+    SW_SCOPE:                        '/checkoutweb',
+    GET_SW_LOGS_EVENT_NAME:          'GET_SW_LOGS',
+    LOGS_CHANNEL_NAME:               'logs-channel',
+    GET_SW_LOGS_RESPONSE_EVENT_NAME: 'GET_SW_LOGS_RESPONSE'
+};
