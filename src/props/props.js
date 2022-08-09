@@ -15,6 +15,8 @@ import { getOnApprove } from './onApprove';
 import { getOnComplete } from './onComplete';
 import { getOnCancel } from './onCancel';
 import { getOnShippingChange } from './onShippingChange';
+import { getOnShippingAddressChange } from './onShippingAddressChange';
+import { getOnShippingOptionsChange } from './onShippingOptionsChange';
 import { getOnClick } from './onClick';
 import { getCreateBillingAgreement } from './createBillingAgreement';
 import { getCreateSubscription } from './createSubscription';
@@ -22,8 +24,10 @@ import { getOnAuth } from './onAuth';
 import { getOnError } from './onError';
 
 import type { CreateOrder, XCreateOrder, CreateBillingAgreement, XCreateBillingAgreement, OnInit,
-    XOnInit, OnApprove, XOnApprove, OnComplete, XOnComplete, OnCancel, XOnCancel, OnClick, XOnClick, OnShippingChange, XOnShippingChange, XOnError,
-    OnError, XGetPopupBridge, GetPopupBridge, XCreateSubscription, RememberFunding, GetPageURL, OnAuth, GetQueriedEligibleFunding
+    XOnInit, OnApprove, XOnApprove, OnComplete, XOnComplete, OnCancel, XOnCancel, OnClick, XOnClick,
+    OnShippingChange, XOnShippingChange, OnShippingAddressChange, XOnShippingAddressChange,
+    OnShippingOptionsChange, XOnShippingOptionsChange, XOnError,
+    OnError, XGetPopupBridge, GetPopupBridge, XCreateSubscription, RememberFunding, GetPageURL, OnAuth, GetQueriedEligibleFunding, PaymentRequest
 } from '.';
 
 // export something to force webpack to see this as an ES module
@@ -93,6 +97,8 @@ export type XProps = {|
     onClick : XOnClick,
     onError : XOnError,
     onShippingChange : ?XOnShippingChange,
+    onShippingAddressChange : ?XOnShippingAddressChange,
+    onShippingOptionsChange : ?XOnShippingOptionsChange,
 
     paymentMethodNonce : ?string,
     paymentMethodToken : ?string,
@@ -100,7 +106,8 @@ export type XProps = {|
     userExperienceFlow : string,
     allowBillingPayments : boolean,
 
-    applePay : XApplePaySessionConfigRequest
+    applePay : XApplePaySessionConfigRequest,
+    paymentRequest: ?PaymentRequest
 |};
 
 export type Props = {|
@@ -164,6 +171,8 @@ export type Props = {|
 
     onCancel : OnCancel,
     onShippingChange : ?OnShippingChange,
+    onShippingAddressChange : ?OnShippingAddressChange,
+    onShippingOptionsChange : ?OnShippingOptionsChange,
     onAuth : OnAuth,
 
     paymentMethodToken : ?string,
@@ -172,7 +181,10 @@ export type Props = {|
 
     branded : boolean | null,
     userExperienceFlow : string,
-    allowBillingPayments : boolean
+    allowBillingPayments : boolean,
+
+    paymentRequest: ?PaymentRequest,
+    merchantID : $ReadOnlyArray<string>
 |};
 
 export function getProps({ facilitatorAccessToken, branded, paymentSource } : {| facilitatorAccessToken : string, branded : boolean | null, paymentSource : $Values<typeof FUNDING> | null |}) : Props {
@@ -222,7 +234,8 @@ export function getProps({ facilitatorAccessToken, branded, paymentSource } : {|
         storageID,
         applePay,
         userExperienceFlow,
-        allowBillingPayments
+        allowBillingPayments,
+        paymentRequest
     } = xprops;
 
     const onInit = getOnInit({ onInit: xprops.onInit });
@@ -244,9 +257,11 @@ export function getProps({ facilitatorAccessToken, branded, paymentSource } : {|
 
     const onError = getOnError({ onError: xprops.onError });
     const onApprove = getOnApprove({ onApprove: xprops.onApprove, createBillingAgreement, createSubscription, intent, onError, partnerAttributionID, clientAccessToken, vault, clientID, facilitatorAccessToken, branded, createOrder, paymentSource });
-    const onComplete = getOnComplete({ createOrder, onComplete: xprops.onComplete, onError: xprops.onError });
+    const onComplete = getOnComplete({ intent, onComplete: xprops.onComplete, partnerAttributionID, onError, clientID, facilitatorAccessToken, createOrder });
     const onCancel = getOnCancel({ onCancel: xprops.onCancel, onError }, { createOrder });
     const onShippingChange = getOnShippingChange({ onShippingChange: xprops.onShippingChange, partnerAttributionID, clientID }, { facilitatorAccessToken, createOrder });
+    const onShippingAddressChange = getOnShippingAddressChange({ onShippingAddressChange: xprops.onShippingAddressChange, clientID }, { createOrder });
+    const onShippingOptionsChange = getOnShippingOptionsChange({ onShippingOptionsChange: xprops.onShippingOptionsChange, clientID }, { createOrder });
     const onAuth = getOnAuth({ facilitatorAccessToken, createOrder, createSubscription, clientID });
 
     return {
@@ -305,6 +320,8 @@ export function getProps({ facilitatorAccessToken, branded, paymentSource } : {|
         onComplete,
         onCancel,
         onShippingChange,
+        onShippingAddressChange,
+        onShippingOptionsChange,
 
         onAuth,
         standaloneFundingSource: fundingSource,
@@ -313,6 +330,9 @@ export function getProps({ facilitatorAccessToken, branded, paymentSource } : {|
         stickinessID,
         applePay,
         userExperienceFlow,
-        allowBillingPayments
+        allowBillingPayments,
+
+        paymentRequest,
+        merchantID
     };
 }
