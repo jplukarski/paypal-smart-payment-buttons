@@ -129,7 +129,7 @@ function initCheckout({ props, components, serviceData, payment, config, restart
         createBillingAgreement, createSubscription, onClick, amount,
         clientID, connect, clientMetadataID: cmid, onAuth, userIDToken, env,
         currency, enableFunding, stickinessID,
-        standaloneFundingSource, branded, paymentMethodToken, allowBillingPayments, merchantRequestedPopupsDisabled, inlinexo } = props;
+        standaloneFundingSource, branded, paymentMethodToken, allowBillingPayments, merchantRequestedPopupsDisabled, inlinexo, smokeHash } = props;
     let { button, win, fundingSource, card, isClick, buyerAccessToken = serviceData.buyerAccessToken,
         venmoPayloadID, buyerIntent } = payment;
     const { buyerCountry, sdkMeta, merchantID } = serviceData;
@@ -153,6 +153,7 @@ function initCheckout({ props, components, serviceData, payment, config, restart
             clientAccessToken,
             venmoPayloadID,
             inlinexo: inline,
+            smokeHash,
 
             createAuthCode: () => {
                 return ZalgoPromise.try(() => {
