@@ -33,7 +33,8 @@ export type ButtonXProps = {|
     ...XProps,
 
     style : ButtonStyle,
-    buttonSessionID : string
+    buttonSessionID : string,
+    smokeHash : string
 |};
 
 export type ButtonProps = {|
@@ -41,7 +42,8 @@ export type ButtonProps = {|
 
     style : ButtonStyle,
     inlinexo : boolean,
-    buttonSessionID : string
+    buttonSessionID : string,
+    smokeHash : string
 |};
 
 export function getButtonProps({ facilitatorAccessToken, brandedDefault, paymentSource } : {| facilitatorAccessToken : string, brandedDefault : boolean | null, paymentSource : $Values<typeof FUNDING> | null |}) : ButtonProps {
@@ -52,7 +54,8 @@ export function getButtonProps({ facilitatorAccessToken, brandedDefault, payment
         style,
         branded,
         experience,
-        intent
+        intent,
+        smokeHash
     } = xprops;
 
     branded = branded ?? brandedDefault;
@@ -106,7 +109,8 @@ export function getButtonProps({ facilitatorAccessToken, brandedDefault, payment
         style,
         buttonSessionID,
         branded,
-        inlinexo: experience === EXPERIENCE.INLINE
+        inlinexo: experience === EXPERIENCE.INLINE,
+        smokeHash
     };
 }
 
