@@ -10728,13 +10728,11 @@ window.spb = function(modules) {
                 return _ref12.data;
             }));
         }
-        function buildPaymentSource(tokenID) {
-            return {
-                token: {
-                    id: tokenID,
-                    type: "NONCE"
-                }
-            };
+        function buildPaymentSource(tokenID, fundingSource) {
+            var _paymentSource;
+            return (_paymentSource = {})[fundingSource] = {
+                vault_id: tokenID
+            }, _paymentSource;
         }
         function validatePaymentMethod(_ref13) {
             var _headers15;
@@ -10742,7 +10740,7 @@ window.spb = function(modules) {
             Object(lib.getLogger)().info("rest_api_create_order_token");
             var headers = ((_headers15 = {})[constants.HEADERS.AUTHORIZATION] = "Bearer " + accessToken, 
             _headers15[constants.HEADERS.PARTNER_ATTRIBUTION_ID] = partnerAttributionID, _headers15[constants.HEADERS.CLIENT_METADATA_ID] = clientMetadataID, 
-            _headers15[constants.HEADERS.APP_NAME] = constants.SMART_PAYMENT_BUTTONS, _headers15[constants.HEADERS.APP_VERSION] = "5.0.110", 
+            _headers15[constants.HEADERS.APP_NAME] = constants.SMART_PAYMENT_BUTTONS, _headers15[constants.HEADERS.APP_VERSION] = "5.0.111", 
             _headers15);
             var paymentSource = {
                 token: {
@@ -11529,7 +11527,7 @@ window.spb = function(modules) {
             var _ref$amount = _ref.amount, _ref$vetted = _ref.vetted, _ref$allowBillingPaym = _ref.allowBillingPayments;
             return callGraphQL({
                 name: "GetSmartWallet",
-                query: "\n            query GetSmartWallet(\n                $clientID: String!\n                $merchantID: [String!]\n                $currency: String\n                $amount: String\n                $userIDToken: String\n                $vetted: Boolean\n                $paymentMethodToken: String\n                $branded: Boolean,\n                $allowBillingPayments: Boolean\n            ) {\n                smartWallet(\n                    clientId: $clientID\n                    merchantId: $merchantID\n                    currency: $currency\n                    amount: $amount\n                    userIdToken: $userIDToken\n                    vetted: $vetted\n                    paymentMethodNonce: $paymentMethodToken\n                    branded: $branded,\n                    allowBillingPayments: $allowBillingPayments\n                ) {\n                    paypal {\n                        instruments {\n                            type\n                            label\n                            logoUrl\n                            instrumentID\n                            tokenID\n                            vendor\n                            oneClick\n                            accessToken\n                        }\n                    }\n                    credit {\n                        instruments {\n                            type\n                            label\n                            logoUrl\n                            instrumentID\n                            tokenID\n                            vendor\n                            oneClick\n                            accessToken\n                        }\n                    }\n                    card {\n                        instruments {\n                            type\n                            label\n                            logoUrl\n                            instrumentID\n                            tokenID\n                            vendor\n                            oneClick\n                        }\n                    }\n                }\n            }\n        ",
+                query: "\n            query GetSmartWallet(\n                $clientID: String!\n                $merchantID: [String!]\n                $currency: String\n                $amount: String\n                $userIDToken: String\n                $vetted: Boolean\n                $paymentMethodToken: String\n                $branded: Boolean,\n                $allowBillingPayments: Boolean\n            ) {\n                smartWallet(\n                    clientId: $clientID\n                    merchantId: $merchantID\n                    currency: $currency\n                    amount: $amount\n                    userIdToken: $userIDToken\n                    vetted: $vetted\n                    paymentMethodNonce: $paymentMethodToken\n                    branded: $branded,\n                    allowBillingPayments: $allowBillingPayments\n                ) {\n                    paypal {\n                        instruments {\n                            type\n                            label\n                            logoUrl\n                            instrumentID\n                            tokenID\n                            vendor\n                            oneClick\n                            accessToken\n                        }\n                    }\n                    credit {\n                        instruments {\n                            type\n                            label\n                            logoUrl\n                            instrumentID\n                            tokenID\n                            vendor\n                            oneClick\n                            accessToken\n                        }\n                    }\n                    card {\n                        instruments {\n                            type\n                            label\n                            logoUrl\n                            instrumentID\n                            tokenID\n                            vendor\n                            oneClick\n                        }\n                    }\n                    venmo {\n                        instruments {\n                            type\n                            label\n                            logoUrl\n                            instrumentID\n                            tokenID\n                            oneClick\n                        }\n                    }\n                }\n            }\n        ",
                 variables: {
                     clientID: _ref.clientID,
                     merchantID: _ref.merchantID,
@@ -13332,7 +13330,7 @@ window.spb = function(modules) {
                             getParent: getParent
                         }).then((function() {
                             return Object(api.confirmOrderAPI)(orderID, {
-                                payment_source: Object(api.buildPaymentSource)(paymentMethodID)
+                                payment_source: Object(api.buildPaymentSource)(paymentMethodID, fundingSource)
                             }, {
                                 facilitatorAccessToken: facilitatorAccessToken,
                                 partnerAttributionID: partnerAttributionID
@@ -16057,7 +16055,7 @@ window.spb = function(modules) {
                     var _ref3;
                     return (_ref3 = {})[sdk_constants_src.FPTI_KEY.CONTEXT_TYPE] = constants.FPTI_CONTEXT_TYPE.BUTTON_SESSION_ID, 
                     _ref3[sdk_constants_src.FPTI_KEY.CONTEXT_ID] = buttonSessionID, _ref3[sdk_constants_src.FPTI_KEY.BUTTON_SESSION_UID] = buttonSessionID, 
-                    _ref3[sdk_constants_src.FPTI_KEY.BUTTON_VERSION] = "5.0.110", _ref3[constants.FPTI_BUTTON_KEY.BUTTON_CORRELATION_ID] = buttonCorrelationID, 
+                    _ref3[sdk_constants_src.FPTI_KEY.BUTTON_VERSION] = "5.0.111", _ref3[constants.FPTI_BUTTON_KEY.BUTTON_CORRELATION_ID] = buttonCorrelationID, 
                     _ref3[sdk_constants_src.FPTI_KEY.STICKINESS_ID] = Object(lib.isAndroidChrome)() ? stickinessID : null, 
                     _ref3[sdk_constants_src.FPTI_KEY.PARTNER_ATTRIBUTION_ID] = partnerAttributionID, 
                     _ref3[sdk_constants_src.FPTI_KEY.USER_ACTION] = commit ? sdk_constants_src.FPTI_USER_ACTION.COMMIT : sdk_constants_src.FPTI_USER_ACTION.CONTINUE, 
