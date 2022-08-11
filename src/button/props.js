@@ -33,8 +33,7 @@ export type ButtonXProps = {|
     ...XProps,
 
     style : ButtonStyle,
-    buttonSessionID : string,
-    smokeHash : string
+    buttonSessionID : string
 |};
 
 export type ButtonProps = {|
