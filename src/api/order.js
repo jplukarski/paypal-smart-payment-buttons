@@ -337,15 +337,14 @@ type ConfirmPaymentSource = {|
         id?: string
     |}
 |}
-type LimitedNonceSource = {|
-    token : {|
-        id : string,
-        type : 'NONCE'
-    |},
+type ConfirmVaultPaymentSource = {|
+    [$Values<typeof FUNDING>] : {|
+        vault_id: string
+    |}
 |}
 
 export type ConfirmData = {|
-    payment_source : ConfirmPaymentSource | LimitedNonceSource
+    payment_source : ConfirmPaymentSource | ConfirmVaultPaymentSource
 |};
 
 export function confirmOrderAPI(orderID : string, data : ConfirmData, { facilitatorAccessToken, partnerAttributionID } : OrderAPIOptions) : ZalgoPromise<OrderConfirmResponse> {
@@ -392,11 +391,10 @@ export type ValidatePaymentMethodResponse = {|
 |};
 
 
-export function buildPaymentSource(tokenID: string): LimitedNonceSource {
+export function buildPaymentSource(tokenID: string, fundingSource: string): ConfirmVaultPaymentSource {
     const paymentSource = {
-        token: {
-            id:   tokenID,
-            type: 'NONCE'
+        [fundingSource]: {
+            vault_id: tokenID,
         }
     };
     return paymentSource;
