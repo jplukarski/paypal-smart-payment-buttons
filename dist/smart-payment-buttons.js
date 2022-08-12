@@ -10742,7 +10742,7 @@ window.spb = function(modules) {
             Object(lib.getLogger)().info("rest_api_create_order_token");
             var headers = ((_headers15 = {})[constants.HEADERS.AUTHORIZATION] = "Bearer " + accessToken, 
             _headers15[constants.HEADERS.PARTNER_ATTRIBUTION_ID] = partnerAttributionID, _headers15[constants.HEADERS.CLIENT_METADATA_ID] = clientMetadataID, 
-            _headers15[constants.HEADERS.APP_NAME] = constants.SMART_PAYMENT_BUTTONS, _headers15[constants.HEADERS.APP_VERSION] = "5.0.107", 
+            _headers15[constants.HEADERS.APP_NAME] = constants.SMART_PAYMENT_BUTTONS, _headers15[constants.HEADERS.APP_VERSION] = "5.0.108", 
             _headers15);
             var paymentSource = {
                 token: {
@@ -11713,7 +11713,8 @@ window.spb = function(modules) {
                 ThreeDomainSecure: _paypal.ThreeDomainSecure,
                 Menu: _paypal.Menu,
                 Installments: _paypal.Installments,
-                QRCode: _paypal.QRCode
+                QRCode: _paypal.QRCode,
+                PaymentFields: _paypal.PaymentFields
             };
         }
         function getConfig(_ref2) {
@@ -11737,9 +11738,17 @@ window.spb = function(modules) {
                 buyerAccessToken: _ref3.buyerAccessToken,
                 facilitatorAccessToken: _ref3.facilitatorAccessToken,
                 eligibility: eligibility ? {
-                    cardForm: eligibility.cardFields || !1
+                    cardForm: eligibility.cardFields || !1,
+                    paymentFields: eligibility.inlinePaymentFields || {
+                        inlineEligibleAPMs: [],
+                        isInlineEnabled: !1
+                    }
                 } : {
-                    cardForm: !1
+                    cardForm: !1,
+                    paymentFields: {
+                        inlineEligibleAPMs: [],
+                        isInlineEnabled: !1
+                    }
                 },
                 cookies: _ref3.cookies,
                 personalization: _ref3.personalization
@@ -12616,6 +12625,7 @@ window.spb = function(modules) {
                                 approved = !0;
                                 Object(lib.getLogger)().info("spb_onapprove_access_token_" + (buyerAccessToken ? "present" : "not_present")).flush();
                                 Object(lib.setBuyerAccessToken)(buyerAccessToken);
+                                var valid = !0;
                                 return _onApprove({
                                     accelerated: accelerated,
                                     payerID: payerID,
@@ -12627,8 +12637,10 @@ window.spb = function(modules) {
                                 }, {
                                     restart: restart
                                 }).finally((function() {
-                                    return accelerated ? src.noop : close().then(src.noop);
-                                })).catch(src.noop);
+                                    return accelerated ? valid : close().then(src.noop);
+                                })).catch((function() {
+                                    valid = !1;
+                                }));
                             }
                             doApproveOnClose = !0;
                         },
@@ -12915,6 +12927,185 @@ window.spb = function(modules) {
                             recalculateMargin();
                         }();
                         highlightCard(card);
+                        return renderPromise;
+                    },
+                    close: close
+                };
+            },
+            inline: !0
+        };
+        var src_props = __webpack_require__("./src/props/index.js");
+        var payment_fields_getElements = function(fundingSource) {
+            var buttonsContainer = document.querySelector("#buttons-container");
+            var fundingSourceButtonsContainer;
+            fundingSource && (fundingSourceButtonsContainer = document.querySelector("[" + constants.DATA_ATTRIBUTES.FUNDING_SOURCE + '="' + fundingSource + '"]'));
+            var paymentFieldsContainer = document.querySelector("#payment-fields-container");
+            if (!buttonsContainer || !fundingSourceButtonsContainer || !paymentFieldsContainer) throw new Error("Did not find payment fields elements");
+            return {
+                buttonsContainer: buttonsContainer,
+                fundingSourceButtonsContainer: fundingSourceButtonsContainer,
+                paymentFieldsContainer: paymentFieldsContainer
+            };
+        };
+        var payment_fields_resizeListener;
+        var payment_fields_slideDownButtons = function(fundingSource) {
+            var buttonsContainer = payment_fields_getElements(fundingSource).buttonsContainer;
+            Object(src.querySelectorAll)("[" + constants.DATA_ATTRIBUTES.FUNDING_SOURCE + "]").forEach((function(el) {
+                el.style.opacity = "1";
+                el.parentElement && (el.parentElement.style.display = "");
+                el.style.display = "";
+            }));
+            window.removeEventListener("resize", payment_fields_resizeListener);
+            buttonsContainer.style.removeProperty("transition-duration");
+            buttonsContainer.style.removeProperty("margin-top");
+        };
+        var paymentFields = {
+            name: "payment_fields",
+            setup: function() {},
+            isEligible: function(_ref) {
+                var props = _ref.props;
+                var eligibility = _ref.serviceData.eligibility;
+                var componentsList = window.xprops.components || [];
+                return !props.vault && !props.onShippingChange && !componentsList.includes("marks") && eligibility.paymentFields.isInlineEnabled;
+            },
+            isPaymentEligible: function(_ref2) {
+                var _ref3 = _ref2.payment || {}, fundingSource = _ref3.fundingSource;
+                return !(_ref3.win || fundingSource && !(_ref2.serviceData.eligibility.paymentFields.inlineEligibleAPMs || []).includes(fundingSource));
+            },
+            init: function initPaymentFields(_ref4) {
+                var props = _ref4.props, components = _ref4.components, payment = _ref4.payment, serviceData = _ref4.serviceData, config = _ref4.config;
+                var createOrder = props.createOrder, _onApprove = props.onApprove, _onCancel = props.onCancel, locale = props.locale, commit = props.commit, onError = props.onError, sessionID = props.sessionID, partnerAttributionID = props.partnerAttributionID, buttonSessionID = props.buttonSessionID, _onAuth = props.onAuth;
+                var PaymentFields = components.PaymentFields, Checkout = components.Checkout;
+                var fundingSource = payment.fundingSource;
+                var cspNonce = config.cspNonce;
+                var buyerCountry = serviceData.buyerCountry, sdkMeta = serviceData.sdkMeta;
+                var instance;
+                var approved = !1;
+                var forceClosed = !1;
+                var restart = Object(src.memoize)((function() {
+                    return close().finally((function() {
+                        return initPaymentFields({
+                            props: props,
+                            components: components,
+                            serviceData: serviceData,
+                            config: config,
+                            payment: Object(esm_extends.default)({}, payment),
+                            restart: restart
+                        }).start().finally(lib.unresolvedPromise);
+                    }));
+                }));
+                var buyerAccessToken;
+                var _PaymentFields = PaymentFields({
+                    createOrder: createOrder,
+                    fundingSource: fundingSource,
+                    onContinue: function(data, orderID) {
+                        return Object(src_props.getConfirmOrder)({
+                            orderID: orderID,
+                            payload: data,
+                            partnerAttributionID: partnerAttributionID
+                        }, {
+                            facilitatorAccessToken: serviceData.facilitatorAccessToken
+                        }).then((function() {
+                            (instance = Checkout({
+                                onClose: function() {
+                                    if (!forceClosed && !approved) return close().then((function() {
+                                        return _onCancel();
+                                    }));
+                                },
+                                onApprove: function(_ref5) {
+                                    var payerID = _ref5.payerID, paymentID = _ref5.paymentID, billingToken = _ref5.billingToken;
+                                    approved = !0;
+                                    return close().then((function() {
+                                        return _onApprove({
+                                            payerID: payerID,
+                                            paymentID: paymentID,
+                                            billingToken: billingToken,
+                                            buyerAccessToken: buyerAccessToken
+                                        }, {
+                                            restart: restart
+                                        }).catch(src.noop);
+                                    }));
+                                },
+                                branded: !1,
+                                standaloneFundingSource: fundingSource,
+                                inlinexo: !1,
+                                onCancel: function() {
+                                    return close().then((function() {
+                                        return _onCancel();
+                                    }));
+                                },
+                                onAuth: function(_ref6) {
+                                    return _onAuth({
+                                        accessToken: _ref6.accessToken || buyerAccessToken
+                                    }).then((function(token) {
+                                        buyerAccessToken = token;
+                                    }));
+                                },
+                                restart: restart,
+                                createOrder: createOrder,
+                                onError: onError,
+                                sessionID: sessionID,
+                                fundingSource: fundingSource,
+                                buyerCountry: buyerCountry,
+                                locale: locale,
+                                commit: commit,
+                                cspNonce: cspNonce
+                            })).renderTo(function() {
+                                Object(cross_domain_utils_src.getTop)(window);
+                                return Object(cross_domain_utils_src.getParent)() ? Object(cross_domain_utils_src.getParent)() : window;
+                            }(), constants.TARGET_ELEMENT.BODY, constants.CONTEXT.POPUP);
+                        }));
+                    },
+                    onFieldsClose: function() {
+                        return closePaymentFields().then((function() {
+                            payment_fields_slideDownButtons(fundingSource);
+                        }));
+                    },
+                    onError: onError,
+                    onClose: function() {},
+                    showActionButtons: !0,
+                    sdkMeta: sdkMeta,
+                    sessionID: sessionID,
+                    buttonSessionID: buttonSessionID,
+                    buyerCountry: buyerCountry,
+                    locale: locale,
+                    commit: commit,
+                    cspNonce: cspNonce
+                }), render = _PaymentFields.render, closePaymentFields = _PaymentFields.close;
+                var close = function() {
+                    return closePaymentFields().then((function() {
+                        forceClosed = !0;
+                        instance && instance.close();
+                        payment_fields_slideDownButtons(fundingSource);
+                    }));
+                };
+                return {
+                    start: function() {
+                        var renderPromise = render("#payment-fields-container");
+                        !function(fundingSource) {
+                            var _getElements = payment_fields_getElements(fundingSource), buttonsContainer = _getElements.buttonsContainer, fundingSourceButtonsContainer = _getElements.fundingSourceButtonsContainer, paymentFieldsContainer = _getElements.paymentFieldsContainer;
+                            if (!buttonsContainer || !fundingSourceButtonsContainer || !paymentFieldsContainer) throw new Error("Required elements not found");
+                            paymentFieldsContainer.style.minHeight = "0px";
+                            paymentFieldsContainer.style.display = "block";
+                            var recalculateMargin = function() {
+                                buttonsContainer.style.marginTop = buttonsContainer.offsetTop - fundingSourceButtonsContainer.offsetTop + "px";
+                            };
+                            payment_fields_resizeListener = Object(src.debounce)((function() {
+                                buttonsContainer.style.transitionDuration = "0s";
+                                recalculateMargin();
+                            }));
+                            window.addEventListener("resize", payment_fields_resizeListener);
+                            recalculateMargin();
+                        }(fundingSource);
+                        !function(fundingSource) {
+                            fundingSource && Object(src.querySelectorAll)("[" + constants.DATA_ATTRIBUTES.FUNDING_SOURCE + "]").forEach((function(el) {
+                                if (el.getAttribute(constants.DATA_ATTRIBUTES.FUNDING_SOURCE) === fundingSource.toLowerCase()) el.style.opacity = "1"; else {
+                                    el.style.display = "none";
+                                    el.parentElement && (el.parentElement.style.display = "none");
+                                    el.style.opacity = "0.1";
+                                }
+                            }));
+                        }(fundingSource);
                         return renderPromise;
                     },
                     close: close
@@ -15170,7 +15361,6 @@ window.spb = function(modules) {
             },
             spinner: !0
         };
-        var src_props = __webpack_require__("./src/props/index.js");
         var parentPopupBridge;
         var popupBridge = {
             name: "popup_bridge",
@@ -15280,7 +15470,7 @@ window.spb = function(modules) {
             newMenu.renderTo(window.xprops.getParent(), "#" + containerUID + " #smart-menu");
             return menu_menu = newMenu;
         }
-        var PAYMENT_FLOWS = [ vaultCapture, walletCapture, cardField, cardForm, popupBridge, applepay, native_native, checkout ];
+        var PAYMENT_FLOWS = [ vaultCapture, walletCapture, cardField, cardForm, paymentFields, popupBridge, applepay, native_native, checkout ];
         function getPaymentFlow(_ref2) {
             var props = _ref2.props, payment = _ref2.payment, config = _ref2.config, serviceData = _ref2.serviceData;
             !props.fundingSource && payment.fundingSource && (props.fundingSource = payment.fundingSource);
@@ -15344,8 +15534,8 @@ window.spb = function(modules) {
                     return (_ref5 = {})[sdk_constants_src.FPTI_KEY.CHOSEN_FUNDING] = fundingSource, 
                     _ref5[sdk_constants_src.FPTI_KEY.CONTEXT_TYPE] = constants.FPTI_CONTEXT_TYPE.BUTTON_SESSION_ID, 
                     _ref5[sdk_constants_src.FPTI_KEY.CONTEXT_ID] = buttonSessionID, _ref5[sdk_constants_src.FPTI_KEY.BUTTON_SESSION_UID] = buttonSessionID, 
-                    _ref5[constants.AMPLITUDE_KEY.USER_ID] = buttonSessionID, _ref5[sdk_constants_src.FPTI_KEY.TOKEN] = null, 
-                    _ref5;
+                    _ref5[constants.AMPLITUDE_KEY.USER_ID] = buttonSessionID, _ref5[constants.AMPLITUDE_KEY.TIME] = Date.now().toString(), 
+                    _ref5[sdk_constants_src.FPTI_KEY.TOKEN] = null, _ref5;
                 })).track(((_getLogger$addPayload = {})[sdk_constants_src.FPTI_KEY.TRANSITION] = constants.FPTI_TRANSITION.BUTTON_CLICK, 
                 _getLogger$addPayload[sdk_constants_src.FPTI_KEY.CHOSEN_FI_TYPE] = instrumentType, 
                 _getLogger$addPayload[sdk_constants_src.FPTI_KEY.PAYMENT_FLOW] = name, _getLogger$addPayload[sdk_constants_src.FPTI_KEY.IS_VAULT] = instrumentType ? "1" : "0", 
@@ -16054,14 +16244,13 @@ window.spb = function(modules) {
                     var _ref3;
                     return (_ref3 = {})[sdk_constants_src.FPTI_KEY.CONTEXT_TYPE] = constants.FPTI_CONTEXT_TYPE.BUTTON_SESSION_ID, 
                     _ref3[sdk_constants_src.FPTI_KEY.CONTEXT_ID] = buttonSessionID, _ref3[sdk_constants_src.FPTI_KEY.BUTTON_SESSION_UID] = buttonSessionID, 
-                    _ref3[sdk_constants_src.FPTI_KEY.BUTTON_VERSION] = "5.0.107", _ref3[constants.FPTI_BUTTON_KEY.BUTTON_CORRELATION_ID] = buttonCorrelationID, 
+                    _ref3[sdk_constants_src.FPTI_KEY.BUTTON_VERSION] = "5.0.108", _ref3[constants.FPTI_BUTTON_KEY.BUTTON_CORRELATION_ID] = buttonCorrelationID, 
                     _ref3[sdk_constants_src.FPTI_KEY.STICKINESS_ID] = Object(lib.isAndroidChrome)() ? stickinessID : null, 
                     _ref3[sdk_constants_src.FPTI_KEY.PARTNER_ATTRIBUTION_ID] = partnerAttributionID, 
                     _ref3[sdk_constants_src.FPTI_KEY.USER_ACTION] = commit ? sdk_constants_src.FPTI_USER_ACTION.COMMIT : sdk_constants_src.FPTI_USER_ACTION.CONTINUE, 
                     _ref3[sdk_constants_src.FPTI_KEY.SELLER_ID] = merchantID[0], _ref3[sdk_constants_src.FPTI_KEY.MERCHANT_DOMAIN] = merchantDomain, 
                     _ref3[constants.FPTI_CUSTOM_KEY.EXPERIENCE] = experience === constants_button.EXPERIENCE.INLINE ? "inline" : "default", 
-                    _ref3[sdk_constants_src.FPTI_KEY.TIMESTAMP] = Date.now().toString(), _ref3[constants.AMPLITUDE_KEY.TIME] = Date.now().toString(), 
-                    _ref3[constants.AMPLITUDE_KEY.USER_ID] = buttonSessionID, _ref3;
+                    _ref3[sdk_constants_src.FPTI_KEY.TIMESTAMP] = Date.now().toString(), _ref3;
                 }));
                 Object(src.isIEIntranet)() && logger.warn("button_child_intranet_mode");
                 return zalgo_promise_src.ZalgoPromise.hash({
