@@ -51,6 +51,7 @@ function isPaymentFieldsEligible({ props, serviceData } : IsEligibleOptions) : b
 function isPaymentFieldsPaymentEligible({ payment, serviceData } : IsPaymentEligibleOptions) : boolean {
     const { win, fundingSource } = payment || {};
     const { eligibility } = serviceData;
+    console.log('----- eligibility in 2nd --- ', eligibility);
     const inlineEligibleAPMs = eligibility.paymentFields.inlineEligibleAPMs || [];
 
     if (win) {
@@ -73,7 +74,10 @@ function highlightFundingSource(fundingSource : ?$Values<typeof FUNDING>) {
             el.style.opacity = '1';
         } else {
             el.style.display = 'none';
-            el.parentElement.style.display = 'none';
+            if (el.parentElement) {
+                // $FlowFixMe
+                el.parentElement.style.display = 'none';
+            }
             el.style.opacity = '0.1';
         }
     });
@@ -82,9 +86,12 @@ function highlightFundingSource(fundingSource : ?$Values<typeof FUNDING>) {
 function unhighlightFundingSources() {
     querySelectorAll(`[${ DATA_ATTRIBUTES.FUNDING_SOURCE }]`).forEach(el => {
         el.style.opacity = '1';
-        el.parentElement.style.display = '';
+        if (el.parentElement) {
+            // $FlowFixMe
+            el.parentElement.style.display = '';
+        }
         el.style.display = '';
-    });
+    })
 }
 
 const getElements = (fundingSource : ?$Values<typeof FUNDING>) : {| buttonsContainer : HTMLElement, fundingSourceButtonsContainer : HTMLElement, paymentFieldsContainer : HTMLElement |} => {
@@ -136,6 +143,7 @@ const slideDownButtons = (fundingSource : ?$Values<typeof FUNDING>) => {
 };
 
 function initPaymentFields({ props, components, payment, serviceData, config } : InitOptions) : PaymentFlowInstance {
+    console.log('----- in initpayment ----- ');
     const { createOrder, onApprove, onCancel, locale, commit, onError, sessionID, partnerAttributionID, buttonSessionID, onAuth } = props;
 
     const { PaymentFields, Checkout } = components;
