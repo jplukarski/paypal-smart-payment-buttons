@@ -283,6 +283,12 @@ function initApplePay({ props, payment, serviceData } : InitOptions) : PaymentFl
                 });
         };
 
+        const validate = memoize(() => {
+            return ZalgoPromise.try(() => {
+                return onClick ? onClick({ fundingSource }) : true;
+            });
+        });
+
         const setupApplePaySession = () => {
                 const requiredShippingContactFields = paymentRequest?.applepay?.requiredShippingContactFields || [];
 
@@ -325,22 +331,19 @@ function initApplePay({ props, payment, serviceData } : InitOptions) : PaymentFl
                         logApplePayEvent('validatemerchant', { validationURL });
 
                         const validatePromise = ZalgoPromise.try(() => {
-                            return onClick ? onClick({ fundingSource })
+                            return validate()
                                 .then((valid) => {
                                     if(!valid){
+                                        getLogger().info(`applepay_onclick_invalid`).track({
+                                            [FPTI_KEY.STATE]:       FPTI_STATE.BUTTON,
+                                            [FPTI_KEY.TRANSITION]:  FPTI_TRANSITION.APPLEPAY_ON_CLICK_INVALID
+                                        }).flush();
+
                                         abort();
                                     }
+                                    
                                     return valid
-                                }) : true;
-                            }).then(valid => {
-                                if (!valid) {
-                                    getLogger().info(`applepay_onclick_invalid`).track({
-                                        [FPTI_KEY.STATE]:       FPTI_STATE.BUTTON,
-                                        [FPTI_KEY.TRANSITION]:  FPTI_TRANSITION.APPLEPAY_ON_CLICK_INVALID
-                                    }).flush();
-                                }
-                    
-                                return valid;
+                                });
                             });
                 
                         const orderPromise = validatePromise.then(valid => {
