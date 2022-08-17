@@ -16,10 +16,6 @@ import { SERVICE_WORKER } from '../constants';
 import { getLogger } from './logger';
 
 const {
-    PROD_CHECKOUTWEB_CDN_DUMBLEDORE,
-    DEFAULT_DIR,
-    DUMBLEDORE_APP,
-    RELEASE_CONFIG_FILE_NAME,
     SW_URL,
     SW_SCOPE,
     GET_SW_LOGS_EVENT_NAME,
@@ -54,54 +50,44 @@ const listenBroadCastChannelEvents = () => {
     });
 };
 
-function listenButtonClick() {
+function handleButtonClick() {
     const paypalButtons = document.getElementsByClassName('paypal-button');
     for (let i = 0; i < paypalButtons.length; i++) {
         paypalButtons[i].addEventListener('click', requestSwLogs);
     }
 }
 
-// eslint-disable-next-line promise/no-native, no-restricted-globals, flowtype/no-weak-types
-export function fetchFile(url : string) : Promise<any> {
+function startRegistration(swUrl) {
     // eslint-disable-next-line compat/compat
-    return fetch(url)
-        .then((response) => response.json())
-        .then((data) => {
-            return data;
+    navigator.serviceWorker
+        ?.register(swUrl, { scope: SW_SCOPE })
+        .then((registration) => {
+
+            getLogger().info(`${ LOG_PREFIX }REGISTERED`).flush();
+
+            registration.addEventListener('updatefound', () => {
+                const installingWorker = registration.installing;
+                
+                if (installingWorker) {
+                    installingWorker.addEventListener('statechange', () => {
+                        const state = installingWorker.state;
+                        if (state === 'activated') {
+                            requestSwLogs();
+                        }
+                        getLogger().info(`${ LOG_PREFIX }REGISTERING: ${ installingWorker.state }`).flush();
+                    });
+                }
+                
+            });
+        })
+        .catch((err) => {
+            getLogger().error(`${ LOG_PREFIX }ERROR_REGISTERING`, { err: stringifyError(err) }).flush();
         });
 }
 
-function startRegistration(swUrl) {
-    if (navigator.serviceWorker) {
-        navigator.serviceWorker
-            .register(swUrl, { scope: SW_SCOPE })
-            .then((registration) => {
-                getLogger().info(`${ LOG_PREFIX }REGISTERED`).flush();
-                registration.addEventListener('updatefound', () => {
-                    const installingWorker = registration.installing;
-                    if (installingWorker) {
-                        installingWorker.addEventListener('statechange', () => {
-                            const state = installingWorker.state;
-                            if (state === 'activated') {
-                                requestSwLogs();
-                            }
-                            getLogger().info(`${ LOG_PREFIX }REGISTERING: ${ installingWorker.state }`).flush();
-                        });
-                    }
-                });
-            })
-            .catch((err) => {
-                getLogger().error(`${ LOG_PREFIX }ERROR_REGISTERING`, { err: stringifyError(err) }).flush();
-            });
-    }
-}
-
-function register(releaseHash, userDir = false) {
+function register(releaseHash: string) {
     const swParameters = [ `releaseHash=${ releaseHash }` ];
-    if (userDir) {
-        swParameters.push(`userDir=${ userDir }`);
-    }
-    let swUrl = SW_URL;
+    let swUrl = `${SW_URL}?`;
     swUrl += swParameters.join('&');
 
     getLogger().info(`${ LOG_PREFIX }REGISTER_START`, {
@@ -110,48 +96,20 @@ function register(releaseHash, userDir = false) {
     startRegistration(swUrl);
 }
 
-// eslint-disable-next-line promise/no-native, no-restricted-globals, flowtype/no-weak-types
-function getCurrentRelease() : Promise<any> {
-    // eslint-disable-next-line compat/compat,promise/no-native, no-restricted-globals
-    return new Promise(((resolve, reject) => {
-        fetchFile(`${ PROD_CHECKOUTWEB_CDN_DUMBLEDORE }/${ DEFAULT_DIR }/${ DUMBLEDORE_APP }/${ RELEASE_CONFIG_FILE_NAME }`)
-            .catch((err) => {
-                reject(err);
-            })
-            .then((value) => {
-                getLogger().info(`${ LOG_PREFIX }RELEASE_CONFIG_RESOLVED`).flush();
-                resolve(value);
-            });
-    }));
-}
-
-export function registerServiceWorker() {
-    // eslint-disable-next-line compat/compat
-    const clientUrl = new URL(window.location.href);
-    const smokeHash = clientUrl.searchParams.get('smokeHash');
-    const userDir = clientUrl.searchParams.get('userDir');
+export function registerServiceWorker(currentReleaseHash?: string) {
+    if ('serviceWorker' in navigator === false) {
+        getLogger().info(`${ LOG_PREFIX }NOT_SUPPORTED`).flush();
+        return;
+    }
+    if (!currentReleaseHash) {
+        getLogger().error(`${ LOG_PREFIX }RELEASE_HASH_NO_PROVIDED`, { releaseHash: currentReleaseHash }).flush();
+        return;
+    }
     try {
-        if ('serviceWorker' in navigator) {
-            listenButtonClick();
-            startBroadCastChannel();
-            listenBroadCastChannelEvents();
-            const releaseHashHandler = function (release) {
-                if (release && release.current) {
-                    register(release.current);
-                }
-            };
-            if (smokeHash && userDir) {
-                register(smokeHash, userDir);
-            } else {
-                getCurrentRelease()
-                    .then(releaseHashHandler)
-                    .catch((err) => {
-                        getLogger().error(`${ LOG_PREFIX }ERROR_FETCHING_RELEASE_CONFIG`, { err: stringifyError(err) }).flush();
-                    });
-            }
-        } else {
-            getLogger().info(`${ LOG_PREFIX }NOT_SUPPORTED`).flush();
-        }
+        handleButtonClick();
+        startBroadCastChannel();
+        listenBroadCastChannelEvents();
+        register(currentReleaseHash);
     } catch (err) {
         getLogger().error(`${ LOG_PREFIX }ERROR_DURING_INITIALIZATION`, { err: stringifyError(err) }).flush();
     }

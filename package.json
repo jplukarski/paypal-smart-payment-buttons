@@ -1,6 +1,6 @@
 {
   "name": "@paypal/smart-payment-buttons",
-  "version": "5.0.95",
+  "version": "5.0.111",
   "publishConfig": {
     "registry": "https://registry.npmjs.org"
   },
@@ -31,8 +31,8 @@
     "webpack.config.js"
   ],
   "engines": {
-    "node": ">=14.13.1",
-    "npm": ">=6"
+    "node": ">=16",
+    "npm": ">=8"
   },
   "scripts": {
     "start": "babel-node ./server/devServer",
@@ -58,7 +58,7 @@
     "reinstall": "rimraf flow-typed && rimraf node_modules && npm install && flow-typed install",
     "debug": "cross-env NODE_ENV=debug",
     "jest:server": "jest test/server --collectCoverage --collectCoverageFrom='server/' --env=node --no-cache --runInBand",
-    "jest:client": "jest src/ --collectCoverage --collectCoverageFrom='src/' --no-cache --runInBand --env=jsdom",
+    "jest:client": "jest src/ --collectCoverage --collectCoverageFrom='src/' --testPathIgnorePatterns=/fixtures/ --no-cache --runInBand --env=jsdom",
     "cover": "echo no-cover",
     "prepublishOnly": "npm run babel",
     "postpublish": "if [ \"$DRY_RUN\" != 'true' ]; then git clean -f && git checkout .; fi;",
@@ -70,9 +70,10 @@
   },
   "alias": {},
   "dependencies": {
-    "@krakenjs/grabthar": "^5.0.0",
+    "@krakenjs/beaver-logger": "^5.0.1",
     "@krakenjs/belter": "^2.0.0",
     "@krakenjs/cross-domain-utils": "^3.0.0",
+    "@krakenjs/grabthar": "^6.2.0",
     "@krakenjs/jsx-pragmatic": "^3.0.0",
     "@krakenjs/post-robot": "^11.0.0",
     "@krakenjs/zalgo-promise": "^2.0.0",
@@ -80,10 +81,9 @@
     "@paypal/common-components": "^1.0.16",
     "@paypal/installments": "^1.0.0",
     "@paypal/sdk-client": "^4.0.156",
-    "@paypal/sdk-constants": "^1.0.107",
-    "@paypal/sdk-logos": "^1.0.26",
+    "@paypal/sdk-constants": "^1.0.119",
+    "@paypal/sdk-logos": "^1.0.43",
     "@paypal/sdk-release": "^5.0.138",
-    "beaver-logger": "^4.0.32",
     "card-validator": "^8.1.1",
     "credit-card-type": "^9.1.0",
     "get-browser-fingerprint": "^1.1.0",
@@ -94,8 +94,8 @@
     "typed-graphqlify": "^2.2.3"
   },
   "devDependencies": {
-    "@krakenjs/grabthar-release": "^2.0.0",
-    "@krakenjs/grumbler-scripts": "^6.0.2",
+    "@krakenjs/grabthar-release": "^3.0.0",
+    "@krakenjs/grumbler-scripts": "^7.0.0",
     "@krakenjs/sync-browser-mocks": "^3.0.0",
     "@krakenjs/webpack-mem-compile": "^2.0.1",
     "babel-core": "^7.0.0-bridge.0",

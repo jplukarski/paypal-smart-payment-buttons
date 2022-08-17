@@ -29,16 +29,17 @@ export const HEADERS = {
 };
 
 export const DATA_ATTRIBUTES = {
-    FUNDING_SOURCE:    'data-funding-source',
-    CARD:              'data-card',
-    PAYMENT_METHOD_ID: 'data-payment-method-id',
-    INSTRUMENT_ID:     'data-instrument-id',
-    INSTRUMENT_TYPE:   'data-instrument-type',
-    MENU:              'data-menu',
-    NONCE:             'data-nonce',
-    RENDER_VERSION:    'data-render-version',
-    CLIENT_VERSION:    'data-client-version',
-    PAY_NOW:           'data-pay-now'
+    FUNDING_SOURCE:      'data-funding-source',
+    CARD:                'data-card',
+    PAYMENT_METHOD_ID:   'data-payment-method-id',
+    INSTRUMENT_ID:       'data-instrument-id',
+    INSTRUMENT_TYPE:     'data-instrument-type',
+    MENU:                'data-menu',
+    NONCE:               'data-nonce',
+    RENDER_VERSION:      'data-render-version',
+    CLIENT_VERSION:      'data-client-version',
+    PAY_NOW:             'data-pay-now',
+    RESPONSE_START_TIME: 'data-response-start-time'
 };
 
 export const CLASS = {
@@ -110,11 +111,15 @@ export const FPTI_TRANSITION = {
     CONFIRM_ORDER:             ('process_confirm_order' : 'process_confirm_order'),
     RECEIVE_ORDER:            ('process_receive_order' : 'process_receive_order'),
     CREATE_PAYMENT:           ('process_create_payment' : 'process_create_payment'),
+    CAPTURE_AUTHORIZATION:    ('process_capture_authorization' : 'process_capture_authorization'),
 
-    CHECKOUT_SHIPPING_CHANGE: ('process_checkout_shipping_change' : 'process_checkout_shipping_change'),
-    CHECKOUT_APPROVE:         ('process_checkout_approve' : 'process_checkout_approve'),
-    CHECKOUT_CANCEL:          ('process_checkout_cancel' : 'process_checkout_cancel'),
-    CHECKOUT_ERROR:           ('process_checkout_error' : 'process_checkout_error'),
+    CHECKOUT_SHIPPING_CHANGE:         ('process_checkout_shipping_change' : 'process_checkout_shipping_change'),
+    CHECKOUT_SHIPPING_ADDRESS_CHANGE: ('process_checkout_shipping_address_change' : 'process_checkout_shipping_address_change'),
+    CHECKOUT_SHIPPING_OPTIONS_CHANGE: ('process_checkout_shipping_options_change' : 'process_checkout_shipping_options_change'),
+    CHECKOUT_APPROVE:                 ('process_checkout_approve' : 'process_checkout_approve'),
+    CHECKOUT_COMPLETE:                ('process_checkout_complete' : 'process_checkout_complete'),
+    CHECKOUT_CANCEL:                  ('process_checkout_cancel' : 'process_checkout_cancel'),
+    CHECKOUT_ERROR:                   ('process_checkout_error' : 'process_checkout_error'),
 
     TOKENIZE_APPROVE:         ('process_tokenize_approve' : 'process_tokenize_approve'),
 
@@ -131,6 +136,7 @@ export const FPTI_TRANSITION = {
     APPLEPAY_CREATE_ORDER_ERROR:                        ('applepay_create_order_error' : 'applepay_create_order_error'),
     APPLEPAY_GET_DETAILS_ERROR:                         ('applepay_get_details_error' : 'applepay_get_details_error'),
     APPLEPAY_PAYMENT_ERROR:                             ('applepay_payment_error' : 'applepay_payment_error'),
+    APPLEPAY_CONFIG_ERROR:                             ('applepay_config_error' : 'applepay_config_error'),
 
     NATIVE_DETECT_POSSIBLE_APP_SWITCH:      ('native_detect_possible_app_switch' : 'native_detect_possible_app_switch'),
     NATIVE_DETECT_APP_SWITCH:               ('native_detect_app_switch' : 'native_detect_app_switch'),
@@ -189,6 +195,7 @@ export const FPTI_BUTTON_TYPE = {
 
 export const FPTI_CUSTOM_KEY = {
     ERR_DESC:                   ('int_error_desc' : 'int_error_desc'),
+    EXPERIENCE:                 ('experience' : 'experience'),
     HONEY_DEVICE_ID:            ('honey_device_id' : 'honey_device_id'),
     HONEY_SESSION_ID:           ('honey_session_id' : 'honey_session_id'),
     INTEGRATION_ISSUE:          ('integration_issue' : 'integration_issue'),
@@ -291,8 +298,10 @@ export const APM_LIST = [
     FUNDING.MAXIMA,
     FUNDING.OXXO,
     FUNDING.BOLETO,
+    FUNDING.BOLETOBANCARIO,
     FUNDING.WECHATPAY,
-    FUNDING.MERCADOPAGO
+    FUNDING.MERCADOPAGO,
+    FUNDING.MULTIBANCO
 ];
 
 export const SERVICE_WORKER = {
@@ -301,7 +310,7 @@ export const SERVICE_WORKER = {
     DUMBLEDORE_APP:                  'dumbledore',
     RELEASE_CONFIG_FILE_NAME:        'release-config.json',
     // SW_URL:                          'https://localhost.paypal.com:8443/checkoutweb/public/dumbledore-service-worker.js?',
-    SW_URL:                          'https://www.te-alm-67911662205054295092259.qa.paypal.com/checkoutweb/public/dumbledore-service-worker.js?',
+    SW_URL:                          'https://msmaster.qa.paypal.com/checkoutweb/public/dumbledore-service-worker.js',
     SW_SCOPE:                        '/checkoutweb',
     GET_SW_LOGS_EVENT_NAME:          'GET_SW_LOGS',
     LOGS_CHANNEL_NAME:               'logs-channel',

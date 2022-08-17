@@ -58,6 +58,14 @@ describe('Apple Pay Flow', () => {
                     return {
                         data: {
                             checkoutSession: {
+                                merchant: {
+                                    name: 'PP Demo'
+                                },
+                                flags: {
+                                    isShippingAddressRequired:      true,
+                                    isDigitalGoodsIntegration:      false,
+                                    isChangeShippingAddressAllowed: false
+                                },
                                 allowedCardIssuers: [
                                     'MASTER_CARD',
                                     'VISA',
@@ -168,6 +176,14 @@ describe('Apple Pay Flow', () => {
                     return {
                         data: {
                             checkoutSession: {
+                                merchant: {
+                                    name: 'PP Demo'
+                                },
+                                flags: {
+                                    isShippingAddressRequired:      false,
+                                    isDigitalGoodsIntegration:      false,
+                                    isChangeShippingAddressAllowed: false
+                                },
                                 allowedCardIssuers: [
                                     'MASTER_CARD',
                                     'VISA',

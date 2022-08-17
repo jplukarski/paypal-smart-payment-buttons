@@ -62,6 +62,25 @@ describe('Apple Pay Flow Utils', () => {
                 administrativeArea: '',
                 postalCode:         '',
                 country:            'United States',
+                countryCode:        'US'
+            };
+            const { errors } = validateShippingContact(shippingContact);
+            if (!errors && !errors.length) {
+                throw new Error(`Expected errors but got ${ JSON.stringify(errors) }.`);
+            }
+        });
+
+        it('should invalidate shipping contact when missing required fields inc countryCode', () => {
+            const shippingContact = {
+                givenName:    'Jimmy',
+                familyName:   'Bob',
+                addressLines: [
+                    '1 Police Plaza'
+                ],
+                locality:           '',
+                administrativeArea: '',
+                postalCode:         '',
+                country:            'United States',
                 countryCode:        ''
             };
             const { errors } = validateShippingContact(shippingContact);
@@ -70,4 +89,5 @@ describe('Apple Pay Flow Utils', () => {
             }
         });
     });
+
 });

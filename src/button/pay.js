@@ -1,6 +1,6 @@
 /* @flow */
 
-import { noop, stringifyError } from '@krakenjs/belter/src';
+import { noop, stringifyError, isCrossSiteTrackingEnabled } from '@krakenjs/belter/src';
 import { ZalgoPromise } from '@krakenjs/zalgo-promise/src';
 import { FPTI_KEY } from '@paypal/sdk-constants/src';
 
@@ -63,10 +63,11 @@ type InitiatePaymentOptions = {|
     props : ButtonProps,
     serviceData : ServiceData,
     config : Config,
-    components : Components
+    components : Components,
+    brandedDefault? : boolean | null
 |};
 
-export function initiatePaymentFlow({ payment, serviceData, config, components, props } : InitiatePaymentOptions) : ZalgoPromise<void> {
+export function initiatePaymentFlow({ payment, serviceData, config, components, props, brandedDefault } : InitiatePaymentOptions) : ZalgoPromise<void> {
     const { button, fundingSource, instrumentType, buyerIntent } = payment;
     const buttonLabel = props.style?.label;
 
@@ -98,16 +99,23 @@ export function initiatePaymentFlow({ payment, serviceData, config, components, 
                     [FPTI_KEY.CONTEXT_ID]:         buttonSessionID,
                     [FPTI_KEY.BUTTON_SESSION_UID]: buttonSessionID,
                     [AMPLITUDE_KEY.USER_ID]:       buttonSessionID,
+                    [AMPLITUDE_KEY.TIME]:          Date.now().toString(),
                     [FPTI_KEY.TOKEN]:              null
                 };
             })
             .track({
-                [FPTI_KEY.TRANSITION]:      FPTI_TRANSITION.BUTTON_CLICK,
-                [FPTI_KEY.CHOSEN_FI_TYPE]:  instrumentType,
-                [FPTI_KEY.PAYMENT_FLOW]:    name,
-                [FPTI_KEY.IS_VAULT]:        instrumentType ? '1' : '0',
-                [FPTI_CUSTOM_KEY.INFO_MSG]: enableNativeCheckout ? 'tester' : ''
-            }).flush();
+                [FPTI_KEY.TRANSITION]:        FPTI_TRANSITION.BUTTON_CLICK,
+                [FPTI_KEY.CHOSEN_FI_TYPE]:    instrumentType,
+                [FPTI_KEY.PAYMENT_FLOW]:      name,
+                [FPTI_KEY.IS_VAULT]:          instrumentType ? '1' : '0',
+                [FPTI_CUSTOM_KEY.INFO_MSG]:   enableNativeCheckout ? 'tester' : ''
+            });
+
+            getLogger()
+                .info(`cross_site_tracking_${ isCrossSiteTrackingEnabled('enforce_policy') ? 'enabled' : 'disabled' }`)
+                .track({
+                    [FPTI_KEY.TRANSITION]: `cross_site_tracking_${ isCrossSiteTrackingEnabled('enforce_policy') ? 'enabled' : 'disabled' }`
+                }).flush();
 
         const loggingPromise =  ZalgoPromise.try(() => {
             return window.xprops.sessionState.get(`__confirm_${ fundingSource }_payload__`).then(confirmPayload => {
@@ -152,7 +160,7 @@ export function initiatePaymentFlow({ payment, serviceData, config, components, 
                 return ZalgoPromise.try(() => {
                     if (clientID && buyerIntent === BUYER_INTENT.PAY) {
                         return enableVaultSetup({ orderID, vault, clientAccessToken, fundingEligibility, fundingSource, createBillingAgreement, createSubscription,
-                            clientID, merchantID, buyerCountry, currency, commit, intent, disableFunding, disableCard, userIDToken });
+                            clientID, merchantID, buyerCountry, currency, commit, intent, disableFunding, disableCard, userIDToken, userExperienceFlow, buttonSessionID, inline });
                     }
                 });
             });
@@ -170,7 +178,11 @@ export function initiatePaymentFlow({ payment, serviceData, config, components, 
                     `__confirm_${ fundingSource }_payload__`
                 ).then(confirmOrderPayload => {
                     if (!confirmOrderPayload) {
-                        // skip the confirm call when there is no confirm payload (regular flow).
+                        // skip the confirm call when there is no confirm payload (regular flow). 
+                        if( !brandedDefault ) {
+                            getLogger().warn(`Standalone button integration has been deprecated, please use unbranded integration https://developer.paypa.com/docs/checkout/apm/. If this is an existing integration please contact developer team dl-pp-altpay-exp@paypal.com`);
+                        }
+                    
                         return;
                     }
 

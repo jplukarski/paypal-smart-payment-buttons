@@ -3,7 +3,7 @@
 /* @flow */
 import { registerServiceWorker } from './register-service-worker';
 
-const SW_URL = 'https://localhost.paypal.com:8443/checkoutweb/public/dumbledore-service-worker.js?';
+const SW_URL = 'https://localhost.paypal.com:8443/checkoutweb/public/dumbledore-service-worker.js';
 
 const waitForExpect = function waitForExpect(
     expectation : () => void | Promise<void>,
@@ -60,11 +60,7 @@ describe('Test service worker registration script', () => {
     it('Should install a service worker', async() => {
         const registerSpy = jest.spyOn(global.navigator.serviceWorker, 'register');
         const hash = 'b6cc430fb82802fb9363767b8a7c38187fa4a9d7';
-        global.fetch = jest.fn(() =>
-            Promise.resolve({
-                json: () => Promise.resolve({ current: hash })
-            }));
-        registerServiceWorker();
+        registerServiceWorker(hash);
         const expectedSwUrl = `${ SW_URL }releaseHash=${ hash }`;
         await waitForExpect(() => {
             expect(registerSpy).toHaveBeenLastCalledWith(expectedSwUrl, { scope: '/checkoutweb' });

@@ -1,10 +1,20 @@
 /* @flow */
 /* eslint no-restricted-globals: off, promise/no-native: off, compat/compat: off */
 
-import type { ExpressRequest, InstanceLocationInformation, SDKLocationInformation } from '../../server/types';
+import type { ExpressRequest, SDKLocationInformation } from '../../server/types';
 
 type MockReq = {|
-    query : { [string] : string }
+    query : { [string] : string },
+    model : {| rootTxn :
+        {|
+            name : string,
+            data : {|
+                client_id : string,
+                sdk_version : string,
+                smart_buttons_version : string
+            |}
+        |}
+    |}
 |};
 
 export function mockReq(opts : Object = {}) : MockReq {
@@ -203,6 +213,9 @@ export async function graphQL(req : ExpressRequest, payload : $ReadOnlyArray<{| 
                     },
                     mercadopago: {
                         eligible: false
+                    },
+                    multibanco: {
+                        eligible: false
                     }
                 }
             };
@@ -234,13 +247,6 @@ export function transportRiskData() : Promise<void> {
 
 export function getPersonalizationEnabled() : boolean {
     return true;
-}
-
-export function getInstanceLocationInformation() : InstanceLocationInformation {
-    return {
-        cdnHostName:  'paypal.com',
-        paypalDomain: 'paypal.com'
-    };
 }
 
 export function getSDKLocationInformation() : Promise<SDKLocationInformation> {

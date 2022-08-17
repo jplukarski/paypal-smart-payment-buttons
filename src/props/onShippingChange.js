@@ -1,15 +1,52 @@
 /* @flow */
 
 import { ZalgoPromise } from '@krakenjs/zalgo-promise/src';
-import { COUNTRY, CURRENCY, FPTI_KEY } from '@paypal/sdk-constants/src';
+import { COUNTRY, FPTI_KEY } from '@paypal/sdk-constants/src';
 
 import { patchOrder, type OrderResponse } from '../api';
 import { FPTI_TRANSITION, FPTI_CONTEXT_TYPE, LSAT_UPGRADE_EXCLUDED_MERCHANTS, FPTI_CUSTOM_KEY } from '../constants';
 import { getLogger } from '../lib';
+import type { OrderAmount } from '../types';
 
 import type { CreateOrder } from './createOrder';
 
-type SHIPPING_OPTION_TYPE = 'SHIPPING' | 'PICKUP';
+export type SHIPPING_OPTION_TYPE = 'SHIPPING' | 'PICKUP';
+export type ON_SHIPPING_CHANGE_EVENT = 'add' | 'replace';
+
+export const ON_SHIPPING_CHANGE_PATHS = {
+    AMOUNT:  ("/purchase_units/@reference_id=='default'/amount" : "/purchase_units/@reference_id=='default'/amount"),
+    OPTIONS: ("/purchase_units/@reference_id=='default'/shipping/options" : "/purchase_units/@reference_id=='default'/shipping/options")
+};
+
+export const SHIPPING_ADDRESS_ERROR_MESSAGES = {
+    ADDRESS_ERROR: ("Your order can't be shipped to this address." : "Your order can't be shipped to this address."),
+    COUNTRY_ERROR: ("Your order can't be shipped to this country." : "Your order can't be shipped to this country."),
+    STATE_ERROR :  ("Your order can't be shipped to this state." : "Your order can't be shipped to this state."),
+    ZIP_ERROR:     ("Your order can't be shipped to this zip." : "Your order can't be shipped to this zip.")
+};
+
+export const SHIPPING_OPTIONS_ERROR_MESSAGES = {
+    METHOD_UNAVAILABLE: `The shipping method you chose is unavailable. To continue, choose another way to get your order.`,
+    STORE_UNAVAILABLE:  `Part of your order isn't available at this store.`
+};
+
+export type ShippingOption = {|
+    id? : string,
+    label : string,
+    selected : boolean,
+    type : SHIPPING_OPTION_TYPE,
+    amount : {|
+        currency_code : string,
+        value : string
+    |}
+|};
+
+export type Query = {|
+    op : ON_SHIPPING_CHANGE_EVENT,
+    path : string,
+    value : mixed
+|};
+
 export type XOnShippingChangeDataType = {|
     orderID? : string,
     paymentID? : string,
@@ -20,21 +57,15 @@ export type XOnShippingChangeDataType = {|
         country_code : $Values<typeof COUNTRY>,
         postal_code : string
     |},
-    selected_shipping_option? : {|
-        label : string,
-        type : SHIPPING_OPTION_TYPE,
-        amount : {|
-            currency_code : $Values<typeof CURRENCY>,
-            value : string
-        |}
-    |},
+    selected_shipping_option? : ShippingOption,
     buyerAccessToken? : ?string,
-    forceRestAPI? : boolean
+    forceRestAPI? : boolean,
+    amount? : OrderAmount
 |};
 
 export type XOnShippingChangeActionsType = {|
     resolve : () => ZalgoPromise<void>,
-    reject : (mixed) => ZalgoPromise<void>,
+    reject : (string) => ZalgoPromise<void>,
     order : {|
         patch : () => ZalgoPromise<OrderResponse>
     |}
@@ -47,6 +78,7 @@ export function buildXOnShippingChangeData(data : XOnShippingChangeDataType) : X
 }
 
 export type OnShippingChangeData = {|
+    amount? : OrderAmount,
     orderID? : string,
     paymentID? : string,
     paymentToken? : string,
@@ -56,21 +88,14 @@ export type OnShippingChangeData = {|
         country_code : $Values<typeof COUNTRY>,
         postal_code : string
     |},
-    selected_shipping_option? : {|
-        label : string,
-        type : SHIPPING_OPTION_TYPE,
-        amount : {|
-            currency_code : $Values<typeof CURRENCY>,
-            value : string
-        |}
-    |},
+    selected_shipping_option? : ShippingOption,
     buyerAccessToken? : ?string,
     forceRestAPI? : boolean
 |};
 
 export type OnShippingChangeActionsType = {|
     resolve : () => ZalgoPromise<void>,
-    reject : () => ZalgoPromise<void>
+    reject : (string) => ZalgoPromise<void>
 |};
 
 export function buildXShippingChangeActions({ orderID, actions, facilitatorAccessToken, buyerAccessToken, partnerAttributionID, forceRestAPI } : {| orderID : string, actions : OnShippingChangeActionsType, facilitatorAccessToken : string, buyerAccessToken : ?string, partnerAttributionID : ?string, forceRestAPI : boolean |}) : XOnShippingChangeActionsType {

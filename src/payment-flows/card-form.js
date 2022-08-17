@@ -22,7 +22,7 @@ function isCardFormEligible({ props, serviceData } : IsEligibleOptions) : boolea
     const { eligibility } = serviceData;
 
     if (experience === EXPERIENCE.INLINE) {
-        return false;
+        return false
     }
 
     if (vault) {

@@ -37,7 +37,8 @@ type ButtonOpts = {|
     correlationID? : string,
     cookies : string,
     personalization : PersonalizationType,
-    brandedDefault? : boolean | null
+    brandedDefault? : boolean | null,
+    currentReleaseHash? : string
 |};
 
 try {
@@ -69,7 +70,8 @@ export function setupButton(opts : ButtonOpts) : ZalgoPromise<void> {
 
     const props = getButtonProps({ facilitatorAccessToken, brandedDefault, paymentSource: null });
     const { env, sessionID, partnerAttributionID, commit, sdkCorrelationID, locale, onShippingChange,
-        buttonSessionID, merchantDomain, onInit, getPrerenderDetails, rememberFunding, getQueriedEligibleFunding,
+        buttonSessionID, merchantDomain, onInit,
+        getPrerenderDetails, rememberFunding, getQueriedEligibleFunding, experience,
         style, fundingSource, intent, createBillingAgreement, createSubscription, stickinessID } = props;
         
     const config = getConfig({ serverCSPNonce, firebaseConfig });
@@ -108,7 +110,7 @@ export function setupButton(opts : ButtonOpts) : ZalgoPromise<void> {
             if (isEnabled()) {
                 paymentProcessing = true;
 
-                return initiatePaymentFlow({ payment, config, serviceData, components, props: paymentProps }).finally(() => {
+                return initiatePaymentFlow({ payment, config, serviceData, components, props: paymentProps, brandedDefault }).finally(() => {
                     paymentProcessing = false;
                 });
             } else  {
@@ -225,7 +227,7 @@ export function setupButton(opts : ButtonOpts) : ZalgoPromise<void> {
     const setupButtonLogsTask = setupButtonLogger({
         style, env, sdkVersion, sessionID, clientID, partnerAttributionID, commit, sdkCorrelationID,
         stickinessID, buttonCorrelationID, locale, merchantID, buttonSessionID, merchantDomain,
-        fundingSource, getQueriedEligibleFunding, buyerCountry, onShippingChange });
+        fundingSource, getQueriedEligibleFunding, buyerCountry, onShippingChange, experience });
     const setupPaymentFlowsTask = setupPaymentFlows({ props, config, serviceData, components });
     const setupExportsTask = setupExports({ props, isEnabled, facilitatorAccessToken, fundingEligibility, merchantID });
 
@@ -234,7 +236,7 @@ export function setupButton(opts : ButtonOpts) : ZalgoPromise<void> {
     
     if (eligibility.isServiceWorkerEligible) {
         getLogger().info(`SERVICE_WORKER_ELIGIBLE`).flush();
-        registerServiceWorker();
+        registerServiceWorker(opts.currentReleaseHash);
     } else {
         getLogger().info(`SERVICE_WORKER_NOT_ELIGIBLE`).flush();
         unregisterServiceWorker();

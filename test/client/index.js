@@ -17,10 +17,11 @@ import './vault';
 import './clientConfig';
 import './popupBridge';
 import './card';
+import './inlinexo';
 import './native';
 import './native-qrcode';
-import './nativePopup';
 import './nativeFallback';
+import './nativePopup';
 import './payee';
 import './connect';
 import './smart-fields';
@@ -31,6 +32,9 @@ import './exports';
 import './card-fields';
 import './data';
 import './menu';
+import './props-utils';
+import './onShippingAddressChange';
+import './onShippingOptionsChange';
 
 beforeEach(() => {
     setupMocks();

@@ -116,6 +116,12 @@ export function setupMocks() {
                         return props.createOrder();
                     }).then(orderID => {
                         return ZalgoPromise.delay(50).then(() => {
+                            if (props.inlinexo) {
+                                return props.onComplete({ orderID })
+                                    .catch(err => {
+                                        return props.onError(err);
+                                    });
+                            }
                             return props.onApprove({
                                 orderID,
                                 payerID: 'AAABBBCCC'
@@ -309,12 +315,12 @@ export function setupMocks() {
             country: 'US',
             lang:    'en'
         },
-        onInit:    mockAsyncProp(noop),
-        onApprove: mockAsyncProp(noop),
-        onCancel:  mockAsyncProp(noop),
-        onChange:  mockAsyncProp(noop),
-        export:    mockAsyncProp(noop),
-        onError:   mockAsyncProp((err) => {
+        onInit:     mockAsyncProp(noop),
+        onApprove:  mockAsyncProp(noop),
+        onCancel:   mockAsyncProp(noop),
+        onChange:   mockAsyncProp(noop),
+        export:     mockAsyncProp(noop),
+        onError:    mockAsyncProp((err) => {
             throw err;
         }),
         remember:                 mockAsyncProp(noop),
@@ -642,6 +648,20 @@ export function getRestfulPatchOrderApiMock(options : Object = {}) : MockEndpoin
     });
 }
 
+export function getRestfulAuthorizationsCaptureApiMock(options : Object = {}) : MockEndpoint {
+    return $mockEndpoint.register({
+        method: 'POST',
+        uri:    new RegExp('/v2/payments/authorizations/[^/]+/capture'),
+        data:   {
+            ack:  'success',
+            data: {
+
+            }
+        },
+        ...options
+    });
+}
+
 export function getSubscriptionIdToCartIdApiMock(options : Object = {}, subscriptionID : string = 'I-SUBSCRIPTIONID', cartId : string = 'CARTIDOFSUBSCRIPTIONS') : MockEndpoint {
 
     return $mockEndpoint.register({
@@ -852,6 +872,25 @@ export function getValidatePaymentMethodApiMock(options : Object = {}) : MockEnd
     });
 }
 
+
+export function getConfirmOrderApiMock(options : Object = {}) : MockEndpoint {
+    return $mockEndpoint.register({
+        method:  'POST',
+        uri:     new RegExp('/v2/checkout/orders/[^/]+/confirm-payment-source'),
+        handler: ({ uri, method, query, data, headers }) => {
+            if (options.extraHandler) {
+                const result = options.extraHandler({ uri, method, query, data, headers });
+                if (result) {
+                    return result;
+                }
+            }
+
+            return {};
+        },
+        ...options
+    });
+}
+
 getCreateAccessTokenMock().listen();
 
 getCreateOrderApiMock().listen();
@@ -871,9 +910,8 @@ getRestfulGetOrderApiMock().listen();
 getRestfulCaptureOrderApiMock().listen();
 getRestfulAuthorizeOrderApiMock().listen();
 getRestfulPatchOrderApiMock().listen();
+getRestfulAuthorizationsCaptureApiMock().listen();
 
-
-// eslint-disable-next-line compat/compat
 navigator.sendBeacon = () => true;
 
 type NativeMockWebSocket = {|

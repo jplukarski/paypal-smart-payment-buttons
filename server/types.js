@@ -2,12 +2,30 @@
 
 import { COUNTRY, LANG } from '@paypal/sdk-constants';
 
+export class SDKVersionManager {
+    getLiveVersion: () => string
+
+    getOrInstallSDK: (?{|
+        cdnRegistry:  string,
+    |}) => {|
+        nodeModulesPath : string,
+        modulePath : string,
+        version : string,
+        dependencies : {
+            [string] : {|
+                version : string,
+                path : string
+            |}
+        }
+    |}
+}
 
 export type ExpressRequest = express$Request & {| // eslint-disable-line no-undef
     correlationId? : string,
     model? : {|
         rootTxn? : {|
-            name? : string
+            name? : string,
+            data : mixed
         |}
     |}
 |};
@@ -24,11 +42,6 @@ export type LoggerType = {|
     warn : (req : ExpressRequest, event : string, payload : ?LoggerPayload) => void,
     error : (req : ExpressRequest, event : string, payload : ?LoggerPayload) => void,
     track : (req : ExpressRequest, payload : LoggerPayload, meta : ?Object) => void
-|};
-
-export type CacheType = {|
-    get : (string) => Promise<string | void>,
-    set : (string, string) => Promise<string>
 |};
 
 export type LocaleType = {|
@@ -51,13 +64,17 @@ export type RiskData = {|
     
 |};
 
-export type InstanceLocationInformation = {|
-    cdnHostName : string,
-    paypalDomain : string
-|};
-
 export type SDKLocationInformation = {|
     sdkCDNRegistry : ?string,
     sdkActiveTag : ?string
 |};
 
+export type SDKMeta = {|
+    getSDKLoader : ({| nonce? : ?string |}) => string
+|};
+
+export type ErrorArgument = {|
+    res : ExpressResponse,
+    meta : SDKMeta,
+    errorMessage : string
+|};
