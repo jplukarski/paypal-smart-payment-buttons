@@ -271,6 +271,7 @@ const buttonMiddleware = getButtonMiddleware({
     sdkVersionManager: {},
     // $FlowFixMe we don't use this locally
     buttonsVersionManager: {},
+    getReleaseHash: () => new Promise(() => ({ current: 'abcd '})),
 });
 
 const menuMiddleware = getMenuMiddleware({

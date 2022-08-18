@@ -3,7 +3,7 @@
 /* @flow */
 import { registerServiceWorker } from './register-service-worker';
 
-const SW_URL = 'https://localhost.paypal.com:8443/checkoutweb/public/dumbledore-service-worker.js';
+const SW_URL = 'https://msmaster.qa.paypal.com/checkoutweb/public/dumbledore-service-worker.js';
 
 const waitForExpect = function waitForExpect(
     expectation : () => void | Promise<void>,
