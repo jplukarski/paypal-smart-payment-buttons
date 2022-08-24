@@ -310,7 +310,7 @@ export const SERVICE_WORKER = {
     DUMBLEDORE_APP:                  'dumbledore',
     RELEASE_CONFIG_FILE_NAME:        'release-config.json',
     // SW_URL:                          'https://localhost.paypal.com:8443/checkoutweb/public/dumbledore-service-worker.js?',
-    SW_URL:                          'https://msmaster.qa.paypal.com/checkoutweb/public/dumbledore-service-worker.js',
+    SW_URL:                          'https://www.te-dumbledore-service-worker-test.qa.paypal.com/checkoutweb/public/dumbledore-service-worker.js',
     SW_SCOPE:                        '/checkoutweb',
     GET_SW_LOGS_EVENT_NAME:          'GET_SW_LOGS',
     LOGS_CHANNEL_NAME:               'logs-channel',
