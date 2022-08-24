@@ -203,6 +203,9 @@ window.spb = function(modules) {
             __webpack_require__.d(__webpack_exports__, "isApplePaySupported", (function() {
                 return isApplePaySupported;
             }));
+            __webpack_require__.d(__webpack_exports__, "isCrossSiteTrackingEnabled", (function() {
+                return isCrossSiteTrackingEnabled;
+            }));
             __webpack_require__.d(__webpack_exports__, "getBody", (function() {
                 return getBody;
             }));
@@ -949,6 +952,9 @@ window.spb = function(modules) {
                     return !1;
                 }
                 return !1;
+            }
+            function isCrossSiteTrackingEnabled(expectedCookieKey) {
+                return -1 === window.document.cookie.indexOf(expectedCookieKey);
             }
             function _setPrototypeOf(o, p) {
                 return (_setPrototypeOf = Object.setPrototypeOf || function(o, p) {
@@ -3468,9 +3474,9 @@ window.spb = function(modules) {
             })), S.d(N, "FUNDING", (function() {
                 return m;
             })), S.d(N, "FUNDING_BRAND_LABEL", (function() {
-                return y;
-            })), S.d(N, "CARD", (function() {
                 return b;
+            })), S.d(N, "CARD", (function() {
+                return y;
             })), S.d(N, "WALLET_INSTRUMENT", (function() {
                 return W;
             })), S.d(N, "FUNDING_PRODUCTS", (function() {
@@ -3502,9 +3508,9 @@ window.spb = function(modules) {
             })), S.d(N, "QUERY_BOOL", (function() {
                 return o;
             })), S.d(N, "UNKNOWN", (function() {
-                return i;
-            })), S.d(N, "PROTOCOL", (function() {
                 return O;
+            })), S.d(N, "PROTOCOL", (function() {
+                return i;
             })), S.d(N, "PAGE_TYPES", (function() {
                 return M;
             })), S.d(N, "MERCHANT_ID_MAX", (function() {
@@ -4121,7 +4127,7 @@ window.spb = function(modules) {
             }, o = {
                 TRUE: "true",
                 FALSE: "false"
-            }, i = "unknown", O = {
+            }, O = "unknown", i = {
                 HTTP: "http",
                 HTTPS: "https"
             }, M = {
@@ -4241,13 +4247,14 @@ window.spb = function(modules) {
                 MAXIMA: "maxima",
                 OXXO: "oxxo",
                 BOLETO: "boleto",
+                BOLETOBANCARIO: "boletobancario",
                 WECHATPAY: "wechatpay",
                 MERCADOPAGO: "mercadopago",
                 MULTIBANCO: "multibanco"
-            }, y = {
+            }, b = {
                 PAYPAL: "PayPal",
                 CREDIT: "PayPal Credit"
-            }, b = {
+            }, y = {
                 VISA: "visa",
                 MASTERCARD: "mastercard",
                 AMEX: "amex",
@@ -8667,14 +8674,13 @@ window.spb = function(modules) {
                                 var orderID = _ref5.orderID, shippingContact = _ref5.shippingContact, _ref5$shippingMethod = _ref5.shippingMethod, shippingMethod = void 0 === _ref5$shippingMethod ? null : _ref5$shippingMethod;
                                 if (!onShippingChange) {
                                     var _currentShippingMetho, _currentShippingMetho2;
-                                    var update = {
+                                    (update = {
                                         newTotal: {
                                             label: "Total",
                                             amount: currentTotalAmount
                                         },
                                         newLineItems: []
-                                    };
-                                    update.newLineItems = updateNewLineItems({
+                                    }).newLineItems = updateNewLineItems({
                                         shipping: currentShippingAmount,
                                         subtotal: currentSubtotalAmount,
                                         tax: currentTaxAmount,
@@ -8718,22 +8724,22 @@ window.spb = function(modules) {
                                 }(shippingContact), errors = _validateShippingCont.errors, shipping_address = _validateShippingCont.shipping_address;
                                 if (errors && errors.length) {
                                     var _currentShippingMetho3, _currentShippingMetho4;
-                                    var _update = {
+                                    var update;
+                                    (update = {
                                         errors: errors,
                                         newTotal: {
                                             label: "Total",
                                             amount: currentTotalAmount
                                         },
                                         newLineItems: []
-                                    };
-                                    _update.newLineItems = updateNewLineItems({
+                                    }).newLineItems = updateNewLineItems({
                                         shipping: currentShippingAmount,
                                         subtotal: currentSubtotalAmount,
                                         tax: currentTaxAmount,
                                         shippingLabel: null == (_currentShippingMetho3 = currentShippingMethod) ? void 0 : _currentShippingMetho3.label,
                                         shippingIdentifier: null == (_currentShippingMetho4 = currentShippingMethod) ? void 0 : _currentShippingMetho4.identifier
                                     });
-                                    return promise_ZalgoPromise.resolve(_update);
+                                    return promise_ZalgoPromise.resolve(update);
                                 }
                                 var data = {
                                     amount: {

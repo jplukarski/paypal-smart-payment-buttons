@@ -207,6 +207,9 @@
             __webpack_require__.d(__webpack_exports__, "isApplePaySupported", (function() {
                 return isApplePaySupported;
             }));
+            __webpack_require__.d(__webpack_exports__, "isCrossSiteTrackingEnabled", (function() {
+                return isCrossSiteTrackingEnabled;
+            }));
             __webpack_require__.d(__webpack_exports__, "getBody", (function() {
                 return getBody;
             }));
@@ -953,6 +956,9 @@
                     return !1;
                 }
                 return !1;
+            }
+            function isCrossSiteTrackingEnabled(expectedCookieKey) {
+                return -1 === window.document.cookie.indexOf(expectedCookieKey);
             }
             function _setPrototypeOf(o, p) {
                 return (_setPrototypeOf = Object.setPrototypeOf || function(o, p) {
