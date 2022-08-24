@@ -1,9 +1,14 @@
 // eslint-disable-next-line eslint-comments/disable-enable-pair
 /* eslint-disable promise/no-native, no-restricted-globals, compat/compat, no-undef */
 /* @flow */
+import { SERVICE_WORKER } from '../constants';
+
 import { registerServiceWorker } from './register-service-worker';
 
-const SW_URL = 'https://msmaster.qa.paypal.com/checkoutweb/public/dumbledore-service-worker.js';
+const {
+    SW_URL,
+} = SERVICE_WORKER;
+
 
 const waitForExpect = function waitForExpect(
     expectation : () => void | Promise<void>,
@@ -61,7 +66,7 @@ describe('Test service worker registration script', () => {
         const registerSpy = jest.spyOn(global.navigator.serviceWorker, 'register');
         const hash = 'b6cc430fb82802fb9363767b8a7c38187fa4a9d7';
         registerServiceWorker(hash);
-        const expectedSwUrl = `${ SW_URL }releaseHash=${ hash }`;
+        const expectedSwUrl = `${ SW_URL }?releaseHash=${ hash }`;
         await waitForExpect(() => {
             expect(registerSpy).toHaveBeenLastCalledWith(expectedSwUrl, { scope: '/checkoutweb' });
         });
