@@ -865,13 +865,16 @@
                         var u = o.__c.__H.__.filter((function(n) {
                             return n.__c;
                         }));
-                        return (u.every((function(n) {
+                        if (u.every((function(n) {
                             return !n.__N;
-                        })) || !u.every((function(n) {
-                            if (!n.__N) return !0;
-                            var t = n.__[0];
-                            return n.__ = n.__N, n.__N = void 0, t === n.__[0];
-                        }))) && (!c || c.call(this, n, t, r));
+                        }))) return !c || c.call(this, n, t, r);
+                        var i = !1;
+                        return u.forEach((function(n) {
+                            if (n.__N) {
+                                var t = n.__[0];
+                                n.__ = n.__N, n.__N = void 0, t !== n.__[0] && (i = !0);
+                            }
+                        })), !!i && (!c || c.call(this, n, t, r));
                     };
                 }
                 return o.__N || o.__;
@@ -3181,7 +3184,7 @@
             logger.addTrackingBuilder((function() {
                 var _ref2;
                 return (_ref2 = {}).state_name = "smart_button", _ref2.context_type = "EC-Token", 
-                _ref2.context_id = orderID, _ref2.button_session_id = buttonSessionID, _ref2.button_version = "5.0.112", 
+                _ref2.context_id = orderID, _ref2.button_session_id = buttonSessionID, _ref2.button_version = "5.0.113", 
                 _ref2.user_id = buttonSessionID, _ref2;
             }));
             (function() {
