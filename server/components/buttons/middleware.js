@@ -33,7 +33,8 @@ type ButtonMiddlewareOptions = {|
     getSDKLocationInformation : (req : ExpressRequest, env : string) => Promise<SDKLocationInformation>,
     getExperiments? : (req : ExpressRequest, params : GetExperimentsParams) => Promise<GetExperimentsType>,
     sdkVersionManager: SDKVersionManager,
-    buttonsVersionManager: SDKVersionManager
+    buttonsVersionManager: SDKVersionManager,
+    getReleaseHash: (req : ExpressRequest) => Promise<{| current: string, previous: string |}>
 |};
 
 export function getButtonMiddleware({
@@ -50,6 +51,7 @@ export function getButtonMiddleware({
     getExperiments = getDefaultExperiments,
     sdkVersionManager,
     buttonsVersionManager,
+    getReleaseHash
 } : ButtonMiddlewareOptions = {}) : ExpressMiddleware {
     const useLocal = !cdn;
 
@@ -139,9 +141,15 @@ export function getButtonMiddleware({
                     }
                     return getDefaultExperiments();
                 });
-            const experiments = await getExperimentsPromise;
+            const getReleaseHashPromise = promiseTimeout(getReleaseHash(req), EXPERIMENT_TIMEOUT)
+                .catch((err) => {
+                    logger.info(req, `GET_CURRENT_RELEASE_HASH_FAILED_${ err.message }`);
+                    return {};
+                });
+            const [experiments, releaseHash] = await Promise.all([getExperimentsPromise, getReleaseHashPromise])
             const eligibility = {
-                cardFields: experiments.isCardFieldsExperimentEnabled
+                cardFields: experiments.isCardFieldsExperimentEnabled,
+                isServiceWorkerEligible: experiments.isServiceWorkerEligible,
             };
 
             logger.info(req, `button_render_version_${ sdkVersion }`);
@@ -172,10 +180,11 @@ export function getButtonMiddleware({
                 return clientErrorResponse(res, err.stack || err.message);
             }
             const buttonHTML = renderButton.Buttons(buttonProps).render(html());
+            const currentReleaseHash = releaseHash.current;
             const setupParams = {
                 fundingEligibility, buyerCountry, cspNonce, merchantID, sdkMeta, wallet, correlationID,
                 firebaseConfig, facilitatorAccessToken, eligibility, content, cookies, personalization,
-                brandedDefault: experiments.isFundingSourceBranded
+                brandedDefault: experiments.isFundingSourceBranded, currentReleaseHash
             };
 
             const cplCompPayload = {
