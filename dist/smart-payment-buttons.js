@@ -7603,11 +7603,11 @@ window.spb = function(modules) {
             })), S.d(N, "DEFAULT_COMPONENTS", (function() {
                 return U;
             })), S.d(N, "DEFAULT_DEBUG", (function() {
-                return s;
+                return B;
             })), S.d(N, "ENV", (function() {
                 return G;
             })), S.d(N, "MOBILE_ENV", (function() {
-                return B;
+                return s;
             })), S.d(N, "ERROR_CODE", (function() {
                 return K;
             })), S.d(N, "FPTI_KEY", (function() {
@@ -7635,9 +7635,9 @@ window.spb = function(modules) {
             })), S.d(N, "LANG", (function() {
                 return t;
             })), S.d(N, "COUNTRY_LANGS", (function() {
-                return e;
-            })), S.d(N, "INTENT", (function() {
                 return T;
+            })), S.d(N, "INTENT", (function() {
+                return e;
             })), S.d(N, "COMMIT", (function() {
                 return n;
             })), S.d(N, "VAULT", (function() {
@@ -7649,15 +7649,15 @@ window.spb = function(modules) {
             })), S.d(N, "SDK_SETTINGS", (function() {
                 return F;
             })), S.d(N, "SDK_QUERY_KEYS", (function() {
-                return D;
-            })), S.d(N, "COMPONENTS", (function() {
-                return H;
-            })), S.d(N, "DEBUG", (function() {
                 return I;
+            })), S.d(N, "COMPONENTS", (function() {
+                return D;
+            })), S.d(N, "DEBUG", (function() {
+                return H;
             })), S.d(N, "QUERY_BOOL", (function() {
-                return o;
-            })), S.d(N, "UNKNOWN", (function() {
                 return O;
+            })), S.d(N, "UNKNOWN", (function() {
+                return o;
             })), S.d(N, "PROTOCOL", (function() {
                 return i;
             })), S.d(N, "PAGE_TYPES", (function() {
@@ -7668,6 +7668,8 @@ window.spb = function(modules) {
                 return h;
             })), S.d(N, "TYPES", (function() {
                 return k;
+            })), S.d(N, "APM_LIST", (function() {
+                return g;
             }));
             var R = {
                 AD: "AD",
@@ -7911,7 +7913,7 @@ window.spb = function(modules) {
                 VI: "vi",
                 ZH: "zh",
                 ZH_HANT: "zh_Hant"
-            }, e = {
+            }, T = {
                 AD: [ t.EN, t.FR, t.ES, t.ZH ],
                 AE: [ t.EN, t.FR, t.ES, t.ZH, t.AR ],
                 AG: [ t.EN, t.FR, t.ES, t.ZH ],
@@ -8115,7 +8117,7 @@ window.spb = function(modules) {
                 ZA: [ t.EN, t.FR, t.ES, t.ZH ],
                 ZM: [ t.EN, t.FR, t.ES, t.ZH ],
                 ZW: [ t.EN ]
-            }, T = {
+            }, e = {
                 CAPTURE: "capture",
                 AUTHORIZE: "authorize",
                 ORDER: "order",
@@ -8246,7 +8248,7 @@ window.spb = function(modules) {
                 PAGE_TYPE: "data-page-type",
                 USER_EXPERIENCE_FLOW: "data-user-experience-flow",
                 POPUPS_DISABLED: "data-popups-disabled"
-            }, D = {
+            }, I = {
                 COMPONENTS: "components",
                 ENV: "env",
                 DEBUG: "debug",
@@ -8267,16 +8269,16 @@ window.spb = function(modules) {
                 STAGE_ALIAS: "stage-alias",
                 CDN_REGISTRY: "cdn-registry",
                 VERSION: "version"
-            }, H = {
+            }, D = {
                 BUTTONS: "buttons",
                 HOSTED_FIELDS: "hosted-fields"
-            }, I = {
+            }, H = {
                 TRUE: !0,
                 FALSE: !1
-            }, o = {
+            }, O = {
                 TRUE: "true",
                 FALSE: "false"
-            }, O = "unknown", i = {
+            }, o = "unknown", i = {
                 HTTP: "http",
                 HTTPS: "https"
             }, M = {
@@ -8288,13 +8290,13 @@ window.spb = function(modules) {
                 SEARCH_RESULTS: "search-results",
                 PRODUCT_DETAILS: "product-details",
                 MINI_CART: "mini-cart"
-            }, C = 10, Z = R.US, a = r.USD, u = T.CAPTURE, L = n.TRUE, P = n.TRUE, d = n.TRUE, c = A.FALSE, U = H.BUTTONS, s = I.FALSE, G = {
+            }, C = 10, Z = R.US, a = r.USD, u = e.CAPTURE, L = n.TRUE, P = n.TRUE, d = n.TRUE, c = A.FALSE, U = D.BUTTONS, B = H.FALSE, G = {
                 LOCAL: "local",
                 STAGE: "stage",
                 SANDBOX: "sandbox",
                 PRODUCTION: "production",
                 TEST: "test"
-            }, B = {
+            }, s = {
                 ANDROID: "android",
                 IOS: "iOS"
             }, K = {
@@ -8425,7 +8427,7 @@ window.spb = function(modules) {
             }, h = {
                 DESKTOP: "desktop",
                 MOBILE: "mobile"
-            }, k = !0;
+            }, k = !0, g = [ m.IDEAL, m.BANCONTACT, m.GIROPAY, m.SOFORT, m.EPS, m.MYBANK, m.P24, m.PAYU, m.BLIK, m.TRUSTLY, m.ZIMPLER, m.MAXIMA, m.OXXO, m.BOLETO, m.BOLETOBANCARIO, m.WECHATPAY, m.MERCADOPAGO, m.MULTIBANCO ];
         } ]);
     },
     "./node_modules/@paypal/sdk-constants/index.js": function(module, exports, __webpack_require__) {
@@ -8556,6 +8558,9 @@ window.spb = function(modules) {
         }));
         __webpack_require__.d(__webpack_exports__, "TYPES", (function() {
             return TYPES;
+        }));
+        __webpack_require__.d(__webpack_exports__, "APM_LIST", (function() {
+            return APM_LIST;
         }));
         var COUNTRY = {
             AD: "AD",
@@ -9354,6 +9359,7 @@ window.spb = function(modules) {
             MOBILE: "mobile"
         };
         var TYPES = !0;
+        var APM_LIST = [ FUNDING.IDEAL, FUNDING.BANCONTACT, FUNDING.GIROPAY, FUNDING.SOFORT, FUNDING.EPS, FUNDING.MYBANK, FUNDING.P24, FUNDING.PAYU, FUNDING.BLIK, FUNDING.TRUSTLY, FUNDING.ZIMPLER, FUNDING.MAXIMA, FUNDING.OXXO, FUNDING.BOLETO, FUNDING.BOLETOBANCARIO, FUNDING.WECHATPAY, FUNDING.MERCADOPAGO, FUNDING.MULTIBANCO ];
     },
     "./node_modules/card-validator/dist/card-number.js": function(module, exports, __webpack_require__) {
         "use strict";
@@ -10742,7 +10748,7 @@ window.spb = function(modules) {
             Object(lib.getLogger)().info("rest_api_create_order_token");
             var headers = ((_headers15 = {})[constants.HEADERS.AUTHORIZATION] = "Bearer " + accessToken, 
             _headers15[constants.HEADERS.PARTNER_ATTRIBUTION_ID] = partnerAttributionID, _headers15[constants.HEADERS.CLIENT_METADATA_ID] = clientMetadataID, 
-            _headers15[constants.HEADERS.APP_NAME] = constants.SMART_PAYMENT_BUTTONS, _headers15[constants.HEADERS.APP_VERSION] = "5.0.112", 
+            _headers15[constants.HEADERS.APP_NAME] = constants.SMART_PAYMENT_BUTTONS, _headers15[constants.HEADERS.APP_VERSION] = "5.0.113", 
             _headers15);
             var paymentSource = {
                 token: {
@@ -12453,7 +12459,7 @@ window.spb = function(modules) {
         var checkout_inline = !1;
         var smokeHash = "";
         function getDimensions(fundingSource) {
-            if (-1 !== constants.APM_LIST.indexOf(fundingSource)) {
+            if (-1 !== sdk_constants_src.APM_LIST.indexOf(fundingSource)) {
                 Object(lib.getLogger)().info("popup_dimensions_value_" + fundingSource).flush();
                 return {
                     width: 1282,
@@ -15311,7 +15317,7 @@ window.spb = function(modules) {
         }
         function initiatePaymentFlow(_ref3) {
             var _props$style;
-            var payment = _ref3.payment, serviceData = _ref3.serviceData, config = _ref3.config, components = _ref3.components, props = _ref3.props, brandedDefault = _ref3.brandedDefault;
+            var payment = _ref3.payment, serviceData = _ref3.serviceData, config = _ref3.config, components = _ref3.components, props = _ref3.props;
             var button = payment.button, fundingSource = payment.fundingSource, instrumentType = payment.instrumentType, buyerIntent = payment.buyerIntent;
             var buttonLabel = null == (_props$style = props.style) ? void 0 : _props$style.label;
             return zalgo_promise_src.ZalgoPromise.try((function() {
@@ -15712,7 +15718,6 @@ window.spb = function(modules) {
                                 }, {
                                     facilitatorAccessToken: serviceData.facilitatorAccessToken
                                 });
-                                brandedDefault || Object(lib.getLogger)().warn("Standalone button integration has been deprecated, please use unbranded integration https://developer.paypa.com/docs/checkout/apm/. If this is an existing integration please contact developer team dl-pp-altpay-exp@paypal.com");
                             }));
                         }));
                         return zalgo_promise_src.ZalgoPromise.all([ loggingPromise, updateClientConfigPromise, clickPromise, vaultPromise, validateOrderPromise, startPromise, confirmOrderPromise ]).catch((function(err) {
@@ -15786,8 +15791,7 @@ window.spb = function(modules) {
                                     config: config,
                                     serviceData: serviceData,
                                     components: components,
-                                    props: paymentProps,
-                                    brandedDefault: brandedDefault
+                                    props: paymentProps
                                 }).finally((function() {
                                     paymentProcessing = !1;
                                 }));
@@ -16066,7 +16070,7 @@ window.spb = function(modules) {
                     var _ref3;
                     return (_ref3 = {})[sdk_constants_src.FPTI_KEY.CONTEXT_TYPE] = constants.FPTI_CONTEXT_TYPE.BUTTON_SESSION_ID, 
                     _ref3[sdk_constants_src.FPTI_KEY.CONTEXT_ID] = buttonSessionID, _ref3[sdk_constants_src.FPTI_KEY.BUTTON_SESSION_UID] = buttonSessionID, 
-                    _ref3[sdk_constants_src.FPTI_KEY.BUTTON_VERSION] = "5.0.112", _ref3[constants.FPTI_BUTTON_KEY.BUTTON_CORRELATION_ID] = buttonCorrelationID, 
+                    _ref3[sdk_constants_src.FPTI_KEY.BUTTON_VERSION] = "5.0.113", _ref3[constants.FPTI_BUTTON_KEY.BUTTON_CORRELATION_ID] = buttonCorrelationID, 
                     _ref3[sdk_constants_src.FPTI_KEY.STICKINESS_ID] = Object(lib.isAndroidChrome)() ? stickinessID : null, 
                     _ref3[sdk_constants_src.FPTI_KEY.PARTNER_ATTRIBUTION_ID] = partnerAttributionID, 
                     _ref3[sdk_constants_src.FPTI_KEY.USER_ACTION] = commit ? sdk_constants_src.FPTI_USER_ACTION.COMMIT : sdk_constants_src.FPTI_USER_ACTION.CONTINUE, 
@@ -16495,10 +16499,6 @@ window.spb = function(modules) {
         __webpack_require__.d(__webpack_exports__, "STATUS_CODES", (function() {
             return STATUS_CODES;
         }));
-        __webpack_require__.d(__webpack_exports__, "APM_LIST", (function() {
-            return APM_LIST;
-        }));
-        var _paypal_sdk_constants_src__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__("./node_modules/@paypal/sdk-constants/src/index.js");
         var SMART_PAYMENT_BUTTONS = "smart-payment-buttons";
         var BUYER_INTENT = {
             PAY: "pay",
@@ -16728,7 +16728,6 @@ window.spb = function(modules) {
         var STATUS_CODES = {
             TOO_MANY_REQUESTS: 429
         };
-        var APM_LIST = [ _paypal_sdk_constants_src__WEBPACK_IMPORTED_MODULE_0__.FUNDING.IDEAL, _paypal_sdk_constants_src__WEBPACK_IMPORTED_MODULE_0__.FUNDING.BANCONTACT, _paypal_sdk_constants_src__WEBPACK_IMPORTED_MODULE_0__.FUNDING.GIROPAY, _paypal_sdk_constants_src__WEBPACK_IMPORTED_MODULE_0__.FUNDING.SOFORT, _paypal_sdk_constants_src__WEBPACK_IMPORTED_MODULE_0__.FUNDING.EPS, _paypal_sdk_constants_src__WEBPACK_IMPORTED_MODULE_0__.FUNDING.MYBANK, _paypal_sdk_constants_src__WEBPACK_IMPORTED_MODULE_0__.FUNDING.P24, _paypal_sdk_constants_src__WEBPACK_IMPORTED_MODULE_0__.FUNDING.PAYU, _paypal_sdk_constants_src__WEBPACK_IMPORTED_MODULE_0__.FUNDING.BLIK, _paypal_sdk_constants_src__WEBPACK_IMPORTED_MODULE_0__.FUNDING.TRUSTLY, _paypal_sdk_constants_src__WEBPACK_IMPORTED_MODULE_0__.FUNDING.ZIMPLER, _paypal_sdk_constants_src__WEBPACK_IMPORTED_MODULE_0__.FUNDING.MAXIMA, _paypal_sdk_constants_src__WEBPACK_IMPORTED_MODULE_0__.FUNDING.OXXO, _paypal_sdk_constants_src__WEBPACK_IMPORTED_MODULE_0__.FUNDING.BOLETO, _paypal_sdk_constants_src__WEBPACK_IMPORTED_MODULE_0__.FUNDING.BOLETOBANCARIO, _paypal_sdk_constants_src__WEBPACK_IMPORTED_MODULE_0__.FUNDING.WECHATPAY, _paypal_sdk_constants_src__WEBPACK_IMPORTED_MODULE_0__.FUNDING.MERCADOPAGO, _paypal_sdk_constants_src__WEBPACK_IMPORTED_MODULE_0__.FUNDING.MULTIBANCO ];
     },
     "./src/lib/dom.js": function(module, __webpack_exports__, __webpack_require__) {
         "use strict";

@@ -336,13 +336,16 @@ window.spb = function(modules) {
                     var u = o.__c.__H.__.filter((function(n) {
                         return n.__c;
                     }));
-                    return (u.every((function(n) {
+                    if (u.every((function(n) {
                         return !n.__N;
-                    })) || !u.every((function(n) {
-                        if (!n.__N) return !0;
-                        var t = n.__[0];
-                        return n.__ = n.__N, n.__N = void 0, t === n.__[0];
-                    }))) && (!c || c.call(this, n, t, r));
+                    }))) return !c || c.call(this, n, t, r);
+                    var i = !1;
+                    return u.forEach((function(n) {
+                        if (n.__N) {
+                            var t = n.__[0];
+                            n.__ = n.__N, n.__N = void 0, t !== n.__[0] && (i = !0);
+                        }
+                    })), !!i && (!c || c.call(this, n, t, r));
                 };
             }
             return o.__N || o.__;
