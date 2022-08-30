@@ -7603,11 +7603,11 @@ window.spb = function(modules) {
             })), S.d(N, "DEFAULT_COMPONENTS", (function() {
                 return U;
             })), S.d(N, "DEFAULT_DEBUG", (function() {
-                return s;
+                return B;
             })), S.d(N, "ENV", (function() {
                 return G;
             })), S.d(N, "MOBILE_ENV", (function() {
-                return B;
+                return s;
             })), S.d(N, "ERROR_CODE", (function() {
                 return K;
             })), S.d(N, "FPTI_KEY", (function() {
@@ -7635,9 +7635,9 @@ window.spb = function(modules) {
             })), S.d(N, "LANG", (function() {
                 return t;
             })), S.d(N, "COUNTRY_LANGS", (function() {
-                return e;
-            })), S.d(N, "INTENT", (function() {
                 return T;
+            })), S.d(N, "INTENT", (function() {
+                return e;
             })), S.d(N, "COMMIT", (function() {
                 return n;
             })), S.d(N, "VAULT", (function() {
@@ -7649,15 +7649,15 @@ window.spb = function(modules) {
             })), S.d(N, "SDK_SETTINGS", (function() {
                 return F;
             })), S.d(N, "SDK_QUERY_KEYS", (function() {
-                return D;
-            })), S.d(N, "COMPONENTS", (function() {
-                return H;
-            })), S.d(N, "DEBUG", (function() {
                 return I;
+            })), S.d(N, "COMPONENTS", (function() {
+                return D;
+            })), S.d(N, "DEBUG", (function() {
+                return H;
             })), S.d(N, "QUERY_BOOL", (function() {
-                return o;
-            })), S.d(N, "UNKNOWN", (function() {
                 return O;
+            })), S.d(N, "UNKNOWN", (function() {
+                return o;
             })), S.d(N, "PROTOCOL", (function() {
                 return i;
             })), S.d(N, "PAGE_TYPES", (function() {
@@ -7668,6 +7668,8 @@ window.spb = function(modules) {
                 return h;
             })), S.d(N, "TYPES", (function() {
                 return k;
+            })), S.d(N, "APM_LIST", (function() {
+                return g;
             }));
             var R = {
                 AD: "AD",
@@ -7911,7 +7913,7 @@ window.spb = function(modules) {
                 VI: "vi",
                 ZH: "zh",
                 ZH_HANT: "zh_Hant"
-            }, e = {
+            }, T = {
                 AD: [ t.EN, t.FR, t.ES, t.ZH ],
                 AE: [ t.EN, t.FR, t.ES, t.ZH, t.AR ],
                 AG: [ t.EN, t.FR, t.ES, t.ZH ],
@@ -8115,7 +8117,7 @@ window.spb = function(modules) {
                 ZA: [ t.EN, t.FR, t.ES, t.ZH ],
                 ZM: [ t.EN, t.FR, t.ES, t.ZH ],
                 ZW: [ t.EN ]
-            }, T = {
+            }, e = {
                 CAPTURE: "capture",
                 AUTHORIZE: "authorize",
                 ORDER: "order",
@@ -8246,7 +8248,7 @@ window.spb = function(modules) {
                 PAGE_TYPE: "data-page-type",
                 USER_EXPERIENCE_FLOW: "data-user-experience-flow",
                 POPUPS_DISABLED: "data-popups-disabled"
-            }, D = {
+            }, I = {
                 COMPONENTS: "components",
                 ENV: "env",
                 DEBUG: "debug",
@@ -8267,16 +8269,16 @@ window.spb = function(modules) {
                 STAGE_ALIAS: "stage-alias",
                 CDN_REGISTRY: "cdn-registry",
                 VERSION: "version"
-            }, H = {
+            }, D = {
                 BUTTONS: "buttons",
                 HOSTED_FIELDS: "hosted-fields"
-            }, I = {
+            }, H = {
                 TRUE: !0,
                 FALSE: !1
-            }, o = {
+            }, O = {
                 TRUE: "true",
                 FALSE: "false"
-            }, O = "unknown", i = {
+            }, o = "unknown", i = {
                 HTTP: "http",
                 HTTPS: "https"
             }, M = {
@@ -8288,13 +8290,13 @@ window.spb = function(modules) {
                 SEARCH_RESULTS: "search-results",
                 PRODUCT_DETAILS: "product-details",
                 MINI_CART: "mini-cart"
-            }, C = 10, Z = R.US, a = r.USD, u = T.CAPTURE, L = n.TRUE, P = n.TRUE, d = n.TRUE, c = A.FALSE, U = H.BUTTONS, s = I.FALSE, G = {
+            }, C = 10, Z = R.US, a = r.USD, u = e.CAPTURE, L = n.TRUE, P = n.TRUE, d = n.TRUE, c = A.FALSE, U = D.BUTTONS, B = H.FALSE, G = {
                 LOCAL: "local",
                 STAGE: "stage",
                 SANDBOX: "sandbox",
                 PRODUCTION: "production",
                 TEST: "test"
-            }, B = {
+            }, s = {
                 ANDROID: "android",
                 IOS: "iOS"
             }, K = {
@@ -8425,7 +8427,7 @@ window.spb = function(modules) {
             }, h = {
                 DESKTOP: "desktop",
                 MOBILE: "mobile"
-            }, k = !0;
+            }, k = !0, g = [ m.IDEAL, m.BANCONTACT, m.GIROPAY, m.SOFORT, m.EPS, m.MYBANK, m.P24, m.PAYU, m.BLIK, m.TRUSTLY, m.ZIMPLER, m.MAXIMA, m.OXXO, m.BOLETO, m.BOLETOBANCARIO, m.WECHATPAY, m.MERCADOPAGO, m.MULTIBANCO ];
         } ]);
     },
     "./node_modules/@paypal/sdk-constants/index.js": function(module, exports, __webpack_require__) {
@@ -8556,6 +8558,9 @@ window.spb = function(modules) {
         }));
         __webpack_require__.d(__webpack_exports__, "TYPES", (function() {
             return TYPES;
+        }));
+        __webpack_require__.d(__webpack_exports__, "APM_LIST", (function() {
+            return APM_LIST;
         }));
         var COUNTRY = {
             AD: "AD",
@@ -9354,6 +9359,7 @@ window.spb = function(modules) {
             MOBILE: "mobile"
         };
         var TYPES = !0;
+        var APM_LIST = [ FUNDING.IDEAL, FUNDING.BANCONTACT, FUNDING.GIROPAY, FUNDING.SOFORT, FUNDING.EPS, FUNDING.MYBANK, FUNDING.P24, FUNDING.PAYU, FUNDING.BLIK, FUNDING.TRUSTLY, FUNDING.ZIMPLER, FUNDING.MAXIMA, FUNDING.OXXO, FUNDING.BOLETO, FUNDING.BOLETOBANCARIO, FUNDING.WECHATPAY, FUNDING.MERCADOPAGO, FUNDING.MULTIBANCO ];
     },
     "./node_modules/card-validator/dist/card-number.js": function(module, exports, __webpack_require__) {
         "use strict";
