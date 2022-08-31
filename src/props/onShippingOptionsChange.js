@@ -78,10 +78,10 @@ export function buildXOnShippingOptionsChangeActions({ clientID, data, actions: 
     const actions = {
         reject: passedActions.reject ?
             (message) => {
-                if (SHIPPING_OPTIONS_ERROR_MESSAGES[message]) {
-                    return passedActions.reject(message);
-                } else {
+                if (Object.values(SHIPPING_OPTIONS_ERROR_MESSAGES).indexOf(message) === -1) {
                     return passedActions.reject(GENERIC_REJECT_ADDRESS_MESSAGE);
+                } else {
+                    return passedActions.reject(message);
                 }
             } : function reject() {
                 throw new Error(`Missing reject action callback`);
