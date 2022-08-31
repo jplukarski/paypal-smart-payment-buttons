@@ -14,7 +14,8 @@ import {
     type Query,
     type ON_SHIPPING_CHANGE_EVENT,
     ON_SHIPPING_CHANGE_PATHS,
-    SHIPPING_OPTIONS_ERROR_MESSAGES
+    SHIPPING_OPTIONS_ERROR_MESSAGES,
+    GENERIC_REJECT_ADDRESS_MESSAGE
 } from './onShippingChange';
 import { buildBreakdown, calculateTotalFromShippingBreakdownAmounts, convertQueriesToArray, updateOperationForShippingOptions, updateShippingOptions } from './utils';
        
@@ -75,9 +76,16 @@ export function buildXOnShippingOptionsChangeActions({ clientID, data, actions: 
     }
 
     const actions = {
-        reject: passedActions.reject || function reject() {
-            throw new Error(`Missing reject action callback`);
-        },
+        reject: passedActions.reject ?
+            (message) => {
+                if (SHIPPING_OPTIONS_ERROR_MESSAGES[message]) {
+                    return passedActions.reject(message);
+                } else {
+                    return passedActions.reject(GENERIC_REJECT_ADDRESS_MESSAGE);
+                }
+            } : function reject() {
+                throw new Error(`Missing reject action callback`);
+            },
 
         updateShippingOption: ({ option }) => {
             if (option && data.options) {
