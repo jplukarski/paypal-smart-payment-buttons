@@ -116,6 +116,19 @@ export function buildXOnShippingAddressChangeActions({ clientID, data, actions: 
 
         updateShippingOptions: ({ options }) => {
             if (options && options.length > 0) {
+                const pickupOptions = options.filter(option => option.type === 'PICKUP');
+                if (pickupOptions && pickupOptions.length > 0) {
+                    const logMessage = `onshippingaddresschange_pickup_found`;
+                    getLogger().info(logMessage)
+                    .track({
+                        [FPTI_KEY.TRANSITION]:                       logMessage,
+                        [FPTI_KEY.EVENT_NAME]:                       logMessage,
+                        [FPTI_KEY.CONTEXT_TYPE]:                     FPTI_CONTEXT_TYPE.ORDER_ID,
+                        [FPTI_KEY.TOKEN]:                            orderID,
+                        [FPTI_KEY.CONTEXT_ID]:                       orderID
+                    }).flush();
+                }
+
                 const selectedShippingOption = options.filter(option => option.selected === true);
                 const selectedShippingOptionAmount = selectedShippingOption && selectedShippingOption[0]?.amount?.value;
 
