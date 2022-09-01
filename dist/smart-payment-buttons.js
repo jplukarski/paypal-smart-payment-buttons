@@ -8304,6 +8304,7 @@ window.spb = function(modules) {
             }, p = {
                 FEED: "feed_name",
                 STATE: "state_name",
+                EVENT_NAME: "event_name",
                 TRANSITION: "transition_name",
                 PAGE: "page_name",
                 BUTTON_TYPE: "button_type",
@@ -9224,6 +9225,7 @@ window.spb = function(modules) {
         var FPTI_KEY = {
             FEED: "feed_name",
             STATE: "state_name",
+            EVENT_NAME: "event_name",
             TRANSITION: "transition_name",
             PAGE: "page_name",
             BUTTON_TYPE: "button_type",
