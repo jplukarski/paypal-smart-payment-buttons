@@ -26,7 +26,7 @@ export const CHECKOUT_APM_POPUP_DIMENSIONS = {
 };
 
 let canRenderTop = false;
-let inline = false;
+let accelerated = false;
 let smokeHash = '';
 
 function getSmokeHash() : ZalgoPromise<string> {
@@ -150,7 +150,7 @@ function initCheckout({ props, components, serviceData, payment, config, restart
     const { buyerCountry, sdkMeta, merchantID } = serviceData;
     const { cspNonce } = config;
 
-    inline = inlinexo && fundingSource === FUNDING.CARD;
+    accelerated = inlinexo && fundingSource === FUNDING.CARD;
 
     let context = getContext({ win, isClick, merchantRequestedPopupsDisabled });
     const connectEligible = isConnectEligible({ connect, createBillingAgreement, createSubscription, vault, fundingSource });
@@ -167,7 +167,7 @@ function initCheckout({ props, components, serviceData, payment, config, restart
             stickinessID,
             clientAccessToken,
             venmoPayloadID,
-            inlinexo: inline,
+            inlinexo: accelerated,
             smokeHash,
 
             createAuthCode: () => {
@@ -239,7 +239,7 @@ function initCheckout({ props, components, serviceData, payment, config, restart
                 });
             },
 
-            onApprove: ({ accelerated, approveOnClose = false, payerID, paymentID, billingToken, subscriptionID, authCode } = {}) => {
+            onApprove: ({ accelerated: axo, approveOnClose = false, payerID, paymentID, billingToken, subscriptionID, authCode } = {}) => {
                 if (approveOnClose) {
                     doApproveOnClose = true;
                     return;
@@ -253,7 +253,7 @@ function initCheckout({ props, components, serviceData, payment, config, restart
                 // eslint-disable-next-line no-use-before-define
                 return onApprove({ accelerated, payerID, paymentID, billingToken, subscriptionID, buyerAccessToken, authCode }, { restart })
                 .finally(() => {
-                    if (accelerated) {
+                    if (axo) {
                         return valid;
                     } else {
                         // eslint-disable-next-line no-use-before-define
@@ -379,7 +379,7 @@ function initCheckout({ props, components, serviceData, payment, config, restart
 
     const click = () => {
         return ZalgoPromise.try(() => {
-            if (inline) {
+            if (accelerated) {
                 context = CONTEXT.IFRAME;
             } else if (!merchantRequestedPopupsDisabled && !win && supportsPopups()) {
                 try {
@@ -417,10 +417,10 @@ function initCheckout({ props, components, serviceData, payment, config, restart
 function updateCheckoutClientConfig({ orderID, payment, userExperienceFlow }) : ZalgoPromise<void> {
     return ZalgoPromise.try(() => {
         const { buyerIntent, fundingSource } = payment;
-        if (inline) {
+        if (accelerated) {
             userExperienceFlow = 'ACCELERATED';
         }
-        const updateClientConfigPromise = updateButtonClientConfig({ fundingSource, orderID, inline, userExperienceFlow });
+        const updateClientConfigPromise = updateButtonClientConfig({ fundingSource, orderID, inline: accelerated, userExperienceFlow });
 
         // Block
         if (buyerIntent === BUYER_INTENT.PAY_WITH_DIFFERENT_FUNDING_SHIPPING) {
