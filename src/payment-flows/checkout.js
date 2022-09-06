@@ -417,6 +417,9 @@ function initCheckout({ props, components, serviceData, payment, config, restart
 function updateCheckoutClientConfig({ orderID, payment, userExperienceFlow }) : ZalgoPromise<void> {
     return ZalgoPromise.try(() => {
         const { buyerIntent, fundingSource } = payment;
+        if (inline) {
+            userExperienceFlow = 'ACCELERATED';
+        }
         const updateClientConfigPromise = updateButtonClientConfig({ fundingSource, orderID, inline, userExperienceFlow });
 
         // Block
