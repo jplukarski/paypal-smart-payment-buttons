@@ -8,7 +8,7 @@ import { getParent, getTop, type CrossDomainWindowType } from '@krakenjs/cross-d
 import type { ProxyWindow, ConnectOptions } from '../types';
 import { type CreateBillingAgreement, type CreateSubscription } from '../props';
 import { exchangeAccessTokenForAuthCode, getConnectURL, updateButtonClientConfig, getSmartWallet, loadFraudnet  } from '../api';
-import { CONTEXT, TARGET_ELEMENT, BUYER_INTENT, FPTI_TRANSITION, FPTI_CONTEXT_TYPE } from '../constants';
+import { CONTEXT, TARGET_ELEMENT, BUYER_INTENT, FPTI_TRANSITION, FPTI_CONTEXT_TYPE, PRODUCT_FLOW } from '../constants';
 import { unresolvedPromise, getLogger, setBuyerAccessToken } from '../lib';
 import { openPopup } from '../ui';
 import { FUNDING_SKIP_LOGIN } from '../config';
@@ -417,10 +417,12 @@ function initCheckout({ props, components, serviceData, payment, config, restart
 function updateCheckoutClientConfig({ orderID, payment, userExperienceFlow }) : ZalgoPromise<void> {
     return ZalgoPromise.try(() => {
         const { buyerIntent, fundingSource } = payment;
+        
+        let productFlow = PRODUCT_FLOW.SMART_PAYMENT_BUTTONS;
         if (acceleratedXO) {
-            userExperienceFlow = 'ACCELERATED';
+            productFlow = PRODUCT_FLOW.ACCELERATED;
         }
-        const updateClientConfigPromise = updateButtonClientConfig({ fundingSource, orderID, inline: acceleratedXO, userExperienceFlow });
+        const updateClientConfigPromise = updateButtonClientConfig({ fundingSource, productFlow, orderID, inline: acceleratedXO, userExperienceFlow });
 
         // Block
         if (buyerIntent === BUYER_INTENT.PAY_WITH_DIFFERENT_FUNDING_SHIPPING) {

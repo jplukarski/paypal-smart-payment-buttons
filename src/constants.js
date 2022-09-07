@@ -75,6 +75,7 @@ export const USER_EXPERIENCE_FLOW = {
 };
 
 export const PRODUCT_FLOW = {
+    ACCELERATED:           'ACCELERATED',
     SMART_PAYMENT_BUTTONS: 'SMART_PAYMENT_BUTTONS'
 };
 
