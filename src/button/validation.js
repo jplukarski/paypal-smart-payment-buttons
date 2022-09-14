@@ -76,10 +76,11 @@ type triggerIntegrationErrorOptions = {|
     orderID? : string,
     loggerPayload? : {|
         [string] : ?(string | boolean)
-    |}
+    |},
+    throwError? : boolean
 |};
 
-function triggerIntegrationError({ error, message = error, orderID, loggerPayload = {} } : triggerIntegrationErrorOptions) {
+function triggerIntegrationError({ error, message = error, orderID, loggerPayload = {}, throwError = true } : triggerIntegrationErrorOptions) {
 
     getLogger()
         .warn(error, loggerPayload)
@@ -92,7 +93,12 @@ function triggerIntegrationError({ error, message = error, orderID, loggerPayloa
             [ FPTI_KEY.ERROR_DESC ]:                   message
         }).flush();
 
-    console.warn(message);
+    if (throwError) {
+        console.error(message);
+        throw new Error(message);
+    } else {
+        console.warn(message);
+    }
 }
 
 type ValidatePropsOptions = {|
@@ -110,7 +116,8 @@ export function validateProps({ intent, createBillingAgreement, createSubscripti
         triggerIntegrationError({
             error:         `smart_button_validation_error_expected_intent_tokenize`,
             message:       `Expected intent=${ INTENT.TOKENIZE } to be passed to SDK with createBillingAgreement, but got intent=${ intent }`,
-            loggerPayload: { intent }
+            loggerPayload: { intent },
+            throwError: false
         });
     }
 
@@ -118,7 +125,8 @@ export function validateProps({ intent, createBillingAgreement, createSubscripti
         triggerIntegrationError({
             error:         `smart_button_validation_error_expected_intent_subscription`,
             message:       `Expected intent=${ INTENT.SUBSCRIPTION } to be passed to SDK with createSubscription, but got intent=${ intent }`,
-            loggerPayload: { intent }
+            loggerPayload: { intent },
+            throwError: false
         });
     }
 
@@ -220,14 +228,16 @@ export function validateOrder(orderID : string, { env, merchantID, currency, int
         if (!payees) {
             return triggerIntegrationError({
                 error:      'smart_button_validation_error_supplemental_order_missing_payees',
-                orderID
+                orderID,
+                throwError: false
             });
         }
 
         if (!payees.length) {
             return triggerIntegrationError({
                 error:      'smart_button_validation_error_supplemental_order_no_payees',
-                orderID
+                orderID,
+                throwError: false
             });
         }
 
@@ -240,7 +250,8 @@ export function validateOrder(orderID : string, { env, merchantID, currency, int
                 return triggerIntegrationError({
                     error:         'smart_button_validation_error_supplemental_order_missing_values',
                     orderID,
-                    loggerPayload: { payees: JSON.stringify(payees) }
+                    loggerPayload: { payees: JSON.stringify(payees) },
+                    throwError: false
                 });
             }
 
@@ -286,7 +297,8 @@ export function validateOrder(orderID : string, { env, merchantID, currency, int
                     triggerIntegrationError({
                         error:      'smart_button_validation_error_payee_no_match',
                         message:    `Payee(s) passed in transaction does not match expected merchant id. Please ensure you are passing ${ SDK_QUERY_KEYS.MERCHANT_ID }=${ payeesStr } or ${ SDK_QUERY_KEYS.MERCHANT_ID }=${ (uniquePayees[0] && uniquePayees[0].email && uniquePayees[0].email.stringValue) ? uniquePayees[0].email.stringValue : 'payee@merchant.com' } to the sdk url. https://developer.paypal.com/docs/checkout/reference/customize-sdk/`,
-                        orderID
+                        orderID,
+                        throwError: true
                     });
                 } else {
                     triggerIntegrationError({
@@ -310,7 +322,8 @@ export function validateOrder(orderID : string, { env, merchantID, currency, int
                     triggerIntegrationError({
                         error:      'smart_button_validation_error_payee_no_match',
                         message:    `Payee(s) passed in transaction does not match expected merchant id. Please ensure you are passing ${ SDK_QUERY_KEYS.MERCHANT_ID }=${ payeesStr } or ${ SDK_QUERY_KEYS.MERCHANT_ID }=${ (uniquePayees[0] && uniquePayees[0].email && uniquePayees[0].email.stringValue) ? uniquePayees[0].email.stringValue : 'payee@merchant.com' } to the sdk url. https://developer.paypal.com/docs/checkout/reference/customize-sdk/`,
-                        orderID
+                        orderID,
+                        throwError: false
                     });
                 } else {
                     triggerIntegrationError({
