@@ -156,6 +156,8 @@ export type ServiceData = {|
         paymentFields : InlinePaymentFieldsEligibility
     |},
     cookies : string,
+    orderID? : string,
+    enableInContextWallet? : boolean,
     personalization : PersonalizationType
 |};
 
