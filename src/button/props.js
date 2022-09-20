@@ -179,7 +179,7 @@ type ServiceDataOptions = {|
 |};
 
 export function getServiceData({ facilitatorAccessToken, sdkMeta, content, buyerGeoCountry,
-    fundingEligibility, wallet, buyerAccessToken, serverMerchantID, eligibility, cookies, personalization } : ServiceDataOptions) : ServiceData {
+    fundingEligibility, wallet, buyerAccessToken, serverMerchantID, eligibility, cookies, personalization, orderID, enableInContextWallet } : ServiceDataOptions) : ServiceData {
 
     return {
         merchantID:   serverMerchantID,
@@ -204,7 +204,9 @@ export function getServiceData({ facilitatorAccessToken, sdkMeta, content, buyer
             }
         },
         cookies,
-        personalization
+        personalization,
+        orderID,
+        enableInContextWallet
     };
 }
 

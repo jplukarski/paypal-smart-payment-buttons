@@ -80,7 +80,7 @@ export function initiatePaymentFlow({ payment, serviceData, config, components, 
         const { clientID, onClick, createOrder, env, vault, partnerAttributionID, userExperienceFlow, buttonSessionID, intent, currency,
             clientAccessToken, createBillingAgreement, createSubscription, commit, disableFunding, disableCard, userIDToken, enableNativeCheckout } = props;
 
-        const createOrderWrapped = enableInContextWallet && orderID ? ZalgoPromise.resolve(orderID) : createOrder;
+        const createOrderWrapped = enableInContextWallet && orderID ? () => ZalgoPromise.resolve(orderID) : createOrder;
 
         sendPersonalizationBeacons(personalization);
 
