@@ -39,7 +39,7 @@ export type SetupButtonOptions = {|
     personalization : PersonalizationType,
     brandedDefault? : boolean | null,
     orderID? : string,
-    enableInContextWallet? : boolean
+    enableOrdersApprovalSmartWallet? : boolean
 |};
 
 try {
@@ -61,7 +61,7 @@ export function setupButton(opts : SetupButtonOptions) : ZalgoPromise<void> {
 
     const { facilitatorAccessToken, eligibility, fundingEligibility, buyerCountry: buyerGeoCountry, sdkMeta, buyerAccessToken, wallet, cookies,
         cspNonce: serverCSPNonce, merchantID: serverMerchantID, firebaseConfig, content, personalization, correlationID: buttonCorrelationID = '',
-        brandedDefault = null, orderID, enableInContextWallet } = opts;
+        brandedDefault = null, orderID, enableOrdersApprovalSmartWallet } = opts;
 
     const clientID = window.xprops.clientID;
     setBuyerAccessToken(buyerAccessToken);
@@ -69,7 +69,7 @@ export function setupButton(opts : SetupButtonOptions) : ZalgoPromise<void> {
 
     const serviceData = getServiceData({
         eligibility, facilitatorAccessToken, buyerGeoCountry, serverMerchantID, fundingEligibility, cookies,
-        sdkMeta, buyerAccessToken, wallet, content, personalization, orderID, enableInContextWallet });
+        sdkMeta, buyerAccessToken, wallet, content, personalization, orderID, enableOrdersApprovalSmartWallet });
     const { merchantID, buyerCountry } = serviceData;
 
     const props = getButtonProps({ facilitatorAccessToken, brandedDefault, paymentSource: null });
@@ -78,11 +78,11 @@ export function setupButton(opts : SetupButtonOptions) : ZalgoPromise<void> {
         getPrerenderDetails, rememberFunding, getQueriedEligibleFunding, experience,
         style, fundingSource, intent, createBillingAgreement, createSubscription, stickinessID } = props;
 
-    console.log('TEST ....... setupButton ', {enableInContextWallet, orderID, buyerAccessToken});
+    console.log('TEST ....... setupButton ', {enableOrdersApprovalSmartWallet, orderID, buyerAccessToken});
 
-    if(enableInContextWallet && orderID && buyerAccessToken) {
+    if(enableOrdersApprovalSmartWallet && orderID && buyerAccessToken) {
         getLogger()
-            .info('smart_buttons_incontext_wallet_enable', {orderID});
+            .info('smart_buttons_orders_approve_wallet_enable', {orderID});
         // Create Order should always return the existing orderID incase of In-context wallet flow
         props.createOrder = () => { console.log('TEST Button.js createOrder resolved'); return ZalgoPromise.resolve(orderID) };
     }

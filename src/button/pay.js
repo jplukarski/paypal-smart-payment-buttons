@@ -76,11 +76,11 @@ export function initiatePaymentFlow({ payment, serviceData, config, components, 
 
     return ZalgoPromise.try(() => {
         console.log('TEST Pay.js initiatePaymentFlow Try block');
-        const { merchantID, personalization, fundingEligibility, buyerCountry, orderID, buyerAccessToken, enableInContextWallet } = serviceData;
+        const { merchantID, personalization, fundingEligibility, buyerCountry, orderID, buyerAccessToken, enableOrdersApprovalSmartWallet } = serviceData;
         const { clientID, onClick, createOrder, env, vault, partnerAttributionID, userExperienceFlow, buttonSessionID, intent, currency,
             clientAccessToken, createBillingAgreement, createSubscription, commit, disableFunding, disableCard, userIDToken, enableNativeCheckout } = props;
 
-        const createOrderWrapped = enableInContextWallet && orderID ? () => ZalgoPromise.resolve(orderID) : createOrder;
+        const createOrderWrapped = enableOrdersApprovalSmartWallet && orderID ? () => ZalgoPromise.resolve(orderID) : createOrder;
 
         sendPersonalizationBeacons(personalization);
 

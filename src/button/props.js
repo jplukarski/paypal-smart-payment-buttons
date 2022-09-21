@@ -157,7 +157,7 @@ export type ServiceData = {|
     |},
     cookies : string,
     orderID? : string,
-    enableInContextWallet? : boolean,
+    enableOrdersApprovalSmartWallet? : boolean,
     personalization : PersonalizationType
 |};
 
@@ -179,7 +179,7 @@ type ServiceDataOptions = {|
 |};
 
 export function getServiceData({ facilitatorAccessToken, sdkMeta, content, buyerGeoCountry,
-    fundingEligibility, wallet, buyerAccessToken, serverMerchantID, eligibility, cookies, personalization, orderID, enableInContextWallet } : ServiceDataOptions) : ServiceData {
+    fundingEligibility, wallet, buyerAccessToken, serverMerchantID, eligibility, cookies, personalization, orderID, enableOrdersApprovalSmartWallet } : ServiceDataOptions) : ServiceData {
 
     return {
         merchantID:   serverMerchantID,
@@ -206,7 +206,7 @@ export function getServiceData({ facilitatorAccessToken, sdkMeta, content, buyer
         cookies,
         personalization,
         orderID,
-        enableInContextWallet
+        enableOrdersApprovalSmartWallet
     };
 }
 
