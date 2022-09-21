@@ -44,7 +44,7 @@ export type ButtonProps = {|
     buttonSessionID : string
 |};
 
-export function getButtonProps({ facilitatorAccessToken, brandedDefault, paymentSource } : {| facilitatorAccessToken : string, brandedDefault : boolean | null, paymentSource : $Values<typeof FUNDING> | null |}) : ButtonProps {
+export function getButtonProps({ facilitatorAccessToken, brandedDefault, paymentSource, enableOrdersApprovalSmartWallet, smartWalletOrderID } : {| facilitatorAccessToken : string, brandedDefault : boolean | null, paymentSource : $Values<typeof FUNDING> | null, enableOrdersApprovalSmartWallet? : boolean, smartWalletOrderID? : string |}) : ButtonProps {
     const xprops : ButtonXProps = window.xprops;
 
     let {
@@ -102,7 +102,7 @@ export function getButtonProps({ facilitatorAccessToken, brandedDefault, payment
     }
 
     return {
-        ...getProps({ facilitatorAccessToken, branded, paymentSource }),
+        ...getProps({ facilitatorAccessToken, branded, paymentSource, enableOrdersApprovalSmartWallet, smartWalletOrderID }),
         style,
         buttonSessionID,
         branded,
@@ -156,8 +156,6 @@ export type ServiceData = {|
         paymentFields : InlinePaymentFieldsEligibility
     |},
     cookies : string,
-    orderID? : string,
-    enableOrdersApprovalSmartWallet? : boolean,
     personalization : PersonalizationType
 |};
 
@@ -179,7 +177,7 @@ type ServiceDataOptions = {|
 |};
 
 export function getServiceData({ facilitatorAccessToken, sdkMeta, content, buyerGeoCountry,
-    fundingEligibility, wallet, buyerAccessToken, serverMerchantID, eligibility, cookies, personalization, orderID, enableOrdersApprovalSmartWallet } : ServiceDataOptions) : ServiceData {
+    fundingEligibility, wallet, buyerAccessToken, serverMerchantID, eligibility, cookies, personalization } : ServiceDataOptions) : ServiceData {
 
     return {
         merchantID:   serverMerchantID,
@@ -204,9 +202,7 @@ export function getServiceData({ facilitatorAccessToken, sdkMeta, content, buyer
             }
         },
         cookies,
-        personalization,
-        orderID,
-        enableOrdersApprovalSmartWallet
+        personalization
     };
 }
 

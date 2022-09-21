@@ -80,8 +80,6 @@ export function initiatePaymentFlow({ payment, serviceData, config, components, 
         const { clientID, onClick, createOrder, env, vault, partnerAttributionID, userExperienceFlow, buttonSessionID, intent, currency,
             clientAccessToken, createBillingAgreement, createSubscription, commit, disableFunding, disableCard, userIDToken, enableNativeCheckout } = props;
 
-        const createOrderWrapped = enableOrdersApprovalSmartWallet && orderID ? () => ZalgoPromise.resolve(orderID) : createOrder;
-
         sendPersonalizationBeacons(personalization);
 
         const restart = ({ payment: restartPayment }) =>
@@ -155,7 +153,7 @@ export function initiatePaymentFlow({ payment, serviceData, config, components, 
                 enableLoadingSpinner(button);
             }
 
-            const updateClientConfigPromise = createOrderWrapped().then(orderID => {
+            const updateClientConfigPromise = createOrder().then(orderID => {
                 if (updateFlowClientConfig) {
                     return updateFlowClientConfig({ orderID, payment, userExperienceFlow, buttonSessionID });
                 }
@@ -166,7 +164,7 @@ export function initiatePaymentFlow({ payment, serviceData, config, components, 
                 });
             }).catch(noop);
 
-            const vaultPromise = createOrderWrapped().then(orderID => {
+            const vaultPromise = createOrder().then(orderID => {
                 return ZalgoPromise.try(() => {
                     if (clientID && buyerIntent === BUYER_INTENT.PAY) {
                         return enableVaultSetup({ orderID, vault, clientAccessToken, fundingEligibility, fundingSource, createBillingAgreement, createSubscription,
@@ -179,11 +177,11 @@ export function initiatePaymentFlow({ payment, serviceData, config, components, 
                 return start();
             });
 
-            const validateOrderPromise = createOrderWrapped().then(orderID => {
+            const validateOrderPromise = createOrder().then(orderID => {
                 return validateOrder(orderID, { env, clientID, merchantID, intent, currency, vault, buttonLabel });
             });
 
-            const confirmOrderPromise = createOrderWrapped().then((orderID) => {
+            const confirmOrderPromise = createOrder().then((orderID) => {
                 return window.xprops.sessionState.get(
                     `__confirm_${ fundingSource }_payload__`
                 ).then(confirmOrderPayload => {

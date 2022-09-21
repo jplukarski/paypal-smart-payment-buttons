@@ -38,7 +38,7 @@ export type SetupButtonOptions = {|
     cookies : string,
     personalization : PersonalizationType,
     brandedDefault? : boolean | null,
-    orderID? : string,
+    smartWalletOrderID? : string,
     enableOrdersApprovalSmartWallet? : boolean
 |};
 
@@ -61,7 +61,7 @@ export function setupButton(opts : SetupButtonOptions) : ZalgoPromise<void> {
 
     const { facilitatorAccessToken, eligibility, fundingEligibility, buyerCountry: buyerGeoCountry, sdkMeta, buyerAccessToken, wallet, cookies,
         cspNonce: serverCSPNonce, merchantID: serverMerchantID, firebaseConfig, content, personalization, correlationID: buttonCorrelationID = '',
-        brandedDefault = null, orderID, enableOrdersApprovalSmartWallet } = opts;
+        brandedDefault = null, smartWalletOrderID, enableOrdersApprovalSmartWallet } = opts;
 
     const clientID = window.xprops.clientID;
     setBuyerAccessToken(buyerAccessToken);
@@ -69,23 +69,16 @@ export function setupButton(opts : SetupButtonOptions) : ZalgoPromise<void> {
 
     const serviceData = getServiceData({
         eligibility, facilitatorAccessToken, buyerGeoCountry, serverMerchantID, fundingEligibility, cookies,
-        sdkMeta, buyerAccessToken, wallet, content, personalization, orderID, enableOrdersApprovalSmartWallet });
+        sdkMeta, buyerAccessToken, wallet, content, personalization });
     const { merchantID, buyerCountry } = serviceData;
 
-    const props = getButtonProps({ facilitatorAccessToken, brandedDefault, paymentSource: null });
+    const props = getButtonProps({ facilitatorAccessToken, brandedDefault, paymentSource: null, enableOrdersApprovalSmartWallet, smartWalletOrderID });
     const { env, sessionID, partnerAttributionID, commit, sdkCorrelationID, locale, onShippingChange,
         buttonSessionID, merchantDomain, onInit,
         getPrerenderDetails, rememberFunding, getQueriedEligibleFunding, experience,
         style, fundingSource, intent, createBillingAgreement, createSubscription, stickinessID } = props;
 
-    console.log('TEST ....... setupButton ', {enableOrdersApprovalSmartWallet, orderID, buyerAccessToken});
-
-    if(enableOrdersApprovalSmartWallet && orderID && buyerAccessToken) {
-        getLogger()
-            .info('smart_buttons_orders_approve_wallet_enable', {orderID});
-        // Create Order should always return the existing orderID incase of In-context wallet flow
-        props.createOrder = () => { console.log('TEST Button.js createOrder resolved'); return ZalgoPromise.resolve(orderID) };
-    }
+    console.log('TEST ....... setupButton ', {enableOrdersApprovalSmartWallet, smartWalletOrderID, buyerAccessToken});
 
     const config = getConfig({ serverCSPNonce, firebaseConfig });
     const { sdkVersion } = config;
@@ -180,7 +173,7 @@ export function setupButton(opts : SetupButtonOptions) : ZalgoPromise<void> {
             event.preventDefault();
             event.stopPropagation();
 
-            const paymentProps = getButtonProps({ facilitatorAccessToken, brandedDefault, paymentSource: paymentFundingSource });
+            const paymentProps = getButtonProps({ facilitatorAccessToken, brandedDefault, paymentSource: paymentFundingSource, enableOrdersApprovalSmartWallet, smartWalletOrderID });
 
             const payPromise = initiatePayment({ payment, props: paymentProps });
             const { onError } = paymentProps;
@@ -222,7 +215,7 @@ export function setupButton(opts : SetupButtonOptions) : ZalgoPromise<void> {
                 throw new Error(`Can not find button element`);
             }
 
-            const paymentProps = getButtonProps({ facilitatorAccessToken, brandedDefault, paymentSource: paymentFundingSource });
+            const paymentProps = getButtonProps({ facilitatorAccessToken, brandedDefault, paymentSource: paymentFundingSource, enableOrdersApprovalSmartWallet, smartWalletOrderID });
             const payment = { win, button, fundingSource: paymentFundingSource, card, buyerIntent: BUYER_INTENT.PAY };
             const payPromise = initiatePayment({ payment, props: paymentProps });
             const { onError } = paymentProps;
