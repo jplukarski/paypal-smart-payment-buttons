@@ -5,7 +5,7 @@ import { COUNTRY, FPTI_KEY, type FundingEligibilityType } from '@paypal/sdk-cons
 import { ZalgoPromise } from '@krakenjs/zalgo-promise/src';
 
 import type { ContentType, Wallet, PersonalizationType, InlinePaymentFieldsEligibility } from '../types';
-import {getLogger, getSmartFieldsByFundingSource, setBuyerAccessToken} from '../lib';
+import { getLogger, getSmartFieldsByFundingSource, setBuyerAccessToken } from '../lib';
 import { type FirebaseConfig } from '../api';
 import { DATA_ATTRIBUTES, BUYER_INTENT } from '../constants';
 import { type Payment } from '../payment-flows';
@@ -66,7 +66,6 @@ export function setupButton(opts : SetupButtonOptions) : ZalgoPromise<void> {
     const clientID = window.xprops.clientID;
     setBuyerAccessToken(buyerAccessToken);
 
-
     const serviceData = getServiceData({
         eligibility, facilitatorAccessToken, buyerGeoCountry, serverMerchantID, fundingEligibility, cookies,
         sdkMeta, buyerAccessToken, wallet, content, personalization });
@@ -82,7 +81,7 @@ export function setupButton(opts : SetupButtonOptions) : ZalgoPromise<void> {
 
     const config = getConfig({ serverCSPNonce, firebaseConfig });
     const { sdkVersion } = config;
-
+    
     const components = getComponents();
 
     const { initPromise, isEnabled } = onInit({ correlationID: buttonCorrelationID });
@@ -100,7 +99,7 @@ export function setupButton(opts : SetupButtonOptions) : ZalgoPromise<void> {
             const { onClick } = paymentProps;
 
             const smartFields = getSmartFieldsByFundingSource(paymentFundingSource);
-
+            
             if (smartFields) {
                 if (!smartFields.isValid()) {
                     if (win) {
@@ -126,7 +125,7 @@ export function setupButton(opts : SetupButtonOptions) : ZalgoPromise<void> {
                 }
             }
         }).catch(err => {
-
+            
             getLogger()
                 .info('smart_buttons_payment_error', { err: stringifyError(err) })
                 .track({
@@ -160,7 +159,7 @@ export function setupButton(opts : SetupButtonOptions) : ZalgoPromise<void> {
     }
 
     clearButtonSmartMenu();
-
+    
     getButtons().forEach(button => {
         const menuToggle = getMenuButton(button);
         const { fundingSource: paymentFundingSource, card, paymentMethodID, instrumentID, instrumentType } = getSelectedFunding(button);
