@@ -79,7 +79,7 @@ export function initiatePaymentFlow({ payment, serviceData, config, components, 
         const { merchantID, personalization, fundingEligibility, buyerCountry, orderID, buyerAccessToken, enableOrdersApprovalSmartWallet } = serviceData;
         const { clientID, onClick, createOrder, env, vault, partnerAttributionID, userExperienceFlow, buttonSessionID, intent, currency,
             clientAccessToken, createBillingAgreement, createSubscription, commit, disableFunding, disableCard, userIDToken, enableNativeCheckout } = props;
-
+        
         sendPersonalizationBeacons(personalization);
 
         const restart = ({ payment: restartPayment }) =>
@@ -180,7 +180,7 @@ export function initiatePaymentFlow({ payment, serviceData, config, components, 
             const validateOrderPromise = createOrder().then(orderID => {
                 return validateOrder(orderID, { env, clientID, merchantID, intent, currency, vault, buttonLabel });
             });
-
+             
             const confirmOrderPromise = createOrder().then((orderID) => {
                 return window.xprops.sessionState.get(
                     `__confirm_${ fundingSource }_payload__`
