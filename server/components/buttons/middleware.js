@@ -147,15 +147,14 @@ export function getButtonMiddleware({
                     }
                     return getDefaultExperiments();
                 });
-            const getReleaseHashPromise = await getReleaseHash(req)
+            const getReleaseHashPromise = promiseTimeout(getReleaseHash(req), EXPERIMENT_TIMEOUT)
                 .catch((err) => {
                     logger.info(req, `GET_CURRENT_RELEASE_HASH_FAILED_${ err.message }`);
                     return {};
                 });
             const [experiments, releaseHash] = await Promise.all([getExperimentsPromise, getReleaseHashPromise])
             const eligibility = {
-                cardFields:              experiments.isCardFieldsExperimentEnabled,
-                isServiceWorkerEligible: experiments.isServiceWorkerEligible
+                cardFields:              experiments.isCardFieldsExperimentEnabled
             };
 
             
