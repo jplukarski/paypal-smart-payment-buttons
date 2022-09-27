@@ -7,4 +7,3 @@ export * from './comms';
 export * from './session';
 export * from './sdk';
 export * from './perceived-latency-instrumentation';
-export * from './register-service-worker';
