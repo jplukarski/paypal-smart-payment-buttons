@@ -161,3 +161,4 @@ export function getNavigationTimeOrigin() : number {
         throw new Error('window.performance not supported');
     }
 }
+

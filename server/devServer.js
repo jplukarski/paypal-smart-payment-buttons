@@ -284,6 +284,7 @@ const buttonMiddleware = getButtonMiddleware({
     getSDKLocationInformation,
     // $FlowFixMe we don't use this locally
     sdkVersionManager: {},
+    getReleaseHash: () => new Promise(() => ({ current: 'abcd '})),
 });
 
 const menuMiddleware = getMenuMiddleware({
