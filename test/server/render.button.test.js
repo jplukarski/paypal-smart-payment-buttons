@@ -51,7 +51,8 @@ const sdkVersionManager: SDKVersionManager = {
 }
 
 test('should do a basic button render and succeed', async () => {
-    const buttonMiddleware = getButtonMiddleware({ sdkVersionManager, graphQL, getAccessToken, getMerchantID, content: mockContent, cache, logger, tracking, getPersonalizationEnabled, getInstanceLocationInformation, getSDKLocationInformation });
+    const buttonMiddleware = getButtonMiddleware({ sdkVersionManager, graphQL, getAccessToken, getMerchantID, content: mockContent, cache, logger, tracking, getPersonalizationEnabled, getInstanceLocationInformation, getSDKLocationInformation,
+        getReleaseHash: () => new Promise(() => ({ current: 'abcd '})), });
 
     const req = mockReq({
         query: {
@@ -132,7 +133,8 @@ test('should do a basic button render and succeed when graphql fundingEligibilit
         tracking,
         getPersonalizationEnabled,
         getInstanceLocationInformation,
-        getSDKLocationInformation
+        getSDKLocationInformation,
+        getReleaseHash: () => new Promise(() => ({ current: 'abcd '})),
     });
     // $FlowFixMe
     await errButtonMiddleware(req, res);
@@ -168,7 +170,8 @@ test('should do a basic button render and succeed when graphql fundingEligibilit
 });
 
 test('should give a 400 error with no clientID passed', async () => {
-    const buttonMiddleware = getButtonMiddleware({ sdkVersionManager, graphQL, getAccessToken, getMerchantID, content: mockContent, cache, logger, tracking, getPersonalizationEnabled, getInstanceLocationInformation, getSDKLocationInformation });
+    const buttonMiddleware = getButtonMiddleware({ sdkVersionManager, graphQL, getAccessToken, getMerchantID, content: mockContent, cache, logger, tracking, getPersonalizationEnabled, getInstanceLocationInformation, getSDKLocationInformation,
+        getReleaseHash: () => new Promise(() => ({ current: 'abcd '})), });
 
     const req = mockReq();
     const res = mockRes();
@@ -186,7 +189,8 @@ test('should give a 400 error with no clientID passed', async () => {
 test('should give a 400 error when an error occur while rendering button', async () => {
     const buttonMiddleware = getButtonMiddleware({ 
         sdkVersionManager,
-        graphQL, getAccessToken, getMerchantID, content: mockContent, cache, logger, tracking, getPersonalizationEnabled, getInstanceLocationInformation, getSDKLocationInformation });
+        graphQL, getAccessToken, getMerchantID, content: mockContent, cache, logger, tracking, getPersonalizationEnabled, getInstanceLocationInformation, getSDKLocationInformation,
+        getReleaseHash: () => new Promise(() => ({ current: 'abcd '})), });
 
     // These are considered valid (validateButtonProps pass)
     const req = mockReq({
@@ -210,7 +214,8 @@ test('should give a 400 error when an error occur while rendering button', async
 test('should render empty personalization when API errors', async () => {
     const buttonMiddleware = getButtonMiddleware({ 
         sdkVersionManager,
-        graphQL, getAccessToken, getMerchantID, content: mockContent, cache, logger, tracking, getPersonalizationEnabled, getInstanceLocationInformation, getSDKLocationInformation });
+        graphQL, getAccessToken, getMerchantID, content: mockContent, cache, logger, tracking, getPersonalizationEnabled, getInstanceLocationInformation, getSDKLocationInformation,
+        getReleaseHash: () => new Promise(() => ({ current: 'abcd '})), });
 
     const req = mockReq({
         query: {
@@ -243,7 +248,8 @@ test('should render empty personalization when config is disabled', async () => 
         tracking,
         getPersonalizationEnabled: () => false,
         getInstanceLocationInformation,
-        getSDKLocationInformation
+        getSDKLocationInformation,
+        getReleaseHash: () => new Promise(() => ({ current: 'abcd '})),
     });
 
     const req = mockReq({
@@ -276,7 +282,8 @@ test('should render filled out tagline when config is enabled', async () => {
         tracking,
         getPersonalizationEnabled: () => true,
         getInstanceLocationInformation,
-        getSDKLocationInformation
+        getSDKLocationInformation,
+        getReleaseHash: () => new Promise(() => ({ current: 'abcd '})),
     });
 
     const req = mockReq({
@@ -300,7 +307,8 @@ test('should render filled out tagline when config is enabled', async () => {
 test('should do a basic button render with post and succeed', async () => {
     const buttonMiddleware = getButtonMiddleware({ 
         sdkVersionManager,
-        graphQL, getAccessToken, getMerchantID, content: mockContent, cache, logger, tracking, getPersonalizationEnabled, getInstanceLocationInformation, getSDKLocationInformation });
+        graphQL, getAccessToken, getMerchantID, content: mockContent, cache, logger, tracking, getPersonalizationEnabled, getInstanceLocationInformation, getSDKLocationInformation,
+        getReleaseHash: () => new Promise(() => ({ current: 'abcd '})), });
 
     const req = mockReq({
         method: 'post',
@@ -351,7 +359,8 @@ test('should find the req.model.rootTxn object in the req', async () => {
         graphQL, getAccessToken, getMerchantID,
         content: mockContent, cache, logger, tracking,
         getPersonalizationEnabled, getInstanceLocationInformation,
-        getSDKLocationInformation
+        getSDKLocationInformation,
+        getReleaseHash: () => new Promise(() => ({ current: 'abcd '})),
     });
 
     const req = mockReq({
@@ -379,7 +388,8 @@ test('should find the rootTxn name in the req model when is wallet', async () =>
         graphQL, getAccessToken, getMerchantID,
         content: mockContent, cache, logger, tracking,
         getPersonalizationEnabled, getInstanceLocationInformation,
-        getSDKLocationInformation
+        getSDKLocationInformation,
+        getReleaseHash: () => new Promise(() => ({ current: 'abcd '})),
     });
 
     const req = mockReq({
@@ -405,7 +415,8 @@ test('should find the req.model.rootTxn.name in the req model when is vault', as
         graphQL, getAccessToken, getMerchantID,
         content: mockContent, cache, logger, tracking,
         getPersonalizationEnabled, getInstanceLocationInformation,
-        getSDKLocationInformation
+        getSDKLocationInformation,
+        getReleaseHash: () => new Promise(() => ({ current: 'abcd '})),
     });
 
     const req = mockReq({
@@ -437,7 +448,8 @@ test('should return an HTML page with the error', async () => {
         cache, logger, graphQL, getAccessToken, getMerchantID,
         getPersonalizationEnabled,
         getInstanceLocationInformation,
-        getSDKLocationInformation
+        getSDKLocationInformation,
+        getReleaseHash: () => new Promise(() => ({ current: 'abcd '})),
     });
 
     const req = mockReq({
