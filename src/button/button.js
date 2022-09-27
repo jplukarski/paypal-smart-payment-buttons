@@ -5,7 +5,7 @@ import { COUNTRY, FPTI_KEY, type FundingEligibilityType } from '@paypal/sdk-cons
 import { ZalgoPromise } from '@krakenjs/zalgo-promise/src';
 
 import type { ContentType, Wallet, PersonalizationType } from '../types';
-import { getLogger, getSmartFieldsByFundingSource, registerServiceWorker, unregisterServiceWorker } from '../lib';
+import { getLogger, getSmartFieldsByFundingSource } from '../lib';
 import { type FirebaseConfig } from '../api';
 import { DATA_ATTRIBUTES, BUYER_INTENT } from '../constants';
 import { type Payment } from '../payment-flows';
@@ -232,15 +232,6 @@ export function setupButton(opts : ButtonOpts) : ZalgoPromise<void> {
     const setupExportsTask = setupExports({ props, isEnabled, facilitatorAccessToken, fundingEligibility, merchantID });
 
     const validatePropsTask = setupButtonLogsTask.then(() => validateProps({ env, clientID, intent, createBillingAgreement, createSubscription }));
-    
-    
-    if (eligibility.isServiceWorkerEligible) {
-        getLogger().info(`SERVICE_WORKER_ELIGIBLE`).flush();
-        registerServiceWorker(opts.currentReleaseHash);
-    } else {
-        getLogger().info(`SERVICE_WORKER_NOT_ELIGIBLE`).flush();
-        unregisterServiceWorker();
-    }
 
     return ZalgoPromise.hash({
         initPromise, facilitatorAccessToken,
