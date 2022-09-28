@@ -4,18 +4,17 @@
 import { h } from 'preact';
 import { useState, useEffect, useRef } from 'preact/hooks';
 import cardValidator from 'card-validator';
+import RestrictedInput from 'restricted-input';
 
 import {
-    formatDate,
-    removeNonDigits,
-    removeDateMask,
     defaultNavigation,
     defaultInputState,
     navigateOnKeyDown,
-    moveCursor,
-    exportMethods
+    exportMethods,
+    shouldUseZeroPaddedExpiryPattern
 } from '../lib';
 import type { CardExpiryChangeEvent, CardNavigation, FieldValidity, InputState, InputEvent } from '../types';
+import { DEFAULT_EXPIRY_PATTERN, ZERO_PADDED_EXPIRY_PATTERN } from '../constants';
 
 type CardExpiryProps = {|
     name : string,
@@ -52,14 +51,23 @@ export function CardExpiry(
     } : CardExpiryProps
 ) : mixed {
     const [ attributes, setAttributes ] : [ Object, (Object) => Object ] = useState({ placeholder });
-    const [ inputState, setInputState ] : [ InputState, (InputState | InputState => InputState) => InputState ] = useState({ ...defaultInputState, ...state });
-    const { inputValue, maskedInputValue, keyStrokeCount, isValid, isPotentiallyValid, contentPasted } = inputState;
+    const [ inputState, setInputState ] : [ InputState, (InputState | (InputState) => InputState) => InputState ] = useState({ ...defaultInputState, ...state });
+    const { inputValue, maskedInputValue, isValid, isPotentiallyValid } = inputState;
+    const [restrictedInput, setRestrictedInput] : [Object, (Object) => Object] = useState({})
 
     const expiryRef = useRef()
 
     useEffect(() => {
         if (!allowNavigation) {
-            exportMethods(expiryRef, setAttributes);
+            exportMethods(expiryRef, setAttributes, setInputState);
+        }
+        const element = expiryRef?.current
+        if (element) {
+           const initialRestrictedInput = new RestrictedInput({
+            element,
+            pattern: DEFAULT_EXPIRY_PATTERN
+           }) ;
+           setRestrictedInput(initialRestrictedInput)
         }
     }, []);
 
@@ -78,42 +86,24 @@ export function CardExpiry(
         }
     }, [ isValid, isPotentiallyValid ]);
 
-    const setDateMask : (InputEvent) => void = (event : InputEvent) : void => {
-        const { value : rawValue, selectionStart, selectionEnd } = event.target;
-        const value = removeNonDigits(rawValue);
-        const mask = formatDate(value, rawValue);
-
-        let startCursorPosition = selectionStart;
-        let endCursorPosition = selectionEnd;
-
-        if (mask.trim().slice(-1) === '/' || contentPasted) {
-            startCursorPosition = mask.length;
-            endCursorPosition = mask.length;
+    const formatExpiryDate : (InputEvent) => void = (event: InputEvent) : void => {
+        const value = event.target.value
+        if(!value.includes("/")) {
+            if (shouldUseZeroPaddedExpiryPattern(value, event.key)) {
+                restrictedInput.setPattern(ZERO_PADDED_EXPIRY_PATTERN)
+            } else {
+                restrictedInput.setPattern(DEFAULT_EXPIRY_PATTERN)
+            }
         }
-
-        moveCursor(event.target, startCursorPosition, endCursorPosition);
-
         setInputState({
             ...inputState,
-            inputValue:       rawValue,
-            maskedInputValue: mask,
-            contentPasted:    false,
-            keyStrokeCount:   keyStrokeCount + 1
+            inputValue: restrictedInput.getUnformattedValue(),
+            maskedInputValue: expiryRef.current.value
         });
-
-        onChange({ event, date: value, maskedDate: mask });
-
-    };
+        onChange({event, date: expiryRef.current.value, maskedDate: expiryRef.current.value});
+    }
 
     const onKeyDownEvent : (InputEvent) => void = (event : InputEvent) : void => {
-        const { target: { value }, key } = event;
-
-        const last = value.trim().slice(-1);
-        if (last === '/' && key === 'Backspace') {
-            const month = removeDateMask(value);
-            setInputState({ ...inputState, inputValue: value, maskedInputValue: month });
-        }
-
         if (allowNavigation) {
             navigateOnKeyDown(event, navigation);
         }
@@ -149,11 +139,10 @@ export function CardExpiry(
             ref={ expiryRef }
             type={ type }
             className='card-field-expiry'
-            value={ maskedInputValue }
             style={ style }
-            maxLength={ maxLength }
+            maxLength= { maxLength }
+            onKeyUp= { formatExpiryDate }
             onKeyDown={ onKeyDownEvent }
-            onInput={ setDateMask }
             onFocus={ onFocusEvent }
             onBlur={ onBlurEvent }
             onPaste={ onPasteEvent }

@@ -2,7 +2,7 @@
 /** @jsx h */
 
 import { h, render, Fragment } from 'preact';
-import { useState, useEffect } from 'preact/hooks';
+import { useState, useEffect, useRef } from 'preact/hooks';
 
 import { getBody } from '../../lib';
 import { setupExports, autoFocusOnFirstInput, filterExtraFields } from '../lib';
@@ -26,6 +26,7 @@ function Page({ cspNonce, props } : PageProps) : mixed {
     const [ fieldErrors, setFieldErrors ] = useState([]);
     const [ mainRef, setRef ] = useState();
     const [ fieldGQLErrors, setFieldGQLErrors ] = useState({ singleField: {}, numberField: [], expiryField: [], cvvField: [], nameField: [], postalCodeField: [] });
+    const initialRender = useRef(true)
 
     let autocomplete;
     if (disableAutocomplete) {
@@ -77,13 +78,24 @@ function Page({ cspNonce, props } : PageProps) : mixed {
     };
 
     useEffect(() => {
-        if(typeof onChange === 'function') {
+        // useEffect is fired on first render as well as when
+        // any value in the depenency array has changed. We
+        // only want to fire off the onChange event if the
+        // validity changes after the first render. So in
+        // order to do that we add this guard to noop
+        // when the component first renders. We leverage
+        // useRef to store the value of initialRender as
+        // we want that to persist across re-renders.
+        // See: https://reactjs.org/docs/hooks-faq.html#is-there-something-like-instance-variables
+        if ( initialRender.current ) {
+            initialRender.current = false
+        } else if(typeof onChange === 'function') {
             onChange({
-                isValid:  fieldValid,
-                errors:   fieldErrors
+                isValid: fieldValid,
+                errors: fieldErrors
             });
         }
-    }, [ fieldValid, fieldErrors ]);
+    }, [ fieldValid ]);
 
     useEffect(() => {
         autoFocusOnFirstInput(mainRef);

@@ -56,45 +56,20 @@ export function maskValidCard(number : string) : string {
     return maskedNumber + lastFour;
 }
 
-export function removeDateMask(date : string) : string {
-    return date.trim().replace(/\s|\//g, '');
-}
-
-// Format expiry date
-export function formatDate(date : string, prevFormat? : string = '') : string {
-    assertString(date);
-
-    if (prevFormat && prevFormat.includes('/')) {
-        const [ month ] = removeSpaces(prevFormat).split('/');
-        if (month.length < 2) {
-            return prevFormat;
-        }
+export function shouldUseZeroPaddedExpiryPattern(value: string, key: string) : boolean {
+    if (value.length === 0) {
+        return false;
     }
-
-    if (date.trim().slice(-1) === '/') {
-        return date.slice(0, 2);
+    if (value[0] === "1" && key === "/") {
+        return true;
     }
-
-    date = removeDateMask(date);
-
-    if (date.length < 2) {
-        const first = date[0];
-        if (parseInt(first, 10) > 1) {
-            return `0${ first } / `;
-        }
-        return date;
+    if (value[0] !== "1" && value[0] !== "0") {
+        return true;
     }
-
-    const month = date.slice(0, 2);
-    if (parseInt(month, 10) > 12) {
-        const first = month[0];
-        const second = month[1];
-        return `0${ first } / ${ second }`;
+    if (value[0] === "1") {
+        return false;
     }
-
-    const year = date.slice(2, 4);
-    return `${ month } / ${ year }`;
-
+    return false;
 }
 
 // from https://github.com/braintree/inject-stylesheet/blob/main/src/lib/filter-style-values.ts
@@ -208,7 +183,7 @@ export function setErrors({ isCardEligible, isNumberValid, isCvvValid, isExpiryV
         if (field === CARD_FIELD_TYPE.NUMBER && gqlErrors.length) {
             errors.push(...gqlErrors);
         } else {
-            errors.push(CARD_ERRORS.INELIGIBLE_CARD);
+            errors.push(CARD_ERRORS.INELIGIBLE_CARD_VENDOR);
         }
     }
 

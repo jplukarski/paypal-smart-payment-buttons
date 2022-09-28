@@ -4,7 +4,6 @@ import { getLogger } from '../../lib';
 
 import {
     maskValidCard,
-    formatDate,
     parseGQLErrors,
     filterStyle,
     styleToString,
@@ -14,13 +13,26 @@ import {
     checkForNonDigits,
     convertDateFormat,
     getContext,
-    markValidity
+    markValidity,
+    assertType,
+    shouldUseZeroPaddedExpiryPattern
 } from './card-utils';
 
 
 jest.mock('../../lib/dom');
 
 describe('card utils', () => {
+
+    describe('assertType', () => {
+        it('throws an error with the provided message when the assertion criteria is not met', () => {
+            function assertNumber() {
+                // $FlowFixMe
+                assertType( typeof '5' === 'number' , 'Expected a number')
+            }
+
+            expect(assertNumber).toThrow(/Expected a number/)
+        });
+    });
 
     describe('maskValidCard', () => {
         it('masks all but the last 4 of the card number with •', () => {
@@ -42,39 +54,6 @@ describe('card utils', () => {
             expect(maskValidCard('1')).toBe('1');
             expect(maskValidCard('')).toBe('');
         });
-    });
-
-    describe('formatDate', () => {
-        it('format valid number sequence', () => {
-            const masked = formatDate('1022');
-
-            expect(masked).toBe('10 / 22');
-        });
-
-        it('add slash at the end of a valid month', () => {
-            const masked = formatDate('10');
-
-            expect(masked).toBe('10 / ');
-        });
-
-        it('format number by adding a slash to separate the month from the year', () => {
-            const masked = formatDate('22');
-
-            expect(masked).toBe('02 / 2');
-        });
-
-        it('returns prevMask if it is valid', () => {
-            const masked = formatDate('22');
-
-            expect(masked).toBe('02 / 2');
-        });
-
-        it('returns only the month section when the string finished with slash', () => {
-            const masked = formatDate('12 /');
-
-            expect(masked).toBe('12');
-        });
-
     });
 
     describe('parseGQLErrors', () => {
@@ -479,5 +458,38 @@ describe('card utils', () => {
             expect(element.classList.contains('invalid')).toBe(true)
             expect(element.classList.contains('valid')).toBe(false)
         })
+    });
+
+    describe('shouldUseZeroPaddedExpiryPattern', () => {
+        it('should return false if the value is an empty string', () => {
+            const result = shouldUseZeroPaddedExpiryPattern('','backspace')
+
+            expect(result).toBe(false)
+        });
+
+        it('should return true if the first digit is a 1 and the key typed is a forward slash', () => {
+            const result = shouldUseZeroPaddedExpiryPattern('1','/')
+
+            expect(result).toBe(true)
+        });
+
+        it('should return true if the first digit is 2-9', () => {
+            const result = shouldUseZeroPaddedExpiryPattern('2','2')
+
+            expect(result).toBe(true)
+        });
+
+        it('should return false if the first digit is a 1', () => {
+            const result = shouldUseZeroPaddedExpiryPattern('1', '2')
+
+            expect(result).toBe(false)
+        });
+
+        it('should default to false', () => {
+            const result = shouldUseZeroPaddedExpiryPattern('0','5')
+
+            expect(result).toBe(false)
+        });
+
     });
 });

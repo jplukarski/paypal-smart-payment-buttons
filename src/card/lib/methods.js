@@ -2,7 +2,7 @@
 
 import { isValidAttribute } from './card-utils';
 
-export function exportMethods(ref : Object, setAttributes : Function) : void {
+export function exportMethods(ref : Object, setAttributes : Function, setInputState? : Function) : void {
     window.xprops.export({
         setAttribute: (name, value) => {
             if (isValidAttribute(name)) {
@@ -29,6 +29,19 @@ export function exportMethods(ref : Object, setAttributes : Function) : void {
         },
         removeClass: (name) => {
             ref?.current?.classList.remove(name);
+        },
+        clear: () => {
+            if (ref && ref.current && typeof setInputState === 'function') {
+                setInputState((currentInputState) => {
+                    return {
+                        ...currentInputState,
+                        inputValue: ''
+                    }
+                })
+            }
+        },
+        focus: () => {
+            ref?.current?.focus();
         }
     });
 };
