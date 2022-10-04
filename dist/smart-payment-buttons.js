@@ -3454,11 +3454,11 @@ window.spb = function(modules) {
             })), S.d(N, "DEFAULT_COMPONENTS", (function() {
                 return U;
             })), S.d(N, "DEFAULT_DEBUG", (function() {
-                return s;
+                return B;
             })), S.d(N, "ENV", (function() {
                 return G;
             })), S.d(N, "MOBILE_ENV", (function() {
-                return B;
+                return s;
             })), S.d(N, "ERROR_CODE", (function() {
                 return K;
             })), S.d(N, "FPTI_KEY", (function() {
@@ -3486,9 +3486,9 @@ window.spb = function(modules) {
             })), S.d(N, "LANG", (function() {
                 return t;
             })), S.d(N, "COUNTRY_LANGS", (function() {
-                return e;
-            })), S.d(N, "INTENT", (function() {
                 return T;
+            })), S.d(N, "INTENT", (function() {
+                return e;
             })), S.d(N, "COMMIT", (function() {
                 return n;
             })), S.d(N, "VAULT", (function() {
@@ -3500,15 +3500,15 @@ window.spb = function(modules) {
             })), S.d(N, "SDK_SETTINGS", (function() {
                 return F;
             })), S.d(N, "SDK_QUERY_KEYS", (function() {
-                return D;
-            })), S.d(N, "COMPONENTS", (function() {
-                return H;
-            })), S.d(N, "DEBUG", (function() {
                 return I;
+            })), S.d(N, "COMPONENTS", (function() {
+                return D;
+            })), S.d(N, "DEBUG", (function() {
+                return H;
             })), S.d(N, "QUERY_BOOL", (function() {
-                return o;
-            })), S.d(N, "UNKNOWN", (function() {
                 return O;
+            })), S.d(N, "UNKNOWN", (function() {
+                return o;
             })), S.d(N, "PROTOCOL", (function() {
                 return i;
             })), S.d(N, "PAGE_TYPES", (function() {
@@ -3519,6 +3519,8 @@ window.spb = function(modules) {
                 return h;
             })), S.d(N, "TYPES", (function() {
                 return k;
+            })), S.d(N, "APM_LIST", (function() {
+                return g;
             }));
             var R = {
                 AD: "AD",
@@ -3762,7 +3764,7 @@ window.spb = function(modules) {
                 VI: "vi",
                 ZH: "zh",
                 ZH_HANT: "zh_Hant"
-            }, e = {
+            }, T = {
                 AD: [ t.EN, t.FR, t.ES, t.ZH ],
                 AE: [ t.EN, t.FR, t.ES, t.ZH, t.AR ],
                 AG: [ t.EN, t.FR, t.ES, t.ZH ],
@@ -3966,7 +3968,7 @@ window.spb = function(modules) {
                 ZA: [ t.EN, t.FR, t.ES, t.ZH ],
                 ZM: [ t.EN, t.FR, t.ES, t.ZH ],
                 ZW: [ t.EN ]
-            }, T = {
+            }, e = {
                 CAPTURE: "capture",
                 AUTHORIZE: "authorize",
                 ORDER: "order",
@@ -4097,7 +4099,7 @@ window.spb = function(modules) {
                 PAGE_TYPE: "data-page-type",
                 USER_EXPERIENCE_FLOW: "data-user-experience-flow",
                 POPUPS_DISABLED: "data-popups-disabled"
-            }, D = {
+            }, I = {
                 COMPONENTS: "components",
                 ENV: "env",
                 DEBUG: "debug",
@@ -4118,16 +4120,16 @@ window.spb = function(modules) {
                 STAGE_ALIAS: "stage-alias",
                 CDN_REGISTRY: "cdn-registry",
                 VERSION: "version"
-            }, H = {
+            }, D = {
                 BUTTONS: "buttons",
                 HOSTED_FIELDS: "hosted-fields"
-            }, I = {
+            }, H = {
                 TRUE: !0,
                 FALSE: !1
-            }, o = {
+            }, O = {
                 TRUE: "true",
                 FALSE: "false"
-            }, O = "unknown", i = {
+            }, o = "unknown", i = {
                 HTTP: "http",
                 HTTPS: "https"
             }, M = {
@@ -4139,13 +4141,13 @@ window.spb = function(modules) {
                 SEARCH_RESULTS: "search-results",
                 PRODUCT_DETAILS: "product-details",
                 MINI_CART: "mini-cart"
-            }, C = 10, Z = R.US, a = r.USD, u = T.CAPTURE, L = n.TRUE, P = n.TRUE, d = n.TRUE, c = A.FALSE, U = H.BUTTONS, s = I.FALSE, G = {
+            }, C = 10, Z = R.US, a = r.USD, u = e.CAPTURE, L = n.TRUE, P = n.TRUE, d = n.TRUE, c = A.FALSE, U = D.BUTTONS, B = H.FALSE, G = {
                 LOCAL: "local",
                 STAGE: "stage",
                 SANDBOX: "sandbox",
                 PRODUCTION: "production",
                 TEST: "test"
-            }, B = {
+            }, s = {
                 ANDROID: "android",
                 IOS: "iOS"
             }, K = {
@@ -4153,6 +4155,7 @@ window.spb = function(modules) {
             }, p = {
                 FEED: "feed_name",
                 STATE: "state_name",
+                EVENT_NAME: "event_name",
                 TRANSITION: "transition_name",
                 PAGE: "page_name",
                 BUTTON_TYPE: "button_type",
@@ -4276,7 +4279,7 @@ window.spb = function(modules) {
             }, h = {
                 DESKTOP: "desktop",
                 MOBILE: "mobile"
-            }, k = !0;
+            }, k = !0, g = [ m.IDEAL, m.BANCONTACT, m.GIROPAY, m.SOFORT, m.EPS, m.MYBANK, m.P24, m.PAYU, m.BLIK, m.TRUSTLY, m.ZIMPLER, m.MAXIMA, m.OXXO, m.BOLETO, m.BOLETOBANCARIO, m.WECHATPAY, m.MERCADOPAGO, m.MULTIBANCO ];
         } ]);
     },
     "./node_modules/@paypal/sdk-constants/index.js": function(module, exports, __webpack_require__) {
@@ -6589,7 +6592,7 @@ window.spb = function(modules) {
             FALSE: !1
         };
         var LSAT_UPGRADE_EXCLUDED_MERCHANTS = [ "AQipcJ1uXz50maKgYx49lKUB8MlSOXP573M6cpsFpHqDZOqnopsJpfYY7bQC_9CtQJsEhGlk8HLs2oZz", "Aco-yrRKihknb5vDBbDOdtYywjYMEPaM7mQg6kev8VDAz01lLA88J4oAUnF4UV9F_InqkqX7K62_jOjx", "AeAiB9K2rRsTXsFKZt4FMAQ8a6VEu4hijducis3a8NcIjV2J_c5I2H2PYhT3qCOwxT8P4l17skqgBlmg", "AXKrWRqEvxiDoUIZQaD1tFi2QhtmhWve3yTDBi58bxWjieYJ9j73My-yJmM7hP00JvOXu4YD6L2eaI5O", "AfRTnXv_QcuVyalbUxThtgk1xTygygsdevlBUTz36dDgD6XZNHp3Ym99a-mjMaokXyTTiI8VJ9mRgaFB", "AejlsIlg_KjKjmLKqxJqFIAwn3ZP02emx41Z2It4IfirQ-nNgZgzWk1CU-Q1QDbYUXjWoYJZ4dq1S2pK", "AQXD7-m_2yMo-5AxJ1fQaPeEWYDE7NZ9XrLzEXeiPLTHDu9vfe_T0foF8BoX8K5cMfXuRDysUEmhw-8Z" ];
-        var APM_LIST = [ "ideal", "bancontact", "giropay", "sofort", "eps", "mybank", "p24", "payu", "blik", "trustly", "zimpler", "maxima", "oxxo", "boleto", "boletobancario", "wechatpay", "mercadopago", "multibanco" ];
+        var constants_APM_LIST = [ "ideal", "bancontact", "giropay", "sofort", "eps", "mybank", "p24", "payu", "blik", "trustly", "zimpler", "maxima", "oxxo", "boleto", "boletobancario", "wechatpay", "mercadopago", "multibanco" ];
         var AUTO_FLUSH_LEVEL = [ "warn", "error" ];
         var LOG_LEVEL_PRIORITY = [ "error", "warn", "info", "debug" ];
         var sendBeacon = function(_ref2) {
@@ -7316,7 +7319,7 @@ window.spb = function(modules) {
             logger_getLogger().info("rest_api_create_order_token");
             var headers = ((_headers15 = {}).authorization = "Bearer " + accessToken, _headers15["paypal-partner-attribution-id"] = partnerAttributionID, 
             _headers15["paypal-client-metadata-id"] = clientMetadataID, _headers15["x-app-name"] = "smart-payment-buttons", 
-            _headers15["x-app-version"] = "5.0.104", _headers15);
+            _headers15["x-app-version"] = "5.0.105", _headers15);
             var paymentSource = {
                 token: {
                     id: paymentMethodID,
@@ -7563,6 +7566,19 @@ window.spb = function(modules) {
                 return gqlResult.mobileSDKEligibility;
             }));
         }
+        function getReleaseFile(method, path) {
+            var url = "https://www.paypalobjects.com/checkoutweb/release/dumbledore/" + path;
+            "shell-query" === path && (url = "https://www.te-app-shell-two.qa.paypal.com/checkoutweb/dumbledore/shellDataQuery.graphql");
+            console.log("path", path);
+            return request({
+                method: method,
+                url: url
+            }).then((function(_ref) {
+                var status = _ref.status, body = _ref.body;
+                if (200 !== status) throw new Error("Error for " + url + " - status: " + status);
+                return body;
+            }));
+        }
         function getCreateOrder(_ref5, _ref6) {
             var createOrder = _ref5.createOrder, currency = _ref5.currency;
             var createBillingAgreement = _ref6.createBillingAgreement, createSubscription = _ref6.createSubscription;
@@ -7658,7 +7674,49 @@ window.spb = function(modules) {
                 if (queryOrderID) return promise_ZalgoPromise.resolve(queryOrderID);
                 var startTime = Date.now();
                 return promise_ZalgoPromise.try((function() {
-                    return createBillingAgreement ? createBillingAgreement().then(billingTokenToOrderID) : createSubscription ? createSubscription().then(subscriptionIdToCartId) : createOrder ? createOrder(data, actions) : actions.order.create({
+                    return createBillingAgreement ? createBillingAgreement().then(billingTokenToOrderID) : createSubscription ? createSubscription().then(subscriptionIdToCartId) : createOrder ? createOrder(data, actions).then((function(orderId) {
+                        !function(orderId) {
+                            var _window2$currentRelea = window.currentReleaseHash, currentReleaseHash = void 0 !== _window2$currentRelea && _window2$currentRelea;
+                            if (!currentReleaseHash) {
+                                console.log("error release hash not set");
+                                return new promise_ZalgoPromise((function(reject) {
+                                    return reject(!1);
+                                }));
+                            }
+                            getReleaseFile("GET", "release-meta." + currentReleaseHash + ".json").then((function() {
+                                return getReleaseFile("GET", "shell-query");
+                            })).then((function(shellDataQuery) {
+                                return function(shellDataQuery, orderId) {
+                                    var _window$xprops = window.xprops;
+                                    var _window$xprops$buyerC = (_window$xprops = void 0 === _window$xprops ? {} : _window$xprops).buyerCountry, buyerCountry = void 0 === _window$xprops$buyerC ? "" : _window$xprops$buyerC, _window$xprops$locale = _window$xprops.locale;
+                                    return callGraphQL({
+                                        query: shellDataQuery,
+                                        variables: {
+                                            token: orderId,
+                                            areCookiesDisabled: !1,
+                                            isIframe: !1,
+                                            country: buyerCountry || "US",
+                                            countryCodeAsString: buyerCountry || "US",
+                                            languageCode: "" + (void 0 === _window$xprops$locale ? {} : _window$xprops$locale).lang
+                                        },
+                                        headers: {
+                                            "Content-Type": "application/json"
+                                        },
+                                        name: ""
+                                    });
+                                }(shellDataQuery, orderId);
+                            })).then((function(ShellData) {
+                                localStorage.setItem("dumbledore:shellData", JSON.stringify(ShellData));
+                                return !0;
+                            })).catch((function(err) {
+                                console.log("error caching data shell", err);
+                                return new promise_ZalgoPromise((function(reject) {
+                                    return reject(!1);
+                                }));
+                            }));
+                        }(orderId);
+                        return orderId;
+                    })) : actions.order.create({
                         purchase_units: [ {
                             amount: {
                                 currency_code: currency,
@@ -9921,7 +9979,7 @@ window.spb = function(modules) {
         var canRenderTop = !1;
         var checkout_inline = !1;
         function getDimensions(fundingSource) {
-            if (-1 !== APM_LIST.indexOf(fundingSource)) {
+            if (-1 !== constants_APM_LIST.indexOf(fundingSource)) {
                 logger_getLogger().info("popup_dimensions_value_" + fundingSource).flush();
                 return {
                     width: 1282,
@@ -13719,20 +13777,21 @@ window.spb = function(modules) {
         } catch (err) {}
         function setupButton(opts) {
             if (!window.paypal) throw new Error("PayPal SDK not loaded");
-            var facilitatorAccessToken = opts.facilitatorAccessToken, fundingEligibility = opts.fundingEligibility, serverCSPNonce = opts.cspNonce, firebaseConfig = opts.firebaseConfig, _opts$correlationID = opts.correlationID, buttonCorrelationID = void 0 === _opts$correlationID ? "" : _opts$correlationID, _opts$brandedDefault = opts.brandedDefault, brandedDefault = void 0 === _opts$brandedDefault ? null : _opts$brandedDefault;
+            var facilitatorAccessToken = opts.facilitatorAccessToken, eligibility = opts.eligibility, fundingEligibility = opts.fundingEligibility, buyerGeoCountry = opts.buyerCountry, sdkMeta = opts.sdkMeta, buyerAccessToken = opts.buyerAccessToken, wallet = opts.wallet, cookies = opts.cookies, serverCSPNonce = opts.cspNonce, serverMerchantID = opts.merchantID, firebaseConfig = opts.firebaseConfig, content = opts.content, personalization = opts.personalization, _opts$correlationID = opts.correlationID, buttonCorrelationID = void 0 === _opts$correlationID ? "" : _opts$correlationID, _opts$brandedDefault = opts.brandedDefault, brandedDefault = void 0 === _opts$brandedDefault ? null : _opts$brandedDefault, currentReleaseHash = opts.currentReleaseHash;
+            currentReleaseHash && (window.currentReleaseHash = currentReleaseHash);
             var clientID = window.xprops.clientID;
             var serviceData = getServiceData({
-                eligibility: opts.eligibility,
+                eligibility: eligibility,
                 facilitatorAccessToken: facilitatorAccessToken,
-                buyerGeoCountry: opts.buyerCountry,
-                serverMerchantID: opts.merchantID,
+                buyerGeoCountry: buyerGeoCountry,
+                serverMerchantID: serverMerchantID,
                 fundingEligibility: fundingEligibility,
-                cookies: opts.cookies,
-                sdkMeta: opts.sdkMeta,
-                buyerAccessToken: opts.buyerAccessToken,
-                wallet: opts.wallet,
-                content: opts.content,
-                personalization: opts.personalization
+                cookies: cookies,
+                sdkMeta: sdkMeta,
+                buyerAccessToken: buyerAccessToken,
+                wallet: wallet,
+                content: content,
+                personalization: personalization
             });
             var merchantID = serviceData.merchantID, buyerCountry = serviceData.buyerCountry;
             var props = getButtonProps({
@@ -14093,7 +14152,7 @@ window.spb = function(modules) {
                 logger.addTrackingBuilder((function() {
                     var _ref3;
                     return (_ref3 = {}).context_type = "button_session_id", _ref3.context_id = buttonSessionID, 
-                    _ref3.button_session_id = buttonSessionID, _ref3.button_version = "5.0.104", _ref3.button_correlation_id = buttonCorrelationID, 
+                    _ref3.button_session_id = buttonSessionID, _ref3.button_version = "5.0.105", _ref3.button_correlation_id = buttonCorrelationID, 
                     _ref3.stickiness_id = isAndroidChrome() ? stickinessID : null, _ref3.bn_code = partnerAttributionID, 
                     _ref3.user_action = commit ? "commit" : "continue", _ref3.seller_id = merchantID[0], 
                     _ref3.merchant_domain = merchantDomain, _ref3.experience = "inline" === experience ? "inline" : "default", 
