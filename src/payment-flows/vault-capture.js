@@ -126,7 +126,16 @@ function initVaultCapture({ props, components, payment, serviceData, config } : 
     const { cspNonce } = config;
 
     const clientMetadataID = getClientMetadataID({ props });
-    const accessToken = userIDToken ? facilitatorAccessToken : clientAccessToken;
+    let accessToken = facilitatorAccessToken;
+
+    if (userIDToken) {
+        accessToken = userIDToken
+    }
+
+    if (clientAccessToken) {
+        accessToken = clientAccessToken
+    }
+
 
     if (!paymentMethodID) {
         throw new Error(`Payment method id required for vault capture`);
