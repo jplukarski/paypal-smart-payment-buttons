@@ -676,8 +676,7 @@
                 "function" == typeof k.type && k.__k === d.__k ? k.__d = s = m(k, s, n) : s = A(n, k, d, x, b, s), 
                 "function" == typeof u.type && (u.__d = s)) : s && d.__e == s && s.parentNode != n && (s = _(d));
             }
-            for (u.__e = g, h = C; h--; ) null != x[h] && ("function" == typeof u.type && null != x[h].__e && x[h].__e == u.__d && (u.__d = _(i, h + 1)), 
-            N(x[h], x[h]));
+            for (u.__e = g, h = C; h--; ) null != x[h] && N(x[h], x[h]);
             if (w) for (h = 0; h < w.length; h++) M(w[h], w[++h], w[++h]);
         }
         function m(n, l, u) {
@@ -708,7 +707,7 @@
                     n[l] = null == u ? "" : u;
                     break n;
                 } catch (n) {}
-                "function" == typeof u || (null != u && (!1 !== u || "a" === l[0] && "r" === l[1]) ? n.setAttribute(l, u) : n.removeAttribute(l));
+                "function" == typeof u || (null == u || !1 === u && -1 == l.indexOf("-") ? n.removeAttribute(l) : n.setAttribute(l, u));
             }
         }
         function I(n) {
@@ -723,12 +722,14 @@
             null != i.__h && (c = i.__h, e = u.__e = i.__e, u.__h = null, r = [ e ]), (a = l.__b) && a(u);
             try {
                 n: if ("function" == typeof H) {
-                    if (g = u.props, m = (a = H.contextType) && t[a.__c], x = a ? m ? m.props.value : a.__ : t, 
+                    g = u.props, m = (a = H.contextType) && t[a.__c], x = a ? m ? m.props.value : a.__ : t, 
                     i.__c ? b = (h = u.__c = i.__c).__ = h.__E : ("prototype" in H && H.prototype.render ? u.__c = h = new H(g, x) : (u.__c = h = new d(g, x), 
                     h.constructor = H, h.render = O), m && m.sub(h), h.props = g, h.state || (h.state = {}), 
-                    h.context = x, h.__n = t, v = h.__d = !0, h.__h = []), null == h.__s && (h.__s = h.state), 
+                    h.context = x, h.__n = t, v = h.__d = !0, h.__h = [], h._sb = []), null == h.__s && (h.__s = h.state), 
                     null != H.getDerivedStateFromProps && (h.__s == h.state && (h.__s = s({}, h.__s)), 
-                    s(h.__s, H.getDerivedStateFromProps(g, h.__s))), y = h.props, _ = h.state, v) null == H.getDerivedStateFromProps && null != h.componentWillMount && h.componentWillMount(), 
+                    s(h.__s, H.getDerivedStateFromProps(g, h.__s))), y = h.props, _ = h.state;
+                    for (a = 0; a < h._sb.length; a++) h.__h.push(h._sb[a]), h._sb = [];
+                    if (v) null == H.getDerivedStateFromProps && null != h.componentWillMount && h.componentWillMount(), 
                     null != h.componentDidMount && h.__h.push(h.componentDidMount); else {
                         if (null == H.getDerivedStateFromProps && g !== y && null != h.componentWillReceiveProps && h.componentWillReceiveProps(g, x), 
                         !h.__e && null != h.shouldComponentUpdate && !1 === h.shouldComponentUpdate(g, h.__s, x) || u.__v === i.__v) {
@@ -815,7 +816,7 @@
                 }
                 t.base = t.__P = null, n.__c = void 0;
             }
-            if (t = n.__k) for (o = 0; o < t.length; o++) t[o] && N(t[o], u, "function" != typeof n.type);
+            if (t = n.__k) for (o = 0; o < t.length; o++) t[o] && N(t[o], u, i || "function" != typeof n.type);
             i || null == n.__e || preact_module_a(n.__e), n.__ = n.__e = n.__d = void 0;
         }
         function O(n, l, u) {
@@ -835,7 +836,7 @@
         }, preact_module_u = 0, d.prototype.setState = function(n, l) {
             var u;
             u = null != this.__s && this.__s !== this.state ? this.__s : this.__s = s({}, this.state), 
-            "function" == typeof n && (n = n(s({}, u), this.props)), n && s(u, n), null != n && this.__v && (l && this.__h.push(l), 
+            "function" == typeof n && (n = n(s({}, u), this.props)), n && s(u, n), null != n && this.__v && (l && this._sb.push(l), 
             b(this));
         }, d.prototype.forceUpdate = function(n) {
             this.__v && (this.__e = !0, n && this.__h.push(n), b(this));
@@ -874,7 +875,7 @@
                                 var t = n.__[0];
                                 n.__ = n.__N, n.__N = void 0, t !== n.__[0] && (i = !0);
                             }
-                        })), !!i && (!f || f.call(this, n, t, r));
+                        })), !(!i && o.__c.props === n) && (!f || f.call(this, n, t, r));
                     };
                 }
                 return o.__N || o.__;
@@ -888,7 +889,7 @@
             }
         }
         l.__b = function(n) {
-            "function" != typeof n.type || n.o || n.type === p ? n.o || (n.o = n.__ && n.__.o ? n.__.o : "") : n.o = (n.__ && n.__.o ? n.__.o : "") + (n.__ && n.__.__k ? n.__.__k.indexOf(n) : 0), 
+            "function" != typeof n.type || n.__m || n.type === p ? n.__m || (n.__m = n.__ && n.__.__m ? n.__.__m : "") : n.__m = (n.__ && n.__.__m ? n.__.__m : "") + (n.__ && n.__.__k ? n.__.__k.indexOf(n) : 0), 
             hooks_module_u = null, hooks_module_a && hooks_module_a(n);
         }, l.__r = function(n) {
             hooks_module_v && hooks_module_v(n), hooks_module_r = 0;
