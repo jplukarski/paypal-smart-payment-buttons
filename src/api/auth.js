@@ -25,8 +25,13 @@ export function createAccessToken(clientID : string, { targetSubject } : Generat
             grant_type: `client_credentials`
         };
 
+        /* eslint-disable-next-line no-console */
+        console.log("createAccessToken()")
+
         if (targetSubject) {
             data.target_subject = targetSubject;
+            /* eslint-disable-next-line no-console */
+            console.log("targetSubject set", targetSubject)
         }
 
         return request({
