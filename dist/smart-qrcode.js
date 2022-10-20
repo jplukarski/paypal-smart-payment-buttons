@@ -591,7 +591,7 @@
                 return target;
             }).apply(this, arguments);
         }
-        var n, l, preact_module_u, preact_module_t, preact_module_o, f = {}, e = [], c = /acit|ex(?:s|g|n|p|$)|rph|grid|ows|mnc|ntw|ine[ch]|zoo|^ord|itera/i;
+        var preact_module_n, l, preact_module_u, preact_module_t, preact_module_o, f = {}, e = [], c = /acit|ex(?:s|g|n|p|$)|rph|grid|ows|mnc|ntw|ine[ch]|zoo|^ord|itera/i;
         function s(n, l) {
             for (var u in l) n[u] = l[u];
             return n;
@@ -603,7 +603,7 @@
         function h(l, u, i) {
             var t, o, r, f = {};
             for (r in u) "key" == r ? t = u[r] : "ref" == r ? o = u[r] : f[r] = u[r];
-            if (arguments.length > 2 && (f.children = arguments.length > 3 ? n.call(arguments, 2) : i), 
+            if (arguments.length > 2 && (f.children = arguments.length > 3 ? preact_module_n.call(arguments, 2) : i), 
             "function" == typeof l && null != l.defaultProps) for (r in l.defaultProps) void 0 === f[r] && (f[r] = l.defaultProps[r]);
             return v(l, f, t, o, null);
         }
@@ -663,7 +663,7 @@
             var h, y, d, k, b, g, w, x = i && i.__k || e, C = x.length;
             for (u.__k = [], h = 0; h < l.length; h++) if (null != (k = u.__k[h] = null == (k = l[h]) || "boolean" == typeof k ? null : "string" == typeof k || "number" == typeof k || "bigint" == typeof k ? v(null, k, null, null, k) : Array.isArray(k) ? v(p, {
                 children: k
-            }, null, null, null) : k.__b > 0 ? v(k.type, k.props, k.key, null, k.__v) : k)) {
+            }, null, null, null) : k.__b > 0 ? v(k.type, k.props, k.key, k.ref ? k.ref : null, k.__v) : k)) {
                 if (k.__ = u, k.__b = u.__b + 1, null === (d = x[h]) || d && k.key == d.key && k.type === d.type) x[h] = void 0; else for (y = 0; y < C; y++) {
                     if ((d = x[y]) && k.key == d.key && k.type === d.type) {
                         x[y] = void 0;
@@ -781,7 +781,7 @@
                 r = null, c = !1;
             }
             if (null === d) y === p || c && l.data === p || (l.data = p); else {
-                if (r = r && n.call(l.childNodes), h = (y = i.props || f).dangerouslySetInnerHTML, 
+                if (r = r && preact_module_n.call(l.childNodes), h = (y = i.props || f).dangerouslySetInnerHTML, 
                 v = p.dangerouslySetInnerHTML, !c) {
                     if (null != r) for (y = {}, k = 0; k < l.attributes.length; k++) y[l.attributes[k].name] = l.attributes[k].value;
                     (v || h) && (v && (h && v.__html == h.__html || v.__html === l.innerHTML) || (l.innerHTML = v && v.__html || ""));
@@ -813,15 +813,15 @@
                 } catch (n) {
                     l.__e(n, u);
                 }
-                t.base = t.__P = null;
+                t.base = t.__P = null, n.__c = void 0;
             }
             if (t = n.__k) for (o = 0; o < t.length; o++) t[o] && N(t[o], u, "function" != typeof n.type);
-            i || null == n.__e || preact_module_a(n.__e), n.__e = n.__d = void 0;
+            i || null == n.__e || preact_module_a(n.__e), n.__ = n.__e = n.__d = void 0;
         }
         function O(n, l, u) {
             return this.constructor(n, u);
         }
-        n = e.slice, l = {
+        preact_module_n = e.slice, l = {
             __e: function(n, l, u, i) {
                 for (var t, o, r; l = l.__; ) if ((t = l.__c) && !t.__) try {
                     if ((o = t.constructor) && null != o.getDerivedStateFromError && (t.setState(o.getDerivedStateFromError(n)), 
@@ -840,105 +840,111 @@
         }, d.prototype.forceUpdate = function(n) {
             this.__v && (this.__e = !0, n && this.__h.push(n), b(this));
         }, d.prototype.render = p, preact_module_t = [], g.__r = 0;
-        var hooks_module_t, hooks_module_r, hooks_module_u, hooks_module_i, hooks_module_o = 0, hooks_module_c = [], hooks_module_f = [], hooks_module_e = l.__b, hooks_module_a = l.__r, hooks_module_v = l.diffed, hooks_module_l = l.__c, hooks_module_m = l.unmount;
-        function hooks_module_d(t, u) {
-            l.__h && l.__h(hooks_module_r, t, hooks_module_o || u), hooks_module_o = 0;
-            var i = hooks_module_r.__H || (hooks_module_r.__H = {
+        var hooks_module_r, hooks_module_u, hooks_module_i, hooks_module_o, hooks_module_f = 0, hooks_module_c = [], hooks_module_e = [], hooks_module_a = l.__b, hooks_module_v = l.__r, hooks_module_l = l.diffed, hooks_module_m = l.__c, hooks_module_d = l.unmount;
+        function hooks_module_p(t, r) {
+            l.__h && l.__h(hooks_module_u, t, hooks_module_f || r), hooks_module_f = 0;
+            var i = hooks_module_u.__H || (hooks_module_u.__H = {
                 __: [],
                 __h: []
             });
             return t >= i.__.length && i.__.push({
-                __V: hooks_module_f
+                __V: hooks_module_e
             }), i.__[t];
         }
-        function hooks_module_p(n) {
-            return hooks_module_o = 1, function(n, u, i) {
-                var o = hooks_module_d(hooks_module_t++, 2);
-                if (o.t = n, !o.__c && (o.__ = [ hooks_module_z(void 0, u), function(n) {
+        function hooks_module_y(n) {
+            return hooks_module_f = 1, function(n, t, i) {
+                var o = hooks_module_p(hooks_module_r++, 2);
+                if (o.t = n, !o.__c && (o.__ = [ hooks_module_C(void 0, t), function(n) {
                     var t = o.__N ? o.__N[0] : o.__[0], r = o.t(t, n);
                     t !== r && (o.__N = [ r, o.__[1] ], o.__c.setState({}));
-                } ], o.__c = hooks_module_r, !hooks_module_r.u)) {
-                    hooks_module_r.u = !0;
-                    var c = hooks_module_r.shouldComponentUpdate;
-                    hooks_module_r.shouldComponentUpdate = function(n, t, r) {
+                } ], o.__c = hooks_module_u, !hooks_module_u.u)) {
+                    hooks_module_u.u = !0;
+                    var f = hooks_module_u.shouldComponentUpdate;
+                    hooks_module_u.shouldComponentUpdate = function(n, t, r) {
                         if (!o.__c.__H) return !0;
                         var u = o.__c.__H.__.filter((function(n) {
                             return n.__c;
                         }));
-                        return (u.every((function(n) {
+                        if (u.every((function(n) {
                             return !n.__N;
-                        })) || !u.every((function(n) {
-                            if (!n.__N) return !0;
-                            var t = n.__[0];
-                            return n.__ = n.__N, n.__N = void 0, t === n.__[0];
-                        }))) && (!c || c.call(this, n, t, r));
+                        }))) return !f || f.call(this, n, t, r);
+                        var i = !1;
+                        return u.forEach((function(n) {
+                            if (n.__N) {
+                                var t = n.__[0];
+                                n.__ = n.__N, n.__N = void 0, t !== n.__[0] && (i = !0);
+                            }
+                        })), !!i && (!f || f.call(this, n, t, r));
                     };
                 }
                 return o.__N || o.__;
-            }(hooks_module_z, n);
+            }(hooks_module_C, n);
         }
-        function hooks_module_b() {
+        function hooks_module_g() {
             for (var t; t = hooks_module_c.shift(); ) if (t.__P && t.__H) try {
-                t.__H.__h.forEach(hooks_module_j), t.__H.__h.forEach(hooks_module_k), t.__H.__h = [];
+                t.__H.__h.forEach(hooks_module_w), t.__H.__h.forEach(hooks_module_z), t.__H.__h = [];
             } catch (r) {
                 t.__H.__h = [], l.__e(r, t.__v);
             }
         }
         l.__b = function(n) {
-            hooks_module_r = null, hooks_module_e && hooks_module_e(n);
+            "function" != typeof n.type || n.o || n.type === p ? n.o || (n.o = n.__ && n.__.o ? n.__.o : "") : n.o = (n.__ && n.__.o ? n.__.o : "") + (n.__ && n.__.__k ? n.__.__k.indexOf(n) : 0), 
+            hooks_module_u = null, hooks_module_a && hooks_module_a(n);
         }, l.__r = function(n) {
-            hooks_module_a && hooks_module_a(n), hooks_module_t = 0;
-            var i = (hooks_module_r = n.__c).__H;
-            i && (hooks_module_u === hooks_module_r ? (i.__h = [], hooks_module_r.__h = [], 
-            i.__.forEach((function(n) {
-                n.__N && (n.__ = n.__N), n.__V = hooks_module_f, n.__N = n.i = void 0;
-            }))) : (i.__h.forEach(hooks_module_j), i.__h.forEach(hooks_module_k), i.__h = [])), 
-            hooks_module_u = hooks_module_r;
+            hooks_module_v && hooks_module_v(n), hooks_module_r = 0;
+            var t = (hooks_module_u = n.__c).__H;
+            t && (hooks_module_i === hooks_module_u ? (t.__h = [], hooks_module_u.__h = [], 
+            t.__.forEach((function(n) {
+                n.__N && (n.__ = n.__N), n.__V = hooks_module_e, n.__N = n.i = void 0;
+            }))) : (t.__h.forEach(hooks_module_w), t.__h.forEach(hooks_module_z), t.__h = [])), 
+            hooks_module_i = hooks_module_u;
         }, l.diffed = function(t) {
-            hooks_module_v && hooks_module_v(t);
-            var o = t.__c;
-            o && o.__H && (o.__H.__h.length && (1 !== hooks_module_c.push(o) && hooks_module_i === l.requestAnimationFrame || ((hooks_module_i = l.requestAnimationFrame) || function(n) {
-                var t, r = function() {
-                    clearTimeout(u), hooks_module_g && cancelAnimationFrame(t), setTimeout(n);
-                }, u = setTimeout(r, 100);
-                hooks_module_g && (t = requestAnimationFrame(r));
-            })(hooks_module_b)), o.__H.__.forEach((function(n) {
-                n.i && (n.__H = n.i), n.__V !== hooks_module_f && (n.__ = n.__V), n.i = void 0, 
-                n.__V = hooks_module_f;
-            }))), hooks_module_u = hooks_module_r = null;
+            hooks_module_l && hooks_module_l(t);
+            var r = t.__c;
+            r && r.__H && (r.__H.__h.length && (1 !== hooks_module_c.push(r) && hooks_module_o === l.requestAnimationFrame || ((hooks_module_o = l.requestAnimationFrame) || hooks_module_k)(hooks_module_g)), 
+            r.__H.__.forEach((function(n) {
+                n.i && (n.__H = n.i), n.__V !== hooks_module_e && (n.__ = n.__V), n.i = void 0, 
+                n.__V = hooks_module_e;
+            }))), hooks_module_i = hooks_module_u = null;
         }, l.__c = function(t, r) {
             r.some((function(t) {
                 try {
-                    t.__h.forEach(hooks_module_j), t.__h = t.__h.filter((function(n) {
-                        return !n.__ || hooks_module_k(n);
+                    t.__h.forEach(hooks_module_w), t.__h = t.__h.filter((function(n) {
+                        return !n.__ || hooks_module_z(n);
                     }));
                 } catch (u) {
                     r.some((function(n) {
                         n.__h && (n.__h = []);
                     })), r = [], l.__e(u, t.__v);
                 }
-            })), hooks_module_l && hooks_module_l(t, r);
+            })), hooks_module_m && hooks_module_m(t, r);
         }, l.unmount = function(t) {
-            hooks_module_m && hooks_module_m(t);
+            hooks_module_d && hooks_module_d(t);
             var r, u = t.__c;
             u && u.__H && (u.__H.__.forEach((function(n) {
                 try {
-                    hooks_module_j(n);
+                    hooks_module_w(n);
                 } catch (n) {
                     r = n;
                 }
-            })), r && l.__e(r, u.__v));
+            })), u.__H = void 0, r && l.__e(r, u.__v));
         };
-        var hooks_module_g = "function" == typeof requestAnimationFrame;
-        function hooks_module_j(n) {
-            var t = hooks_module_r, u = n.__c;
-            "function" == typeof u && (n.__c = void 0, u()), hooks_module_r = t;
-        }
+        var hooks_module_j = "function" == typeof requestAnimationFrame;
         function hooks_module_k(n) {
-            var t = hooks_module_r;
-            n.__c = n.__(), hooks_module_r = t;
+            var t, r = function() {
+                clearTimeout(u), hooks_module_j && cancelAnimationFrame(t), setTimeout(n);
+            }, u = setTimeout(r, 100);
+            hooks_module_j && (t = requestAnimationFrame(r));
         }
-        function hooks_module_z(n, t) {
+        function hooks_module_w(n) {
+            var t = hooks_module_u, r = n.__c;
+            "function" == typeof r && (n.__c = void 0, r()), hooks_module_u = t;
+        }
+        function hooks_module_z(n) {
+            var t = hooks_module_u;
+            n.__c = n.__(), hooks_module_u = t;
+        }
+        function hooks_module_C(n, t) {
             return "function" == typeof t ? t(n) : t;
         }
         function utils_isPromise(item) {
@@ -2528,7 +2534,7 @@
             var _ref$amount = _ref.amount, _ref$vetted = _ref.vetted, _ref$allowBillingPaym = _ref.allowBillingPayments;
             return callGraphQL({
                 name: "GetSmartWallet",
-                query: "\n            query GetSmartWallet(\n                $clientID: String!\n                $merchantID: [String!]\n                $currency: String\n                $amount: String\n                $userIDToken: String\n                $vetted: Boolean\n                $paymentMethodToken: String\n                $branded: Boolean,\n                $allowBillingPayments: Boolean\n            ) {\n                smartWallet(\n                    clientId: $clientID\n                    merchantId: $merchantID\n                    currency: $currency\n                    amount: $amount\n                    userIdToken: $userIDToken\n                    vetted: $vetted\n                    paymentMethodNonce: $paymentMethodToken\n                    branded: $branded,\n                    allowBillingPayments: $allowBillingPayments\n                ) {\n                    paypal {\n                        instruments {\n                            type\n                            label\n                            logoUrl\n                            instrumentID\n                            tokenID\n                            vendor\n                            oneClick\n                            accessToken\n                        }\n                    }\n                    credit {\n                        instruments {\n                            type\n                            label\n                            logoUrl\n                            instrumentID\n                            tokenID\n                            vendor\n                            oneClick\n                            accessToken\n                        }\n                    }\n                    card {\n                        instruments {\n                            type\n                            label\n                            logoUrl\n                            instrumentID\n                            tokenID\n                            vendor\n                            oneClick\n                        }\n                    }\n                }\n            }\n        ",
+                query: "\n            query GetSmartWallet(\n                $clientID: String!\n                $merchantID: [String!]\n                $currency: String\n                $amount: String\n                $userIDToken: String\n                $vetted: Boolean\n                $paymentMethodToken: String\n                $branded: Boolean,\n                $allowBillingPayments: Boolean\n            ) {\n                smartWallet(\n                    clientId: $clientID\n                    merchantId: $merchantID\n                    currency: $currency\n                    amount: $amount\n                    userIdToken: $userIDToken\n                    vetted: $vetted\n                    paymentMethodNonce: $paymentMethodToken\n                    branded: $branded,\n                    allowBillingPayments: $allowBillingPayments\n                ) {\n                    paypal {\n                        instruments {\n                            type\n                            label\n                            logoUrl\n                            instrumentID\n                            tokenID\n                            vendor\n                            oneClick\n                            accessToken\n                        }\n                    }\n                    credit {\n                        instruments {\n                            type\n                            label\n                            logoUrl\n                            instrumentID\n                            tokenID\n                            vendor\n                            oneClick\n                            accessToken\n                        }\n                    }\n                    card {\n                        instruments {\n                            type\n                            label\n                            logoUrl\n                            instrumentID\n                            tokenID\n                            vendor\n                            oneClick\n                        }\n                    }\n                    venmo {\n                        instruments {\n                            type\n                            label\n                            logoUrl\n                            instrumentID\n                            tokenID\n                            oneClick\n                        }\n                    }\n                }\n            }\n        ",
                 variables: {
                     clientID: _ref.clientID,
                     merchantID: _ref.merchantID,
@@ -2597,14 +2603,20 @@
         };
         var logo_LOGO_COLORS;
         (logo_LOGO_COLORS = {}).default = {
-            primary: "#005498",
-            secondary: "#FFD800"
+            primary: "#FFFFFF",
+            secondary: "#FFFFFF",
+            tertiary: "#FFFFFF",
+            quaternary: "#FFFFFF"
         }, logo_LOGO_COLORS.white = {
-            primary: "#ffffff",
-            secondary: "#ffffff"
+            primary: "#FFFFFF",
+            secondary: "#FFFFFF",
+            tertiary: "#FFFFFF",
+            quaternary: "#FFFFFF"
         }, logo_LOGO_COLORS.black = {
-            primary: "#005498",
-            secondary: "#FFD800"
+            primary: "#1E3764",
+            secondary: "#005AB9",
+            tertiary: "#FBA900",
+            quaternary: "#FFD800"
         };
         var glyph_logo_LOGO_COLORS;
         (glyph_logo_LOGO_COLORS = {}).default = {
@@ -2634,67 +2646,67 @@
         };
         var eps_logo_LOGO_COLORS;
         (eps_logo_LOGO_COLORS = {}).default = {
-            primary: "#c8036f",
-            secondary: "#71706f"
+            primary: "#FFFFFF",
+            secondary: "#FFFFFF"
         }, eps_logo_LOGO_COLORS.white = {
-            primary: "#ffffff",
-            secondary: "#ffffff"
+            primary: "#FFFFFF",
+            secondary: "#FFFFFF"
         }, eps_logo_LOGO_COLORS.black = {
-            primary: "#71706F",
-            secondary: "#C8036F"
+            primary: "#C8036F",
+            secondary: "#71706F"
         };
         var giropay_logo_LOGO_COLORS;
         (giropay_logo_LOGO_COLORS = {}).default = {
-            primary: "#ED1C24",
-            secondary: "#ffffff",
-            tertiary: "#003a7d",
-            quaternary: "#FFFFFF"
-        }, giropay_logo_LOGO_COLORS.white = {
             primary: "#FFFFFF",
-            secondary: "#000000",
-            tertiary: "#FFFFFF",
-            quaternary: "#FFFFFF"
-        }, giropay_logo_LOGO_COLORS.black = {
-            primary: "#ED1C24",
+            secondary: "#003A7D",
+            tertiary: "#ED1C24",
+            quaternary: "#FFFFFF",
+            quinary: "#FFFFFF"
+        }, giropay_logo_LOGO_COLORS.white = {
+            primary: "#000000",
             secondary: "#FFFFFF",
-            tertiary: "#003a7d",
-            quaternary: "#FFFFFF"
+            tertiary: "#FFFFFF",
+            quaternary: "#000000",
+            quinary: "#FFFFFF"
+        }, giropay_logo_LOGO_COLORS.black = {
+            primary: "#FFFFFF",
+            secondary: "#003A7D",
+            tertiary: "#ED1C24",
+            quaternary: "#FFFFFF",
+            quinary: "#003A7D"
         };
         var ideal_logo_LOGO_COLORS;
         (ideal_logo_LOGO_COLORS = {}).default = {
-            primary: "#000000",
-            secondary: "#cd0067",
-            tertiary: "#ffffff"
+            primary: "#FFFFFF",
+            secondary: "#CC0066"
         }, ideal_logo_LOGO_COLORS.white = {
-            primary: "#ffffff",
-            secondary: "#ffffff",
-            tertiary: "#ffffff"
+            primary: "#FFFFFF",
+            secondary: "#CC0066"
         }, ideal_logo_LOGO_COLORS.black = {
-            primary: "#000000",
-            secondary: "#FFFFFF",
-            tertiary: "#CD0067"
+            primary: "#FFFFFF",
+            secondary: "#CC0066"
         };
         var mybank_logo_LOGO_COLORS;
         (mybank_logo_LOGO_COLORS = {}).default = {
             primary: "#00C0EE",
-            secondary: "#1a4b67"
+            secondary: "#FFFFFF"
         }, mybank_logo_LOGO_COLORS.white = {
-            primary: "#ffffff",
-            secondary: "#ffffff"
+            primary: "#FFFFFF",
+            secondary: "#FFFFFF"
         }, mybank_logo_LOGO_COLORS.black = {
-            primary: "#1A4B67",
-            secondary: "#00C0EE"
+            primary: "#00C0EE",
+            secondary: "#1A4B67"
         };
         var p24_logo_LOGO_COLORS;
         (p24_logo_LOGO_COLORS = {}).default = {
-            primary: "#d03238",
-            secondary: "#b3b1b1"
+            primary: "#FFFFFF",
+            secondary: "#FFFFFF"
         }, p24_logo_LOGO_COLORS.white = {
-            primary: "#ffffff",
-            secondary: "#ffffff"
+            primary: "#FFFFFF",
+            secondary: "#FFFFFF"
         }, p24_logo_LOGO_COLORS.black = {
-            primary: "#d03238",
-            secondary: "#b3b1b1"
+            primary: "#B3B1B1",
+            secondary: "#D03238"
         };
         var _PAYPAL_LOGO_COLORS, _PP_LOGO_COLORS;
         (_PAYPAL_LOGO_COLORS = {}).default = {
@@ -2745,14 +2757,14 @@
         };
         var sofort_logo_LOGO_COLORS;
         (sofort_logo_LOGO_COLORS = {}).default = {
-            primary: "#FFFFFF",
-            secondary: "#EB6F93"
+            primary: "#EDEDED",
+            secondary: "#393A41"
         }, sofort_logo_LOGO_COLORS.white = {
             primary: "#FFFFFF",
-            secondary: "#2C2E2F"
+            secondary: "#000000"
         }, sofort_logo_LOGO_COLORS.black = {
-            primary: "#FFFFFF",
-            secondary: "#EB6F93"
+            primary: "#393A41",
+            secondary: "#EDEDED"
         };
         var venmo_logo_excluded = [ "logoColor" ];
         var venmo_logo_LOGO_COLORS;
@@ -2778,13 +2790,13 @@
         var wechatpay_logo_LOGO_COLORS;
         (wechatpay_logo_LOGO_COLORS = {}).default = {
             primary: "#1AAD19",
-            secondary: "#4D4D4D"
+            secondary: "#FFFFFF"
         }, wechatpay_logo_LOGO_COLORS.white = {
             primary: "#FFFFFF",
             secondary: "#FFFFFF"
         }, wechatpay_logo_LOGO_COLORS.black = {
-            primary: "#333030",
-            secondary: "#333030"
+            primary: "#1AAD19",
+            secondary: "#4D4D4D"
         };
         var zimpler_logo_LOGO_COLORS;
         (zimpler_logo_LOGO_COLORS = {}).default = {
@@ -2813,85 +2825,73 @@
         };
         var verkkopankki_logo_LOGO_COLORS;
         (verkkopankki_logo_LOGO_COLORS = {}).default = {
-            primary: "#FFFFFF",
-            secondary: "#CACCC8",
-            tertiary: "#2D59A1",
-            quaternary: "#1F3364",
-            quinary: "#4E4E4E",
-            senary: "#1B4482"
+            primary: "#2D59A1",
+            secondary: "#1F3364",
+            tertiary: "#FFFFFF",
+            quaternary: "#CACCC8",
+            quinary: "#FFFFFF",
+            senary: "#FFFFFF"
         }, verkkopankki_logo_LOGO_COLORS.white = {
-            primary: "#FFFFFF",
-            secondary: "#CACCC8",
-            tertiary: "#2D59A1",
-            quaternary: "#1F3364",
-            quinary: "#4E4E4E",
-            senary: "#1B4482"
-        }, verkkopankki_logo_LOGO_COLORS.black = {
             primary: "#000000",
             secondary: "#000000",
             tertiary: "#FFFFFF",
             quaternary: "#FFFFFF",
-            quinary: "#000000",
-            senary: "#000000"
+            quinary: "#FFFFFF",
+            senary: "#FFFFFF"
+        }, verkkopankki_logo_LOGO_COLORS.black = {
+            primary: "#2D59A1",
+            secondary: "#1F3364",
+            tertiary: "#FFFFFF",
+            quaternary: "#CACCC8",
+            quinary: "#1B4482",
+            senary: "#4E4E4E"
         };
         var blik_logo_LOGO_COLORS;
         (blik_logo_LOGO_COLORS = {}).default = {
-            primary: "#4D4D4F",
-            secondary: "#000000",
-            tertiary: "#FF0000",
-            quaternary: "#E83E49",
-            quinary: "#FF00FF",
+            primary: "#FF0000",
+            secondary: "#E83E49",
+            tertiary: "#FF00FF",
+            quaternary: "#000000",
             senary: "#FFFFFF"
         }, blik_logo_LOGO_COLORS.white = {
-            primary: "#FFFFFF",
-            secondary: "#FFFFFF",
+            primary: "#000000",
+            secondary: "#000000",
             tertiary: "#000000",
             quaternary: "#000000",
-            quinary: "#000000",
-            senary: "#000000"
+            senary: "#FFFFFF"
         }, blik_logo_LOGO_COLORS.black = {
-            primary: "#4D4D4F",
-            secondary: "#000000",
-            tertiary: "#FF0000",
-            quaternary: "#E83E49",
-            quinary: "#FF00FF",
+            primary: "#FF0000",
+            secondary: "#E83E49",
+            tertiary: "#FF00FF",
+            quaternary: "#4D4D4F",
             senary: "#FFFFFF"
         };
         var trustly_logo_LOGO_COLORS;
         (trustly_logo_LOGO_COLORS = {}).default = {
-            primary: "#020202",
-            secondary: "#64CC07"
+            primary: "#0EE06E"
         }, trustly_logo_LOGO_COLORS.white = {
-            primary: "#FFFFFF",
-            secondary: "#FFFFFF"
+            primary: "#FFFFFF"
         }, trustly_logo_LOGO_COLORS.black = {
-            primary: "#000000",
-            secondary: "#000000"
+            primary: "#000000"
         };
         var oxxo_logo_LOGO_COLORS;
         (oxxo_logo_LOGO_COLORS = {}).default = {
-            primary: "#EC1D24",
-            secondary: "#EDA42D",
-            tertiary: "#FEFEFE"
+            primary: "#FFFFFF",
+            secondary: "#FFFFFF"
         }, oxxo_logo_LOGO_COLORS.white = {
-            primary: "#EC1D24",
-            secondary: "#EDA42D",
-            tertiary: "#FEFEFE"
+            primary: "#FFFFFF",
+            secondary: "#FFFFFF"
         }, oxxo_logo_LOGO_COLORS.black = {
-            primary: "#EC1D24",
-            secondary: "#EDA42D",
-            tertiary: "#FEFEFE"
+            primary: "#E39E39",
+            secondary: "#D8232A"
         };
         var boleto_logo_LOGO_COLORS;
         (boleto_logo_LOGO_COLORS = {}).default = {
-            primary: "#1A1919",
-            secondary: "#FFFFFE"
+            primary: "#FFFFFF"
         }, boleto_logo_LOGO_COLORS.white = {
-            primary: "#1A1919",
-            secondary: "#FFFFFE"
+            primary: "#FFFFFF"
         }, boleto_logo_LOGO_COLORS.black = {
-            primary: "#1A1919",
-            secondary: "#FFFFFE"
+            primary: "#000000"
         };
         var maxima_logo_LOGO_COLORS;
         (maxima_logo_LOGO_COLORS = {}).default = {
@@ -2906,31 +2906,31 @@
         };
         var mercadopago_logo_LOGO_COLORS;
         (mercadopago_logo_LOGO_COLORS = {}).default = {
-            primary: "#2D3277",
+            primary: "#009EE3",
             secondary: "#FFFFFF",
             tertiary: "#009EE3",
-            quaternary: "#009EE3"
+            quaternary: "#FFFFFF"
         }, mercadopago_logo_LOGO_COLORS.white = {
-            primary: "#FFFFFF",
-            secondary: "#000000",
-            tertiary: "#FFFFFF",
-            quaternary: "#000000"
-        }, mercadopago_logo_LOGO_COLORS.black = {
-            primary: "#2D3277",
+            primary: "#000000",
             secondary: "#FFFFFF",
+            tertiary: "#000000",
+            quaternary: "#FFFFFF"
+        }, mercadopago_logo_LOGO_COLORS.black = {
+            primary: "#FFFFFF",
+            secondary: "#2D3277",
             tertiary: "#009EE3",
             quaternary: "#009EE3"
         };
         var multibanco_logo_LOGO_COLORS;
         (multibanco_logo_LOGO_COLORS = {}).default = {
-            primary: "#373535",
-            secondary: "#1866AB"
+            primary: "#FFFFFF",
+            secondary: "#FFFFFF"
         }, multibanco_logo_LOGO_COLORS.white = {
-            primary: "#ffffff",
-            secondary: "#ffffff"
+            primary: "#FFFFFF",
+            secondary: "#FFFFFF"
         }, multibanco_logo_LOGO_COLORS.black = {
-            primary: "#373535",
-            secondary: "#1866AB"
+            primary: "#1866AB",
+            secondary: "#373535"
         };
         function ErrorMessage(_ref) {
             var resetFunc = _ref.resetFunc;
@@ -3181,7 +3181,7 @@
             logger.addTrackingBuilder((function() {
                 var _ref2;
                 return (_ref2 = {}).state_name = "smart_button", _ref2.context_type = "EC-Token", 
-                _ref2.context_id = orderID, _ref2.button_session_id = buttonSessionID, _ref2.button_version = "5.0.112", 
+                _ref2.context_id = orderID, _ref2.button_session_id = buttonSessionID, _ref2.button_version = "5.0.117", 
                 _ref2.user_id = buttonSessionID, _ref2;
             }));
             (function() {
@@ -3302,17 +3302,17 @@
         function QRCard(_ref) {
             var svgString = _ref.svgString;
             var _useXProps = function() {
-                var _useState = hooks_module_p(window.xprops), xprops = _useState[0], setXProps = _useState[1];
-                u = function() {
+                var _useState = hooks_module_y(window.xprops), xprops = _useState[0], setXProps = _useState[1];
+                t = function() {
                     return xprops.onProps((function(newProps) {
                         setXProps(_extends({}, newProps));
                     }));
-                }, i = [], o = hooks_module_d(hooks_module_t++, 3), !l.__s && function(n, t) {
+                }, i = [], o = hooks_module_p(hooks_module_r++, 3), !l.__s && function(n, t) {
                     return !n || n.length !== t.length || t.some((function(t, r) {
                         return t !== n[r];
                     }));
-                }(o.__H, i) && (o.__ = u, o.i = i, hooks_module_r.__H.__h.push(o));
-                var u, i, o;
+                }(o.__H, i) && (o.__ = t, o.i = i, hooks_module_u.__H.__h.push(o));
+                var t, i, o;
                 return _extends({}, xprops, {
                     setState: function(newState) {
                         setXProps(_extends({}, xprops, {
@@ -3322,7 +3322,7 @@
                 });
             }(), state = _useXProps.state, errorText = _useXProps.errorText, setState = _useXProps.setState, close = _useXProps.close, cancel = _useXProps.onCancel;
             var survey = function() {
-                var _useState = hooks_module_p({
+                var _useState = hooks_module_y({
                     isEnabled: !1,
                     reason: "prefer_not_to_say"
                 }), state = _useState[0], setState = _useState[1];
@@ -3497,7 +3497,7 @@
             qrcard_logger = setupNativeQRLogger();
             !function(u, i, t) {
                 var r, e;
-                l.__ && l.__(u, i), r = !1 ? null : i.__k, e = [], j(i, u = i.__k = h(p, null, [ u ]), r || f, f, void 0 !== i.ownerSVGElement, r ? null : i.firstChild ? n.call(i.childNodes) : null, e, r ? r.__e : i.firstChild, !1), 
+                l.__ && l.__(u, i), r = !1 ? null : i.__k, e = [], j(i, u = i.__k = h(p, null, [ u ]), r || f, f, void 0 !== i.ownerSVGElement, r ? null : i.firstChild ? preact_module_n.call(i.childNodes) : null, e, r ? r.__e : i.firstChild, !1), 
                 z(e, u);
             }(h(QRCard, {
                 svgString: svgString
