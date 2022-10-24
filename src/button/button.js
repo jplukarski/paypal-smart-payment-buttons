@@ -234,7 +234,7 @@ export function setupButton(opts : SetupButtonOptions) : ZalgoPromise<void> {
     const setupButtonLogsTask = setupButtonLogger({
         style, env, sdkVersion, sessionID, clientID, partnerAttributionID, commit, sdkCorrelationID,
         stickinessID, buttonCorrelationID, locale, merchantID, buttonSessionID, merchantDomain,
-        fundingSource, getQueriedEligibleFunding, buyerCountry, onShippingChange, experience, wallet });
+        fundingSource, getQueriedEligibleFunding, buyerCountry, onShippingChange, experience, wallet, smartWalletOrderID });
     const setupPaymentFlowsTask = setupPaymentFlows({ props, config, serviceData, components });
     const setupExportsTask = setupExports({ props, isEnabled, facilitatorAccessToken, fundingEligibility, merchantID });
 
