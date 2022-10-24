@@ -201,6 +201,12 @@ export type PayPal = {|
     postRobot : PostRobot
 |};
 
+type SecondaryInstruments = {|
+    type : string,
+    label : string,
+    instrumentID : string
+|};
+
 export type WalletInstrument = {|
     type? : $Values<typeof WALLET_INSTRUMENT>,
     label? : string,
@@ -211,7 +217,8 @@ export type WalletInstrument = {|
     oneClick : boolean,
     accessToken? : ?string,
     branded : boolean | null,
-    planID? : ?string
+    planID? : ?string,
+    secondaryInstruments? : $ReadOnlyArray<SecondaryInstruments>
 |};
 
 export type WalletPaymentType = {|
