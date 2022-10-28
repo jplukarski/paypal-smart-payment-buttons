@@ -181,7 +181,7 @@ export type Props = {|
     onShippingAddressChange : ?OnShippingAddressChange,
     onShippingOptionsChange : ?OnShippingOptionsChange,
     onAuth : OnAuth,
-    onSmartWalletEligible : onSmartWalletEligible,
+    onSmartWalletEligible? : onSmartWalletEligible,
 
     paymentMethodToken : ?string,
 
@@ -193,11 +193,11 @@ export type Props = {|
 
     paymentRequest: ?PaymentRequest,
     merchantID : $ReadOnlyArray<string>,
-    enableOrdersApprovalSmartWallet : boolean | null,
-    smartWalletOrderID : string | null
+    enableOrdersApprovalSmartWallet : boolean | void,
+    smartWalletOrderID : string | void
 |};
 
-export function getProps({ facilitatorAccessToken, branded, paymentSource, enableOrdersApprovalSmartWallet, smartWalletOrderID } : {| facilitatorAccessToken : string, branded : boolean | null, paymentSource : $Values<typeof FUNDING> | null, enableOrdersApprovalSmartWallet : boolean | false, smartWalletOrderID : string | null |}) : Props {
+export function getProps({ facilitatorAccessToken, branded, paymentSource, enableOrdersApprovalSmartWallet, smartWalletOrderID } : {| facilitatorAccessToken : string, branded : boolean | null, paymentSource : $Values<typeof FUNDING> | null, enableOrdersApprovalSmartWallet? : boolean | void, smartWalletOrderID? : string | void |}) : Props {
     const xprops : XProps = window.xprops;
 
     let {
