@@ -19,7 +19,7 @@ import { prerenderButtonSmartMenu, clearButtonSmartMenu } from './menu';
 import { validateProps } from './validation';
 import { setupExports } from './exports';
 
-type SetupButtonOptions = {|
+export type SetupButtonOptions = {|
     fundingEligibility : FundingEligibilityType,
     buyerCountry : $Values<typeof COUNTRY>,
     cspNonce? : string,
