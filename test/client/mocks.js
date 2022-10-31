@@ -1631,7 +1631,9 @@ export async function mockSetupButton(options : $Shape<SetupButtonOptions> = {})
             }
         },
         sdkMeta: MOCK_SDK_META,
-        featureFlags: {},
+        featureFlags: {
+            isLsatUpgradable: true
+        },
         ...options
     });
 }
