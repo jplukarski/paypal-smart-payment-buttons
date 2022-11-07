@@ -122,6 +122,7 @@ export type InputState = {|
     cursorEnd : number,
     keyStrokeCount : number,
     isPotentiallyValid : boolean,
+    isFocused : boolean,
     isValid : boolean,
     contentPasted? : boolean,
     displayCardIcon?: boolean

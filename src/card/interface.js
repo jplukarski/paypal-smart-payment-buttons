@@ -13,7 +13,7 @@ import { getCardProps } from './props';
 import type { Card, ExtraFields } from './types';
 import { type CardExports, type ExportsOptions } from './lib';
 
-function getExportsByFrameName<T>(name : $Values<typeof FRAME_NAME>) : ?CardExports<T> {
+function getExportsByFrameName<T>(name: $Values<typeof FRAME_NAME>): ?CardExports<T> {
     try {
         for (const win of getAllFramesInWindow(window)) {
 
@@ -31,7 +31,7 @@ function getExportsByFrameName<T>(name : $Values<typeof FRAME_NAME>) : ?CardExpo
     }
 }
 
-function getCardFrames() : {| cardFrame : ?ExportsOptions,  cardNumberFrame : ?ExportsOptions, cardCVVFrame : ?ExportsOptions, cardExpiryFrame : ?ExportsOptions, cardNameFrame : ?ExportsOptions |} {
+function getCardFrames(): {| cardFrame : ?ExportsOptions, cardNumberFrame : ?ExportsOptions, cardCVVFrame : ?ExportsOptions, cardExpiryFrame : ?ExportsOptions, cardNameFrame : ?ExportsOptions, cardPostalFrame: ?ExportsOptions |} {
 
     const cardFrame = getExportsByFrameName(FRAME_NAME.CARD_FIELD);
     const cardNumberFrame = getExportsByFrameName(FRAME_NAME.CARD_NUMBER_FIELD);
@@ -50,15 +50,16 @@ function getCardFrames() : {| cardFrame : ?ExportsOptions,  cardNumberFrame : ?E
     };
 }
 
-function isEmpty(value: string) : boolean {
-    if(value.length === 0) {
+function isEmpty(value: string): boolean {
+    if (value.length === 0) {
         return true
     }
     return false
 }
 
-export function getCardFieldState() : object {
-    const { cardFrame, cardNameFrame, cardNumberFrame, cardCVVFrame, cardExpiryFrame, cardPostalFrame } = getCardFrames();
+export function getCardFieldState(): object {
+    console.log("## Hey there!")
+    const { cardNameFrame, cardNumberFrame, cardCVVFrame, cardExpiryFrame, cardPostalFrame } = getCardFrames();
 
     const cardFieldsState = {
         cards: [],
@@ -66,34 +67,39 @@ export function getCardFieldState() : object {
             cardName: {
                 isEmpty: isEmpty(cardNameFrame.getFieldValue()),
                 isValid: cardNameFrame.isFieldValid(),
-                isPotentiallyValid: cardNameFrame.isFieldPotentiallyValid()
+                isPotentiallyValid: cardNameFrame.isFieldPotentiallyValid(),
+                isFocused: cardNameFrame.isFieldFocused()
             },
             cardNumber: {
                 isEmpty: isEmpty(cardNumberFrame.getFieldValue()),
                 isValid: cardNumberFrame.isFieldValid(),
-                isPotentiallyValid: cardNumberFrame.isFieldPotentiallyValid()
+                isPotentiallyValid: cardNumberFrame.isFieldPotentiallyValid(),
+                isFocused: cardNumberFrame.isFieldFocused()
             },
             cardExpiry: {
                 isEmpty: isEmpty(cardExpiryFrame.getFieldValue()),
                 isValid: cardExpiryFrame.isFieldValid(),
-                isPotentiallyValid: cardExpiryFrame.isFieldPotentiallyValid()
+                isPotentiallyValid: cardExpiryFrame.isFieldPotentiallyValid(),
+                isFocused: cardExpiryFrame.isFieldFocused()
             },
             cardCVV: {
                 isEmpty: isEmpty(cardCVVFrame.getFieldValue()),
                 isValid: cardCVVFrame.isFieldValid(),
-                isPotentiallyValid: cardCVVFrame.isFieldPotentiallyValid()
+                isPotentiallyValid: cardCVVFrame.isFieldPotentiallyValid(),
+                isFocused: cardCVVFrame.isFieldFocused()
             },
             cardPostalCode: {
                 isEmpty: isEmpty(cardPostalFrame.getFieldValue()),
                 isValid: cardPostalFrame.isFieldValid(),
-                isPotentiallyValid: cardPostalFrame.isFieldPotentiallyValid()
+                isPotentiallyValid: cardPostalFrame.isFieldPotentiallyValid(),
+                isFocused: cardPostalFrame.isFieldFocused()
             }
         }
     }
     return cardFieldsState
 }
 
-export function hasCaroFields() : boolean {
+export function hasCardFields(): boolean {
     const { cardFrame, cardNumberFrame, cardCVVFrame, cardExpiryFrame } = getCardFrames();
 
     if (cardFrame || (cardNumberFrame && cardCVVFrame && cardExpiryFrame)) {
@@ -103,7 +109,7 @@ export function hasCaroFields() : boolean {
     return false;
 }
 
-export function getCardFields() : ?Card {
+export function getCardFields(): ?Card {
     const cardFrame = getExportsByFrameName(FRAME_NAME.CARD_FIELD);
 
     if (cardFrame && cardFrame.isFieldValid()) {
@@ -120,16 +126,16 @@ export function getCardFields() : ?Card {
     ) {
         return {
             number: cardNumberFrame.getFieldValue(),
-            cvv:    cardCVVFrame.getFieldValue(),
+            cvv: cardCVVFrame.getFieldValue(),
             expiry: cardExpiryFrame.getFieldValue(),
-            name:   cardNameFrame?.getFieldValue() || ''
+            name: cardNameFrame?.getFieldValue() || ''
         };
     }
 
     throw new Error(`Card fields not available to submit`);
 }
 
-export function emitGqlErrors(errorsMap : Object) : void {
+export function emitGqlErrors(errorsMap: Object): void {
     const { cardFrame, cardNumberFrame, cardExpiryFrame, cardCVVFrame } = getCardFrames();
 
     const { number, expiry, security_code } = errorsMap;
@@ -165,7 +171,7 @@ export function emitGqlErrors(errorsMap : Object) : void {
     }
 }
 
-export function resetGQLErrors() : void {
+export function resetGQLErrors(): void {
     const { cardFrame, cardNumberFrame, cardExpiryFrame, cardCVVFrame } = getCardFrames();
 
     if (cardFrame) {
@@ -187,29 +193,29 @@ export function resetGQLErrors() : void {
 
 type SubmitCardFieldsOptions = {|
     facilitatorAccessToken : string,
-    extraFields? : {|
-        billingAddress? : string
-    |}
+        extraFields ? : {|
+            billingAddress ? : string
+        |}
 |};
 
 type CardValues = {|
     number : string,
-    expiry? : ?string,
-    security_code? : string,
-    postalCode? : string,
-    name? : string,
+        expiry ? : ? string,
+        security_code ? : string,
+        postalCode ? : string,
+        name ? : string,
     ...ExtraFields
-|};
+    |};
 
 // Reformat MM/YYYY to YYYY-MM
-function reformatExpiry(expiry : ?string) : ?string {
+function reformatExpiry(expiry: ?string): ?string {
     if (typeof expiry === "string") {
-        const [ month, year ] = expiry.split('/');
-        return `${ year }-${ month }`;
+        const [month, year] = expiry.split('/');
+        return `${year}-${month}`;
     }
 }
 
-export function submitCardFields({ facilitatorAccessToken, extraFields } : SubmitCardFieldsOptions) : ZalgoPromise<void> {
+export function submitCardFields({ facilitatorAccessToken, extraFields }: SubmitCardFieldsOptions): ZalgoPromise<void> {
     const { intent, createOrder, onApprove, onError } = getCardProps({ facilitatorAccessToken });
 
     resetGQLErrors();
@@ -228,7 +234,7 @@ export function submitCardFields({ facilitatorAccessToken, extraFields } : Submi
         const restart = () => {
             throw new Error(`Restart not implemented for card fields flow`);
         };
-    
+
         if (intent === INTENT.TOKENIZE) {
             return tokenizeCard({ card }).then(({ paymentMethodToken }) => {
                 return onApprove({ paymentMethodToken }, { restart });
@@ -238,10 +244,10 @@ export function submitCardFields({ facilitatorAccessToken, extraFields } : Submi
         if (intent === INTENT.CAPTURE || intent === INTENT.AUTHORIZE) {
             return createOrder().then(orderID => {
 
-                const cardObject : CardValues = {
-                    name:          card.name,
-                    number:        card.number,
-                    expiry:        reformatExpiry(card.expiry),
+                const cardObject: CardValues = {
+                    name: card.name,
+                    number: card.number,
+                    expiry: reformatExpiry(card.expiry),
                     security_code: card.cvv,
                     ...extraFields
                 };
@@ -251,7 +257,7 @@ export function submitCardFields({ facilitatorAccessToken, extraFields } : Submi
                 }
 
                 // eslint-disable-next-line flowtype/no-weak-types
-                const data : any = {
+                const data: any = {
                     payment_source: {
                         card: cardObject
                     }
