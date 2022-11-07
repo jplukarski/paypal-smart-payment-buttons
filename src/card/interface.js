@@ -32,7 +32,6 @@ function getExportsByFrameName<T>(name : $Values<typeof FRAME_NAME>) : ?CardExpo
     }
 }
 
-
 function getCardFrames() : {| cardFrame : ?ExportsOptions,  cardNumberFrame : ?ExportsOptions, cardCVVFrame : ?ExportsOptions, cardExpiryFrame : ?ExportsOptions, cardNameFrame : ?ExportsOptions |} {
 
     const cardFrame = getExportsByFrameName(FRAME_NAME.CARD_FIELD);
@@ -40,18 +39,62 @@ function getCardFrames() : {| cardFrame : ?ExportsOptions,  cardNumberFrame : ?E
     const cardCVVFrame = getExportsByFrameName(FRAME_NAME.CARD_CVV_FIELD);
     const cardExpiryFrame = getExportsByFrameName(FRAME_NAME.CARD_EXPIRY_FIELD);
     const cardNameFrame = getExportsByFrameName(FRAME_NAME.CARD_NAME_FIELD);
+    const cardPostalFrame = getExportsByFrameName(FRAME_NAME.CARD_POSTAL_FIELD)
 
     return {
         cardFrame,
         cardNumberFrame,
         cardCVVFrame,
         cardExpiryFrame,
-        cardNameFrame
+        cardNameFrame,
+        cardPostalFrame
     };
 }
 
+function isEmpty(value: string) : boolean {
+    if(value.length === 0) {
+        return true
+    }
+    return false
+}
 
-export function hasCardFields() : boolean {
+export function getCardFieldState() : object {
+    const { cardFrame, cardNameFrame, cardNumberFrame, cardCVVFrame, cardExpiryFrame, cardPostalFrame } = getCardFrames();
+
+    const cardFieldsState = {
+        cards: [],
+        fields: {
+            cardName: {
+                isEmpty: isEmpty(cardNameFrame.getFieldValue()),
+                isValid: cardNameFrame.isFieldValid(),
+                isPotentiallyValid: cardNameFrame.isFieldPotentiallyValid()
+            },
+            cardNumber: {
+                isEmpty: isEmpty(cardNumberFrame.getFieldValue()),
+                isValid: cardNumberFrame.isFieldValid(),
+                isPotentiallyValid: cardNumberFrame.isFieldPotentiallyValid()
+            },
+            cardExpiry: {
+                isEmpty: isEmpty(cardExpiryFrame.getFieldValue()),
+                isValid: cardExpiryFrame.isFieldValid(),
+                isPotentiallyValid: cardExpiryFrame.isFieldPotentiallyValid()
+            },
+            cardCVV: {
+                isEmpty: isEmpty(cardCVVFrame.getFieldValue()),
+                isValid: cardCVVFrame.isFieldValid(),
+                isPotentiallyValid: cardCVVFrame.isFieldPotentiallyValid()
+            },
+            cardPostalCode: {
+                isEmpty: isEmpty(cardPostalFrame.getFieldValue()),
+                isValid: cardPostalFrame.isFieldValid(),
+                isPotentiallyValid: cardPostalFrame.isFieldPotentiallyValid()
+            }
+        }
+    }
+    return cardFieldsState
+}
+
+export function hasCaroFields() : boolean {
     const { cardFrame, cardNumberFrame, cardCVVFrame, cardExpiryFrame } = getCardFrames();
 
     if (cardFrame || (cardNumberFrame && cardCVVFrame && cardExpiryFrame)) {

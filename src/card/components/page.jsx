@@ -7,7 +7,7 @@ import { useState, useEffect, useRef } from 'preact/hooks';
 import { getBody } from '../../lib';
 import { setupExports, autoFocusOnFirstInput, filterExtraFields } from '../lib';
 import { CARD_FIELD_TYPE_TO_FRAME_NAME, CARD_FIELD_TYPE } from '../constants';
-import { submitCardFields } from '../interface';
+import { submitCardFields, getCardFieldState } from '../interface';
 import { getCardProps, type CardProps } from '../props';
 import type { SetupCardOptions} from '../types';
 import type {FeatureFlags } from '../../types'
@@ -25,6 +25,7 @@ function Page({ cspNonce, props, featureFlags } : PageProps) : mixed {
 
     const [ fieldValue, setFieldValue ] = useState();
     const [ fieldValid, setFieldValid ] = useState(false);
+    const [ fieldPotentiallyValid, setFieldPotentiallyValid] = useState(true)
     const [ fieldErrors, setFieldErrors ] = useState([]);
     const [ mainRef, setRef ] = useState();
     const [ fieldGQLErrors, setFieldGQLErrors ] = useState({ singleField: {}, numberField: [], expiryField: [], cvvField: [], nameField: [], postalCodeField: [] });
@@ -42,6 +43,10 @@ function Page({ cspNonce, props, featureFlags } : PageProps) : mixed {
     const isFieldValid = () => {
         return fieldValid;
     };
+
+    const isFieldPotentiallyValid = () => {
+        return fieldPotentiallyValid
+    }
 
     const setGqlErrors = (errorData : {| field : string, errors : [] |}) => {
         const { errors } = errorData;
@@ -106,6 +111,7 @@ function Page({ cspNonce, props, featureFlags } : PageProps) : mixed {
     useEffect(() => {
         setupExports({
             name: CARD_FIELD_TYPE_TO_FRAME_NAME[type],
+            isFieldPotentiallyValid,
             isFieldValid,
             getFieldValue,
             setGqlErrors,
@@ -116,14 +122,18 @@ function Page({ cspNonce, props, featureFlags } : PageProps) : mixed {
             submit: (extraData) => {
                 const extraFields = filterExtraFields(extraData);
                 return submitCardFields({ facilitatorAccessToken, extraFields, featureFlags });
+            },
+            getState: () => {
+                console.log(getCardFieldState())
             }
         });
-    }, [ fieldValid, fieldValue ]);
+    }, [ fieldValid, fieldValue, fieldPotentiallyValid ]);
 
-    const onFieldChange = ({ value, valid, errors }) => {
+    const onFieldChange = ({ value, valid, potentiallyValid, errors }) => {
         setFieldValue(value);
         setFieldErrors([ ...errors ]);
         setFieldValid(valid);
+        setFieldPotentiallyValid(potentiallyValid)
         resetGQLErrors();
     };
 

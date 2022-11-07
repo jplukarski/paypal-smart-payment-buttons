@@ -240,7 +240,7 @@ export function ValidationMessage({ message } : Object) : mixed {
 
 type CardNumberFieldProps = {|
     cspNonce : string,
-    onChange : ({| value : string, valid : boolean, errors : [$Values<typeof CARD_ERRORS>] | [] |}) => void,
+    onChange : ({| value : string, valid : boolean, potentiallyValid: boolean, errors : [$Values<typeof CARD_ERRORS>] | [] |}) => void,
     styleObject : CardStyle,
     placeholder : string,
     autoFocusRef : (mixed) => void,
@@ -283,7 +283,7 @@ export function CardNumberField({ cspNonce, onChange, styleObject = {}, placehol
         } else {
             markValidity(numberRef, numberValidity);
         }
-        onChange({ value: number, valid: numberValidity.isValid, errors });
+        onChange({ value: number, valid: numberValidity.isValid, potentiallyValid: numberValidity.isPotentiallyValid, errors });
     }, [ number, isCardEligible, isValid, isPotentiallyValid ]);
 
     return (
@@ -307,7 +307,7 @@ export function CardNumberField({ cspNonce, onChange, styleObject = {}, placehol
 
 type CardExpiryFieldProps = {|
     cspNonce : string,
-    onChange : ({| value : string, valid : boolean, errors : [$Values<typeof CARD_ERRORS>] | [] |}) => void,
+    onChange : ({| value : string, valid : boolean, potentiallyValid: boolean, errors : [$Values<typeof CARD_ERRORS>] | [] |}) => void,
     styleObject : CardStyle,
     placeholder : string,
     autoFocusRef : (mixed) => void,
@@ -341,7 +341,7 @@ export function CardExpiryField({ cspNonce, onChange, styleObject = {}, placehol
     useEffect(() => {
         const errors = setErrors({ isExpiryValid: expiryValidity.isValid });
         markValidity(expiryRef, expiryValidity);
-        onChange({ value: expiry, valid: expiryValidity.isValid, errors });
+        onChange({ value: expiry, valid: expiryValidity.isValid, potentiallyValid: expiryValidity.isPotentiallyValid, errors });
     }, [ expiry, isValid, isPotentiallyValid ]);
 
     return (
@@ -363,7 +363,7 @@ export function CardExpiryField({ cspNonce, onChange, styleObject = {}, placehol
 }
 type CardCvvFieldProps = {|
     cspNonce : string,
-    onChange : ({| value : string, valid : boolean, errors : [$Values<typeof CARD_ERRORS>] | [] |}) => void,
+    onChange : ({| value : string, valid : boolean, potentiallyValid: boolean, errors : [$Values<typeof CARD_ERRORS>] | [] |}) => void,
     styleObject : CardStyle,
     placeholder : string,
     autoFocusRef : (mixed) => void,
@@ -397,7 +397,7 @@ export function CardCVVField({ cspNonce, onChange, styleObject = {}, placeholder
     useEffect(() => {
         const errors = setErrors({ isCvvValid: cvvValidity.isValid });
         markValidity(cvvRef, cvvValidity);
-        onChange({ value: cvv, valid: cvvValidity.isValid, errors });
+        onChange({ value: cvv, valid: cvvValidity.isValid, potentiallyValid: cvvValidity.isPotentiallyValid, errors });
     }, [ cvv, isValid, isPotentiallyValid  ]);
 
     return (
@@ -419,7 +419,7 @@ export function CardCVVField({ cspNonce, onChange, styleObject = {}, placeholder
 
 type CardNameFieldProps = {|
     cspNonce : string,
-    onChange : ({| value : string, valid : boolean, errors : [$Values<typeof CARD_ERRORS>] | [] |}) => void,
+    onChange : ({| value : string, valid : boolean, potentiallyValid: boolean, errors : [$Values<typeof CARD_ERRORS>] | [] |}) => void,
     styleObject : CardStyle,
     placeholder : string,
     autoFocusRef : (mixed) => void,
@@ -452,7 +452,7 @@ export function CardNameField({ cspNonce, onChange, styleObject = {}, placeholde
     useEffect(() => {
         const errors = setErrors({ isNameValid: nameValidity.isValid });
         markValidity(nameRef, nameValidity);
-        onChange({ value: name, valid: nameValidity.isValid, errors });
+        onChange({ value: name, valid: nameValidity.isValid, potentiallyValid: nameValidity.isPotentiallyValid, errors });
     }, [ name, isValid, isPotentiallyValid  ]);
 
     return (
@@ -474,7 +474,7 @@ export function CardNameField({ cspNonce, onChange, styleObject = {}, placeholde
 
 type CardPostalFieldProps = {|
     cspNonce : string,
-    onChange : ({| value : string, valid : boolean, errors : [$Values<typeof CARD_ERRORS>] | [] |}) => void,
+    onChange : ({| value : string, valid : boolean, potentiallyValid: boolean, errors : [$Values<typeof CARD_ERRORS>] | [] |}) => void,
     styleObject : CardStyle,
     placeholder : string,
     minLength : number,
@@ -510,7 +510,7 @@ export function CardPostalCodeField({ cspNonce, onChange, styleObject = {}, plac
     useEffect(() => {
         const errors = setErrors({ isPostalCodeValid: postalCodeValidity.isValid });
         markValidity(postalRef, postalCodeValidity);
-        onChange({ value: postalCode, valid: postalCodeValidity.isValid, errors });
+        onChange({ value: postalCode, valid: postalCodeValidity.isValid, potentiallyValid: postalCodeValidity.isPotentiallyValid, errors });
     }, [ postalCode, isValid, isPotentiallyValid  ]);
 
     return (

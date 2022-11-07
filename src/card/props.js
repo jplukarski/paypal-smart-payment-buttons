@@ -20,7 +20,8 @@ export type PrerenderDetailsType = {|
 |};
 
 export type CardExport = ({|
-    submit : () => ZalgoPromise<void>
+    submit : () => ZalgoPromise<void>,
+    getState : () => String
 |}) => ZalgoPromise<void>;
 
 export type OnChange = ({|
