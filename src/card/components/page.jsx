@@ -25,7 +25,8 @@ function Page({ cspNonce, props, featureFlags } : PageProps) : mixed {
 
     const [ fieldValue, setFieldValue ] = useState();
     const [ fieldValid, setFieldValid ] = useState(false);
-    const [ fieldPotentiallyValid, setFieldPotentiallyValid] = useState(true)
+    const [ fieldPotentiallyValid, setFieldPotentiallyValid] = useState(true);
+    const [fieldFocus, setFieldFocus ] = useState(false);
     const [ fieldErrors, setFieldErrors ] = useState([]);
     const [ mainRef, setRef ] = useState();
     const [ fieldGQLErrors, setFieldGQLErrors ] = useState({ singleField: {}, numberField: [], expiryField: [], cvvField: [], nameField: [], postalCodeField: [] });
@@ -46,6 +47,10 @@ function Page({ cspNonce, props, featureFlags } : PageProps) : mixed {
 
     const isFieldPotentiallyValid = () => {
         return fieldPotentiallyValid
+    }
+
+    const isFieldFocused = () => {
+        return fieldFocus;
     }
 
     const setGqlErrors = (errorData : {| field : string, errors : [] |}) => {
@@ -113,6 +118,7 @@ function Page({ cspNonce, props, featureFlags } : PageProps) : mixed {
             name: CARD_FIELD_TYPE_TO_FRAME_NAME[type],
             isFieldPotentiallyValid,
             isFieldValid,
+            isFieldFocused,
             getFieldValue,
             setGqlErrors,
             resetGQLErrors
@@ -127,11 +133,12 @@ function Page({ cspNonce, props, featureFlags } : PageProps) : mixed {
                 console.log(getCardFieldState())
             }
         });
-    }, [ fieldValid, fieldValue, fieldPotentiallyValid ]);
+    }, [ fieldValid, fieldValue, fieldFocus, fieldPotentiallyValid ]);
 
-    const onFieldChange = ({ value, valid, potentiallyValid, errors }) => {
+    const onFieldChange = ({ value, valid, isFocused, potentiallyValid, errors }) => {
         setFieldValue(value);
         setFieldErrors([ ...errors ]);
+        setFieldFocus(isFocused)
         setFieldValid(valid);
         setFieldPotentiallyValid(potentiallyValid)
         resetGQLErrors();
