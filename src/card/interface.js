@@ -58,7 +58,6 @@ function isEmpty(value: string): boolean {
 }
 
 export function getCardFieldState(): object {
-    console.log("## Hey there!")
     const { cardNameFrame, cardNumberFrame, cardCVVFrame, cardExpiryFrame, cardPostalFrame } = getCardFrames();
 
     const cardFieldsState = {
