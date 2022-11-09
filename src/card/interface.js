@@ -68,7 +68,8 @@ export function getCardFieldState(): object {
                 isEmpty: isEmpty(cardNameFrame.getFieldValue()),
                 isValid: cardNameFrame.isFieldValid(),
                 isPotentiallyValid: cardNameFrame.isFieldPotentiallyValid(),
-                isFocused: cardNameFrame.isFieldFocused()
+                isFocused: cardNameFrame.isFieldFocused(),
+                container: cardNameFrame.getContainer()
             },
             cardNumber: {
                 isEmpty: isEmpty(cardNumberFrame.getFieldValue()),

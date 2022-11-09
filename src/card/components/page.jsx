@@ -31,6 +31,7 @@ function Page({ cspNonce, props, featureFlags } : PageProps) : mixed {
     const [ mainRef, setRef ] = useState();
     const [ fieldGQLErrors, setFieldGQLErrors ] = useState({ singleField: {}, numberField: [], expiryField: [], cvvField: [], nameField: [], postalCodeField: [] });
     const initialRender = useRef(true)
+    const fieldRef = useRef()
 
     let autocomplete;
     if (disableAutocomplete) {
@@ -51,6 +52,12 @@ function Page({ cspNonce, props, featureFlags } : PageProps) : mixed {
 
     const isFieldFocused = () => {
         return fieldFocus;
+    }
+
+    const getContainer = () => {
+        console.log('Field Ref: ', fieldRef)
+        return fieldRef.current;
+        // return 'returning the dom node'
     }
 
     const setGqlErrors = (errorData : {| field : string, errors : [] |}) => {
@@ -119,6 +126,7 @@ function Page({ cspNonce, props, featureFlags } : PageProps) : mixed {
             isFieldPotentiallyValid,
             isFieldValid,
             isFieldFocused,
+            getContainer,
             getFieldValue,
             setGqlErrors,
             resetGQLErrors
@@ -130,7 +138,8 @@ function Page({ cspNonce, props, featureFlags } : PageProps) : mixed {
                 return submitCardFields({ facilitatorAccessToken, extraFields, featureFlags });
             },
             getState: () => {
-                console.log(getCardFieldState())
+                // console.log('from sdk',getCardFieldState())
+                return getCardFieldState()
             }
         });
     }, [ fieldValid, fieldValue, fieldFocus, fieldPotentiallyValid ]);
@@ -204,13 +213,13 @@ function Page({ cspNonce, props, featureFlags } : PageProps) : mixed {
             {
                 (type === CARD_FIELD_TYPE.NAME)
                     ? <CardNameField
-                            ref={ mainRef }
+                            innerRef={ fieldRef }
                             gqlErrors={ fieldGQLErrors.nameField }
                             cspNonce={ cspNonce }
                             onChange={ onFieldChange }
                             styleObject={ style }
                             placeholder={ placeholder }
-                            autoFocusRef={ (ref) => setRef(ref.current.base) }
+                            // autoFocusRef={ (ref) => setRef(ref.current.base) }
                     /> : null
             }
 
