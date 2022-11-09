@@ -20,7 +20,8 @@ type CardNameProps = {|
     onFocus : (event : InputEvent) => void,
     onBlur : (event : InputEvent) => void,
     allowNavigation : boolean,
-    onValidityChange? : (numberValidity : FieldValidity) => void
+    onValidityChange? : (numberValidity : FieldValidity) => void,
+    innerInnerRef : object
 |};
 
 
@@ -37,6 +38,7 @@ export function CardName(
         onChange,
         onFocus,
         onBlur,
+        innerInnerRef,
         onValidityChange
     } : CardNameProps
 ) : mixed {
@@ -44,10 +46,10 @@ export function CardName(
     const [ inputState, setInputState ] : [ InputState, (InputState | InputState => InputState) => InputState ] = useState({ ...defaultInputState, ...state });
     const { inputValue, keyStrokeCount, isValid, isPotentiallyValid } = inputState;
 
-    const nameRef = useRef()
+    // const nameRef = useRef()
 
     useEffect(() => {
-        exportMethods(nameRef, setAttributes, setInputState);
+        exportMethods(innerInnerRef, setAttributes, setInputState);
     }, []);
 
     useEffect(() => {
@@ -105,7 +107,7 @@ export function CardName(
         <input
             name={ name }
             inputmode='text'
-            ref={ nameRef }
+            ref={ innerInnerRef }
             type={ type }
             className="card-field-name"
             value={ inputValue }
