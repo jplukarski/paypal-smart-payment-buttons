@@ -3,12 +3,12 @@
 # Example Merchant Page
 
 ```html
-         <div id="card-name-field-container"></div>
-         <div id="card-number-field-container"></div>
-         <div id="card-expiry-field-container"></div>
-         <div id="card-cvv-field-container"></div>
+<div id="card-name-field-container"></div>
+<div id="card-number-field-container"></div>
+<div id="card-expiry-field-container"></div>
+<div id="card-cvv-field-container"></div>
 
-         <button id="multi-card-field-button" type="button">Save Card</button>
+<button id="multi-card-field-button" type="button">Save Card</button>
 
 <script>
 
