@@ -24,6 +24,7 @@ function Page({ cspNonce, props } : PageProps) : mixed {
     const [ fieldValue, setFieldValue ] = useState();
     const [ fieldValid, setFieldValid ] = useState(false);
     const [ fieldPotentiallyValid, setFieldPotentiallyValid] = useState(true);
+    const [cardTypes, setCardTypes] = useState([]);
     const [fieldFocus, setFieldFocus ] = useState(false);
     const [ fieldErrors, setFieldErrors ] = useState([]);
     const [ mainRef, setRef ] = useState();
@@ -49,6 +50,10 @@ function Page({ cspNonce, props } : PageProps) : mixed {
 
     const isFieldFocused = () => {
         return fieldFocus;
+    }
+
+    const getPotentialCardTypes = () => {
+        return cardTypes
     }
 
     const setGqlErrors = (errorData : {| field : string, errors : [] |}) => {
@@ -128,18 +133,19 @@ function Page({ cspNonce, props } : PageProps) : mixed {
                 return submitCardFields({ facilitatorAccessToken, extraFields });
             },
             getState: () => {
-                console.log(getCardFieldState())
+                return getCardFieldState()
             }
         });
     }, [ fieldValid, fieldValue, fieldFocus, fieldPotentiallyValid ]);
 
-    const onFieldChange = ({ value, valid, isFocused, potentiallyValid, errors }) => {
+    const onFieldChange = ({ value, valid, isFocused, potentiallyValid, errors, cardTypes }) => {
         setFieldValue(value);
         setFieldErrors([ ...errors ]);
         setFieldFocus(isFocused)
         setFieldValid(valid);
-        setFieldPotentiallyValid(potentiallyValid)
+        setFieldPotentiallyValid(potentiallyValid);
         resetGQLErrors();
+        setCardTypes(cardTypes)
     };
 
     return (
