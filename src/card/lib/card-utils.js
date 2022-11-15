@@ -154,8 +154,7 @@ export function getCSSText(cardFieldStyle : Object, customStyle : Object) : stri
 
 // mark the ref's HTMLElement as valid or invalid
 export function markValidity(ref : Object, validity : FieldValidity) {
-    const element = ref?.current;
-    console.log('Element from mark validity: ', ref)
+    const element = ref?.current?.base;
     if (element) {
         if (validity.isPotentiallyValid || validity.isValid) {
             element.classList.add('valid');

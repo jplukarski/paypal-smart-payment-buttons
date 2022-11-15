@@ -22,8 +22,7 @@ type CardNameProps = {|
     onFocus : (event : InputEvent) => void,
     onBlur : (event : InputEvent) => void,
     allowNavigation : boolean,
-    onValidityChange? : (numberValidity : FieldValidity) => void,
-    innerInnerRef : object
+    onValidityChange? : (numberValidity : FieldValidity) => void
 |};
 
 
@@ -40,7 +39,6 @@ export function CardName(
         onChange,
         onFocus,
         onBlur,
-        innerInnerRef,
         onValidityChange
     } : CardNameProps
 ) : mixed {

@@ -9,7 +9,6 @@ export type ExportsOptions = {|
     isFieldFocused : () => boolean,
     // eslint-disable-next-line no-undef
     getFieldValue : <T>() => T,
-    getContainer : () => any,
     setGqlErrors : ({| field : string, errors : [] |}) => void,
     resetGQLErrors : () => void
 |};
@@ -20,19 +19,17 @@ export type CardExports<V> = {|
     isFieldPotentiallyValid : () => boolean,
     isFieldFocused: () => boolean,
     getFieldValue : () => V,
-    getContainer : () => any,
     setGqlErrors : ({| field : string, errors : [] |}) => void,
     resetGQLErrors : () => void
 |};
 
-export function setupExports<T>({ name, isFieldValid, isFieldFocused, isFieldPotentiallyValid, getFieldValue, setGqlErrors, getContainer, resetGQLErrors } : ExportsOptions) {
+export function setupExports<T>({ name, isFieldValid, isFieldFocused, isFieldPotentiallyValid, getFieldValue, setGqlErrors, resetGQLErrors } : ExportsOptions) {
     const xports : CardExports<T> = {
         name,
         isFieldValid,
         isFieldPotentiallyValid,
         isFieldFocused,
         getFieldValue,
-        getContainer,
         setGqlErrors,
         resetGQLErrors
     };

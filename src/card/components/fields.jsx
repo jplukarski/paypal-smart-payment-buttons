@@ -140,10 +140,10 @@ export function CardField({ cspNonce, onChange, styleObject = {}, placeholder = 
                 element.classList.remove('valid');
             }
         } else {
-            // markValidity(numberRef, numberValidity);
+            markValidity(numberRef, numberValidity);
         }
-        // markValidity(expiryRef, expiryValidity);
-        // markValidity(cvvRef, cvvValidity);
+        markValidity(expiryRef, expiryValidity);
+        markValidity(cvvRef, cvvValidity);
 
         onChange({ value: { number, cvv, expiry }, valid, errors });
 
@@ -282,7 +282,7 @@ export function CardNumberField({ cspNonce, onChange, styleObject = {}, placehol
                 element.classList.remove('valid');
             }
         } else {
-            // markValidity(numberRef, numberValidity);
+            markValidity(numberRef, numberValidity);
         }
         onChange({ value: number, valid: numberValidity.isValid, isFocused: hasFocus, potentiallyValid: numberValidity.isPotentiallyValid, errors });
     }, [ number, isCardEligible, isValid, hasFocus, isPotentiallyValid ]);
@@ -344,7 +344,7 @@ export function CardExpiryField({ cspNonce, onChange, styleObject = {}, placehol
     
     useEffect(() => {
         const errors = setErrors({ isExpiryValid: expiryValidity.isValid });
-        // markValidity(expiryRef, expiryValidity);
+        markValidity(expiryRef, expiryValidity);
         onChange({ value: expiry, valid: expiryValidity.isValid, isFocused: hasFocus, potentiallyValid: expiryValidity.isPotentiallyValid, errors });
     }, [ expiry, isValid, hasFocus, isPotentiallyValid ]);
 
@@ -403,7 +403,7 @@ export function CardCVVField({ cspNonce, onChange, styleObject = {}, placeholder
 
     useEffect(() => {
         const errors = setErrors({ isCvvValid: cvvValidity.isValid });
-        // markValidity(cvvRef, cvvValidity);
+        markValidity(cvvRef, cvvValidity);
         onChange({ value: cvv, valid: cvvValidity.isValid, isFocused: hasFocus, potentiallyValid: cvvValidity.isPotentiallyValid, errors });
     }, [ cvv, isValid, hasFocus, isPotentiallyValid  ]);
 
@@ -431,23 +431,22 @@ type CardNameFieldProps = {|
     onChange : ({| value : string, valid : boolean, potentiallyValid: boolean, errors : [$Values<typeof CARD_ERRORS>] | [] |}) => void,
     styleObject : CardStyle,
     placeholder : string,
-    // autoFocusRef : (mixed) => void,
-    innerRef: object,
+    autoFocusRef : (mixed) => void,
     gqlErrors : []
 |};
 
-export function CardNameField({ cspNonce, onChange, styleObject = {}, placeholder, innerRef, gqlErrors = [] } : CardNameFieldProps) : mixed {
+export function CardNameField({ cspNonce, onChange, styleObject = {}, placeholder, autoFocusRef, gqlErrors = [] } : CardNameFieldProps) : mixed {
     const [ cssText, setCSSText ] : [ string, (string) => string ] = useState('');
     const [ name, setName ] : [ string, (string) => string ] = useState('');
     const [ nameValidity, setNameValidity ] : [ FieldValidity, (FieldValidity) => FieldValidity ] = useState(initFieldValidity);
-    // const nameRef = useRef();
+    const nameRef = useRef();
     const [ hasFocus, setHasFocus ] : [ boolean, (boolean) => boolean ] = useState(false);
     
     const { isValid, isPotentiallyValid } = nameValidity;
 
-    // useEffect(() => {
-    //     autoFocusRef(nameRef);
-    // }, []);
+    useEffect(() => {
+        autoFocusRef(nameRef);
+    }, []);
 
     useEffect(() => {
         setCSSText(getCSSText(DEFAULT_STYLE_MULTI_CARD, styleObject));
@@ -462,8 +461,7 @@ export function CardNameField({ cspNonce, onChange, styleObject = {}, placeholde
 
     useEffect(() => {
         const errors = setErrors({ isNameValid: nameValidity.isValid });
-        console.log('What is the innerref?', innerRef)
-        markValidity(innerRef, nameValidity);
+        markValidity(nameRef, nameValidity);
         onChange({ value: name, valid: nameValidity.isValid, isFocused: hasFocus, potentiallyValid: nameValidity.isPotentiallyValid, errors });
     }, [ name, isValid, hasFocus, isPotentiallyValid  ]);
 
@@ -473,7 +471,7 @@ export function CardNameField({ cspNonce, onChange, styleObject = {}, placeholde
                 { cssText }
             </style>
             <CardName
-                innerInnerRef={ innerRef }
+                ref={ nameRef }
                 type='text'
                 placeholder={ placeholder ?? DEFAULT_PLACEHOLDERS.name }
                 maxLength='255'
@@ -524,7 +522,7 @@ export function CardPostalCodeField({ cspNonce, onChange, styleObject = {}, plac
 
     useEffect(() => {
         const errors = setErrors({ isPostalCodeValid: postalCodeValidity.isValid });
-        // markValidity(postalRef, postalCodeValidity);
+        markValidity(postalRef, postalCodeValidity);
         onChange({ value: postalCode, valid: postalCodeValidity.isValid, isFocused: hasFocus, potentiallyValid: postalCodeValidity.isPotentiallyValid, errors });
     }, [ postalCode, isValid, hasFocus, isPotentiallyValid  ]);
 

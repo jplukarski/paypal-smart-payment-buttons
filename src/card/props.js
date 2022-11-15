@@ -21,8 +21,8 @@ export type PrerenderDetailsType = {|
 
 export type CardExport = ({|
     submit : () => ZalgoPromise<void>,
-    getState : () => any
-|}) => any;
+    getState : () => String
+|}) => ZalgoPromise<void>;
 
 export type OnChange = ({|
     isValid : boolean,
