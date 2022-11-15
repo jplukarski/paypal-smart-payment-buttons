@@ -60,7 +60,8 @@ type CardNumberProps = {|
     onFocus? : (event : InputEvent) => void,
     onBlur? : (event : InputEvent) => void,
     onValidityChange? : (numberValidity : FieldValidity) => void,
-    onEligibilityChange? : (isCardEligible : boolean) => void
+    onEligibilityChange? : (isCardEligible : boolean) => void,
+    onPotentialCardTypesChange? : (cardTypes : array) => void
 |};
 
 export function CardNumber(
@@ -77,14 +78,16 @@ export function CardNumber(
         onFocus,
         onBlur,
         onValidityChange,
-        onEligibilityChange
+        onEligibilityChange,
+        onPotentialCardTypesChange
     } : CardNumberProps
 ) : mixed {
     const [ attributes, setAttributes ] : [ Object, (Object) => Object ] = useState({ placeholder });
-    const [ cardType, setCardType ] : [ CardType, (CardType) => CardType ] = useState(DEFAULT_CARD_TYPE);
+    const [ cardTypes, setCardTypes ] : [ CardType, (CardType) => CardType ] = useState([DEFAULT_CARD_TYPE]);
     const [ maxLength, setMaxLength ] : [ number, (number) => number ] = useState(24);
     const [ inputState, setInputState ] : [ InputState, (InputState | InputState => InputState) => InputState ] = useState({ ...defaultInputState, ...state });
     const { inputValue, maskedInputValue, cursorStart, cursorEnd, keyStrokeCount, isValid, isPotentiallyValid, contentPasted } = inputState;
+    const [ cardType, setCardType ] : [ CardType, (CardType) => CardType ] = useState(DEFAULT_CARD_TYPE);
 
     const numberRef = useRef()
     const ariaMessageRef = useRef()
@@ -94,6 +97,10 @@ export function CardNumber(
             exportMethods(numberRef, setAttributes, setInputState, ariaMessageRef);
         }
     }, []);
+
+    useEffect(() => {
+        setCardType(cardTypes[0])
+    }, [cardTypes])
 
     useEffect(() => {
         const validity = cardValidator.number(inputValue);
@@ -142,6 +149,7 @@ export function CardNumber(
         const { value: rawValue, selectionStart, selectionEnd } = event.target;
         const value = removeNonDigits(rawValue);
         const detectedCardType = detectCardType(value);
+        // console.log('setValueAndCursor value: ', value)
         const maskedValue = addGapsToCardNumber(value);
 
         let startCursorPosition = selectionStart;
@@ -162,7 +170,7 @@ export function CardNumber(
 
         moveCursor(event.target, startCursorPosition, endCursorPosition);
 
-        setCardType(detectedCardType);
+        setCardTypes(detectedCardType);
         setInputState({
             ...inputState,
             inputValue:       value,
@@ -185,7 +193,7 @@ export function CardNumber(
         if (element) {
             element.classList.add('display-icon');
         }
-
+        // console.log('inputValue in onFocusEvent: ', inputValue)
         const maskedValue = addGapsToCardNumber(inputValue);
         const updatedState = { ...inputState, maskedInputValue: maskedValue, displayCardIcon: true };
         if (!isValid) {

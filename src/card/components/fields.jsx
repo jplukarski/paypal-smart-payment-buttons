@@ -240,7 +240,7 @@ export function ValidationMessage({ message } : Object) : mixed {
 
 type CardNumberFieldProps = {|
     cspNonce : string,
-    onChange : ({| value : string, valid : boolean, isFocused: boolean, potentiallyValid: boolean, errors : [$Values<typeof CARD_ERRORS>] | [] |}) => void,
+    onChange : ({| value : string, valid : boolean, isFocused: boolean, potentiallyValid: boolean, errors : [$Values<typeof CARD_ERRORS>] | [] |}, cardTypes: array) => void,
     styleObject : CardStyle,
     placeholder : string,
     autoFocusRef : (mixed) => void,
@@ -253,6 +253,7 @@ export function CardNumberField({ cspNonce, onChange, styleObject = {}, placehol
     const [ number, setNumber ] : [ string, (string) => string ] = useState('');
     const [ isCardEligible, setIsCardEligible ] : [ boolean, (boolean) => boolean ] = useState(true);
     const [ numberValidity, setNumberValidity ] : [ FieldValidity, (FieldValidity) => FieldValidity ] = useState(initFieldValidity);
+    const [cards, setCards] : [array, (array) => array] = useState([])
     const [ hasFocus, setHasFocus ] : [ boolean, (boolean) => boolean ] = useState(false);
     const numberRef = useRef();
 
@@ -284,8 +285,8 @@ export function CardNumberField({ cspNonce, onChange, styleObject = {}, placehol
         } else {
             markValidity(numberRef, numberValidity);
         }
-        onChange({ value: number, valid: numberValidity.isValid, isFocused: hasFocus, potentiallyValid: numberValidity.isPotentiallyValid, errors });
-    }, [ number, isCardEligible, isValid, hasFocus, isPotentiallyValid ]);
+        onChange({ value: number, valid: numberValidity.isValid, isFocused: hasFocus, potentiallyValid: numberValidity.isPotentiallyValid, errors, cardTypes: cards });
+    }, [ number, isCardEligible, isValid, hasFocus, isPotentiallyValid, cards ]);
 
     return (
         <Fragment>
@@ -301,6 +302,7 @@ export function CardNumberField({ cspNonce, onChange, styleObject = {}, placehol
                 onChange={ ({ cardNumber } : CardNumberChangeEvent) => setNumber(cardNumber) }
                 onEligibilityChange={ (eligibility : boolean) => setIsCardEligible(eligibility) }
                 onValidityChange={ (validity : FieldValidity) => setNumberValidity(validity) }
+                onPotentialCardTypesChange={(cardTypes : Array<strings>) => setCards(cardTypes)}
                 onFocus={ () => setHasFocus(true) }
                 onBlur={ () => setHasFocus(false) }
             />
