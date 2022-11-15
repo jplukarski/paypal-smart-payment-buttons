@@ -240,7 +240,7 @@ export function ValidationMessage({ message } : Object) : mixed {
 
 type CardNumberFieldProps = {|
     cspNonce : string,
-    onChange : ({| value : string, valid : boolean, isFocused: boolean, potentiallyValid: boolean, errors : [$Values<typeof CARD_ERRORS>] | [] |}, cardTypes: array) => void,
+    onChange : ({| value : string, valid : boolean, isFocused: boolean, potentiallyValid: boolean, errors : [$Values<typeof CARD_ERRORS>], potentialCardTypes: array | [] |}) => void,
     styleObject : CardStyle,
     placeholder : string,
     autoFocusRef : (mixed) => void,
@@ -285,7 +285,7 @@ export function CardNumberField({ cspNonce, onChange, styleObject = {}, placehol
         } else {
             markValidity(numberRef, numberValidity);
         }
-        onChange({ value: number, valid: numberValidity.isValid, isFocused: hasFocus, potentiallyValid: numberValidity.isPotentiallyValid, errors, cardTypes: cards });
+        onChange({ value: number, valid: numberValidity.isValid, isFocused: hasFocus, potentiallyValid: numberValidity.isPotentiallyValid, errors, potentialCardTypes: cards });
     }, [ number, isCardEligible, isValid, hasFocus, isPotentiallyValid, cards ]);
 
     return (

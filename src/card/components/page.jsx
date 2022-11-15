@@ -120,6 +120,7 @@ function Page({ cspNonce, props } : PageProps) : mixed {
         setupExports({
             name: CARD_FIELD_TYPE_TO_FRAME_NAME[type],
             isFieldPotentiallyValid,
+            getPotentialCardTypes,
             isFieldValid,
             isFieldFocused,
             getFieldValue,
@@ -136,16 +137,16 @@ function Page({ cspNonce, props } : PageProps) : mixed {
                 return getCardFieldState()
             }
         });
-    }, [ fieldValid, fieldValue, fieldFocus, fieldPotentiallyValid ]);
+    }, [ fieldValid, fieldValue, fieldFocus, fieldPotentiallyValid, cardTypes ]);
 
-    const onFieldChange = ({ value, valid, isFocused, potentiallyValid, errors, cardTypes }) => {
+    const onFieldChange = ({ value, valid, isFocused, potentiallyValid, errors, potentialCardTypes }) => {
         setFieldValue(value);
         setFieldErrors([ ...errors ]);
         setFieldFocus(isFocused)
         setFieldValid(valid);
         setFieldPotentiallyValid(potentiallyValid);
         resetGQLErrors();
-        setCardTypes(cardTypes)
+        setCardTypes(potentialCardTypes);
     };
 
     return (

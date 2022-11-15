@@ -12,6 +12,7 @@ import { getLogger } from '../lib';
 import { getCardProps } from './props';
 import type { Card, ExtraFields } from './types';
 import { type CardExports, type ExportsOptions } from './lib';
+import { parsedCardType } from './/lib/card-utils';
 
 function getExportsByFrameName<T>(name: $Values<typeof FRAME_NAME>): ?CardExports<T> {
     try {
@@ -61,7 +62,7 @@ export function getCardFieldState(): object {
     const { cardNameFrame, cardNumberFrame, cardCVVFrame, cardExpiryFrame, cardPostalFrame } = getCardFrames();
 
     const cardFieldsState = {
-        cards: [],
+        cards: parsedCardType(cardNumberFrame.getPotentialCardTypes()),
         fields: {
             cardName: {
                 isEmpty: isEmpty(cardNameFrame.getFieldValue()),
@@ -73,7 +74,7 @@ export function getCardFieldState(): object {
                 isEmpty: isEmpty(cardNumberFrame.getFieldValue()),
                 isValid: cardNumberFrame.isFieldValid(),
                 isPotentiallyValid: cardNumberFrame.isFieldPotentiallyValid(),
-                isFocused: cardNumberFrame.isFieldFocused()
+                isFocused: cardNumberFrame.isFieldFocused(),
             },
             cardExpiry: {
                 isEmpty: isEmpty(cardExpiryFrame.getFieldValue()),

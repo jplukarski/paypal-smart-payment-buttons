@@ -109,6 +109,11 @@ export function CardNumber(
         if (typeof onEligibilityChange === 'function') {
             onEligibilityChange(checkCardEligibility(inputValue, cardType));
         }
+        
+        if (typeof onPotentialCardTypesChange === 'function') {
+            onPotentialCardTypesChange(cardTypes);
+        }
+
         if (cardType && cardType.lengths) {
             // get the maximum card length for the given card type
             const cardMaxLength = cardType.lengths.reduce((previousValue, currentValue) => {
@@ -147,7 +152,6 @@ export function CardNumber(
         const { value: rawValue, selectionStart, selectionEnd } = event.target;
         const value = removeNonDigits(rawValue);
         const detectedCardType = detectCardType(value);
-        // console.log('setValueAndCursor value: ', value)
         const maskedValue = addGapsToCardNumber(value);
 
         let startCursorPosition = selectionStart;
@@ -191,7 +195,6 @@ export function CardNumber(
         if (element) {
             element.classList.add('display-icon');
         }
-        // console.log('inputValue in onFocusEvent: ', inputValue)
         const maskedValue = addGapsToCardNumber(inputValue);
         const updatedState = { ...inputState, maskedInputValue: maskedValue, displayCardIcon: true };
         if (!isValid) {

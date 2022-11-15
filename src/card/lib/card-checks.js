@@ -71,13 +71,11 @@ export function detectCardType(cardNumber : string) : CardType {
 // not provided, attempt to detect it and add gaps based on that type.
 export function addGapsToCardNumber(cardNumber : string, cardType? : CardType) : string {
     assertString(cardNumber);
-    console.log('Card Number: ', cardNumber)
-    console.log('Card Type: ', cardType)
+
     // Remove all non-digits and all whitespaces
     cardNumber = cardNumber.trim().replace(/[^0-9]/g, '').replace(/\s/g, '');
     // $FlowFixMe
     const gaps = cardType?.gaps || detectCardType(cardNumber)[0]?.gaps;
-    console.log('gaps', gaps)
 
     // The gaps indicate where a space is inserted into the card number for display
     if (gaps) {
