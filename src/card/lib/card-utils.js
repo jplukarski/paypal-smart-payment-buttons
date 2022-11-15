@@ -304,6 +304,18 @@ export function filterExtraFields(extraData : Object) : ExtraFields | Object {
     }, {});
 }
 
+
+export function parsedCardType(potentialCardTypes: Array<object>) : Array<object> {
+    const parsedCardTypeInfo = [];
+    potentialCardTypes.forEach((card) => {
+        const { type, niceType, code } = card;
+        parsedCardTypeInfo.push( { type, niceType, code })
+    })
+
+    return parsedCardTypeInfo;
+    
+}
+
 export function getContext(win : Object) : string {
     return win.xprops?.parent?.uid || win.xprops?.uid;
 }
