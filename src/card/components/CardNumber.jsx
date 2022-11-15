@@ -199,9 +199,6 @@ export function CardNumber(
         }
         const maskedValue = addGapsToCardNumber(inputValue);
         const updatedState = { ...inputState, maskedInputValue: maskedValue, displayCardIcon: true };
-        if (!isValid) {
-            updatedState.isPotentiallyValid = true;
-        }
 
         setInputState((newState) => ({ ...newState, ...updatedState }));
     };
@@ -220,8 +217,6 @@ export function CardNumber(
 
         if (isValid) {
             updatedState.maskedInputValue = maskValidCard(maskedInputValue);
-        } else {
-            updatedState.isPotentiallyValid = false;
         }
 
         if (typeof onBlur === 'function') {
