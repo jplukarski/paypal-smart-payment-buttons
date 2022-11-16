@@ -687,7 +687,7 @@
             var r, f, e;
             if (void 0 !== l.__d) r = l.__d, l.__d = void 0; else if (null == u || t != o || null == t.parentNode) n: if (null == o || o.parentNode !== n) n.appendChild(t), 
             r = null; else {
-                for (f = o, e = 0; (f = f.nextSibling) && e < i.length; e += 2) if (f == t) break n;
+                for (f = o, e = 0; (f = f.nextSibling) && e < i.length; e += 1) if (f == t) break n;
                 n.insertBefore(t, o), r = o;
             }
             return void 0 !== r ? r : t.nextSibling;
@@ -891,7 +891,6 @@
             }
         }
         l.__b = function(n) {
-            "function" != typeof n.type || n.__m || null === n.__ ? n.__m || (n.__m = n.__ && n.__.__m ? n.__.__m : "") : n.__m = (n.__ && n.__.__m ? n.__.__m : "") + (n.__ && n.__.__k ? n.__.__k.indexOf(n) : 0), 
             hooks_module_r = null, hooks_module_e && hooks_module_e(n);
         }, l.__r = function(n) {
             hooks_module_a && hooks_module_a(n), hooks_module_t = 0;
@@ -2510,6 +2509,7 @@
                 var config = {
                     f: clientMetadataID,
                     s: "SMART_PAYMENT_BUTTONS",
+                    u: window.xprops.buttonLocation,
                     cb1: "fnCallback"
                 };
                 "sandbox" === env && (config.sandbox = !0);
@@ -2811,20 +2811,11 @@
         };
         var payu_logo_LOGO_COLORS;
         (payu_logo_LOGO_COLORS = {}).default = {
-            primary: "#A6d71c",
-            secondary: "#3C932A",
-            tertiary: "#6CC62E",
-            quaternary: "#278D30"
+            primary: "#A6C307"
         }, payu_logo_LOGO_COLORS.white = {
-            primary: "#FFFFFF",
-            secondary: "#FFFFFF",
-            tertiary: "#000000",
-            quaternary: "#FFFFFF"
+            primary: "#FFFFFF"
         }, payu_logo_LOGO_COLORS.black = {
-            primary: "#333030",
-            secondary: "#333030",
-            tertiary: "#ffffff",
-            quaternary: "#333030"
+            primary: "#2C2E2F"
         };
         var verkkopankki_logo_LOGO_COLORS;
         (verkkopankki_logo_LOGO_COLORS = {}).default = {
@@ -2934,6 +2925,14 @@
         }, multibanco_logo_LOGO_COLORS.black = {
             primary: "#1866AB",
             secondary: "#373535"
+        };
+        var satispay_logo_LOGO_COLORS;
+        (satispay_logo_LOGO_COLORS = {}).default = {
+            primary: "#FFFFFF"
+        }, satispay_logo_LOGO_COLORS.white = {
+            primary: "#FFFFFF"
+        }, satispay_logo_LOGO_COLORS.black = {
+            primary: "#2C2E2F"
         };
         function ErrorMessage(_ref) {
             var resetFunc = _ref.resetFunc;
@@ -3184,7 +3183,7 @@
             logger.addTrackingBuilder((function() {
                 var _ref2;
                 return (_ref2 = {}).state_name = "smart_button", _ref2.context_type = "EC-Token", 
-                _ref2.context_id = orderID, _ref2.button_session_id = buttonSessionID, _ref2.button_version = "5.0.117", 
+                _ref2.context_id = orderID, _ref2.button_session_id = buttonSessionID, _ref2.button_version = "5.0.120", 
                 _ref2.user_id = buttonSessionID, _ref2;
             }));
             (function() {
