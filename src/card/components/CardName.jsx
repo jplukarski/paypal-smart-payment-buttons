@@ -91,7 +91,7 @@ export function CardName(
             onFocus(event);
         }
         if (!isValid) {
-            setInputState(newState => ({ ...newState, isPotentiallyValid: true }));
+            setInputState(newState => ({ ...newState }));
         }
     };
 
@@ -100,7 +100,7 @@ export function CardName(
             onBlur(event);
         }
         if (!isValid) {
-            setInputState(newState => ({ ...newState, isPotentiallyValid: false }));
+            setInputState(newState => ({ ...newState }));
         }
     };
 

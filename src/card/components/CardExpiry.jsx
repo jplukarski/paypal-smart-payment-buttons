@@ -117,7 +117,7 @@ export function CardExpiry(
             onFocus(event);
         }
         if (!isValid) {
-            setInputState((newState) => ({ ...newState, isPotentiallyValid: true }));
+            setInputState((newState) => ({ ...newState }));
         }
     };
 
@@ -126,7 +126,7 @@ export function CardExpiry(
             onBlur(event);
         }
         if (!isValid) {
-            setInputState((newState) => ({ ...newState, isPotentiallyValid: false, contentPasted: false }));
+            setInputState((newState) => ({ ...newState, contentPasted: false }));
         }
     };
 
