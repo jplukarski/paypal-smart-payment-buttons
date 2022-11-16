@@ -8,6 +8,7 @@ import { uniqueID } from '@krakenjs/belter/src';
 import { FRAME_NAME } from '../constants';
 import { tokenizeCard, confirmOrderAPI } from '../api';
 import { getLogger } from '../lib';
+import type {FeatureFlags} from '../types'
 
 import { getCardProps } from './props';
 import type { Card, ExtraFields } from './types';
@@ -193,9 +194,16 @@ export function resetGQLErrors(): void {
 
 type SubmitCardFieldsOptions = {|
     facilitatorAccessToken : string,
+<<<<<<< HEAD
         extraFields ? : {|
             billingAddress ? : string
         |}
+=======
+    featureFlags: FeatureFlags,
+    extraFields? : {|
+        billingAddress? : string
+    |}
+>>>>>>> main
 |};
 
 type CardValues = {|
@@ -207,6 +215,7 @@ type CardValues = {|
     ...ExtraFields
     |};
 
+<<<<<<< HEAD
 // Reformat MM/YYYY to YYYY-MM
 function reformatExpiry(expiry: ?string): ?string {
     if (typeof expiry === "string") {
@@ -217,6 +226,10 @@ function reformatExpiry(expiry: ?string): ?string {
 
 export function submitCardFields({ facilitatorAccessToken, extraFields }: SubmitCardFieldsOptions): ZalgoPromise<void> {
     const { intent, createOrder, onApprove, onError } = getCardProps({ facilitatorAccessToken });
+=======
+export function submitCardFields({ facilitatorAccessToken, extraFields, featureFlags } : SubmitCardFieldsOptions) : ZalgoPromise<void> {
+    const { intent, branded, vault, createOrder, onApprove, clientID } = getCardProps({ facilitatorAccessToken, featureFlags });
+>>>>>>> main
 
     resetGQLErrors();
 
