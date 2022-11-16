@@ -30,7 +30,7 @@ describe("card-checks", () => {
 
       const cardType = detectCardType(number);
 
-      expect(cardType).toStrictEqual({
+      expect(cardType).toStrictEqual([{
         niceType: "Visa",
         type: "visa",
         patterns: [4],
@@ -41,7 +41,7 @@ describe("card-checks", () => {
           name: "CVV",
           size: 3,
         },
-      });
+      }]);
     });
 
   });

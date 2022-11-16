@@ -119,7 +119,7 @@ export function CardCVV(
             onFocus(event);
         }
         if (!isValid) {
-            setInputState(newState => ({ ...newState, isPotentiallyValid: true }));
+            setInputState(newState => ({ ...newState }));
         }
     };
 
@@ -128,7 +128,7 @@ export function CardCVV(
             onBlur(event);
         }
         if (!isValid) {
-            setInputState(newState => ({ ...newState, isPotentiallyValid: false }));
+            setInputState(newState => ({ ...newState }));
         }
     };
 

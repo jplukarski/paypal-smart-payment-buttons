@@ -89,7 +89,7 @@ export function CardPostalCode(
             onFocus(event);
         }
         if (!isValid) {
-            setInputState((newState) => ({ ...newState, isPotentiallyValid: true }));
+            setInputState((newState) => ({ ...newState }));
         }
     };
 
@@ -98,7 +98,7 @@ export function CardPostalCode(
             onBlur(event);
         }
         if (!isValid) {
-            setInputState((newState) => ({ ...newState, isPotentiallyValid: false, contentPasted: false }));
+            setInputState((newState) => ({ ...newState, contentPasted: false }));
         }
     };
 
