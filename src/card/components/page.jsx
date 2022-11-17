@@ -21,7 +21,7 @@ type PageProps = {|
 |};
 
 function Page({ cspNonce, props, featureFlags } : PageProps) : mixed {
-    const { facilitatorAccessToken, style, disableAutocomplete, placeholder, type, onChange, export: xport } = props;
+    const { facilitatorAccessToken, style, disableAutocomplete, placeholder, type, onChange, export: xport, minLength, maxLength } = props;
 
     const [ fieldValue, setFieldValue ] = useState();
     const [ fieldValid, setFieldValid ] = useState(false);

@@ -63,16 +63,42 @@ export type CardPlaceholder = {|
     postal?: string
 |};
 
+export type CardTypeCode = {|
+    name : string,
+    size : number
+ |}
+
 export type CardType = {|
     gaps : $ReadOnlyArray<number>,
     lengths : $ReadOnlyArray<number>,
     patterns : $ReadOnlyArray<number>,
     type : string,
     niceType : string,
-    code : {|
-        name : string,
-        size : number
-     |}
+    code : CardTypeCode
+|};
+
+export type ParsedCardType = {|
+    type: string,
+    niceType: string,
+    code : CardTypeCode
+|};
+
+export type CardFieldState = {|
+    isEmpty: boolean,
+    isValid: boolean,
+    isPotentiallyValid: boolean,
+    isFocused: boolean
+|}
+
+export type CardFieldsState = {|
+    cards : ParsedCardType,
+    fields: {|
+        cardName? : CardFieldState,
+        cardNumber : CardFieldState,
+        cardExpiry : CardFieldState,
+        cardCvv : CardFieldState,
+        cardPostalCode? : CardFieldState
+    |}
 |};
 
 export type InputEvent = {|

@@ -1,10 +1,10 @@
 /* @flow */
 
-import type { ZalgoPromise } from '@krakenjs/zalgo-promise/src';
+import { ZalgoPromise } from '@krakenjs/zalgo-promise/src';
 import { FUNDING, CARD, type FundingEligibilityType } from '@paypal/sdk-constants/src';
 import { EXPERIENCE } from '@paypal/checkout-components/src/constants/button';
 
-import type { ProxyWindow, FeatureFlags } from '../types';
+import type { ProxyWindow, FeatureFlags, CardFieldsState } from '../types';
 import { getProps, type XProps, type Props } from '../props/props';
 
 import type { CardStyle, CardPlaceholder } from './types';
@@ -21,7 +21,7 @@ export type PrerenderDetailsType = {|
 
 export type CardExport = ({|
     submit : () => ZalgoPromise<void>,
-    getState : () => String
+    getState : () => ZalgoPromise<CardFieldsState>
 |}) => ZalgoPromise<void>;
 
 export type OnChange = ({|

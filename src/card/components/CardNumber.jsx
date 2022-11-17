@@ -61,7 +61,7 @@ type CardNumberProps = {|
     onBlur? : (event : InputEvent) => void,
     onValidityChange? : (numberValidity : FieldValidity) => void,
     onEligibilityChange? : (isCardEligible : boolean) => void,
-    onPotentialCardTypesChange? : (cardTypes : array) => void
+    onPotentialCardTypesChange? : (cardTypes : CardType) => void
 |};
 
 export function CardNumber(

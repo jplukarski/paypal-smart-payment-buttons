@@ -24,7 +24,8 @@ import type {
     CardNameChangeEvent,
     CardPostalCodeChangeEvent,
     FieldValidity,
-    CardNavigation
+    CardNavigation,
+    CardType
 } from '../types';
 import {
     CARD_ERRORS,
@@ -240,7 +241,7 @@ export function ValidationMessage({ message } : Object) : mixed {
 
 type CardNumberFieldProps = {|
     cspNonce : string,
-    onChange : ({| value : string, valid : boolean, isFocused: boolean, potentiallyValid: boolean, errors : [$Values<typeof CARD_ERRORS>], potentialCardTypes: array | [] |}) => void,
+    onChange : ({| value : string, valid : boolean, isFocused: boolean, potentiallyValid: boolean, errors : [$Values<typeof CARD_ERRORS>], potentialCardTypes: CardType | [] |}) => void,
     styleObject : CardStyle,
     placeholder : string,
     autoFocusRef : (mixed) => void,
@@ -253,7 +254,7 @@ export function CardNumberField({ cspNonce, onChange, styleObject = {}, placehol
     const [ number, setNumber ] : [ string, (string) => string ] = useState('');
     const [ isCardEligible, setIsCardEligible ] : [ boolean, (boolean) => boolean ] = useState(true);
     const [ numberValidity, setNumberValidity ] : [ FieldValidity, (FieldValidity) => FieldValidity ] = useState(initFieldValidity);
-    const [cards, setCards] : [array, (array) => array] = useState([])
+    const [cards, setCards] : [$ReadOnlyArray<CardType>, (CardType) => $ReadOnlyArray<CardType>] = useState([])
     const [ hasFocus, setHasFocus ] : [ boolean, (boolean) => boolean ] = useState(false);
     const numberRef = useRef();
 
@@ -302,7 +303,7 @@ export function CardNumberField({ cspNonce, onChange, styleObject = {}, placehol
                 onChange={ ({ cardNumber } : CardNumberChangeEvent) => setNumber(cardNumber) }
                 onEligibilityChange={ (eligibility : boolean) => setIsCardEligible(eligibility) }
                 onValidityChange={ (validity : FieldValidity) => setNumberValidity(validity) }
-                onPotentialCardTypesChange={(cardTypes : Array<strings>) => setCards(cardTypes)}
+                onPotentialCardTypesChange={(cardTypes : CardType) => setCards(cardTypes)}
                 onFocus={ () => setHasFocus(true) }
                 onBlur={ () => setHasFocus(false) }
             />

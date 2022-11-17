@@ -2,7 +2,7 @@
 
 import { values } from '@krakenjs/belter';
 
-import type { InputState, FieldValidity, ExtraFields } from '../types';
+import type { InputState, FieldValidity, ExtraFields, CardType, ParsedCardType } from '../types';
 import {
     CARD_ERRORS,
     CARD_FIELD_TYPE,
@@ -305,7 +305,7 @@ export function filterExtraFields(extraData : Object) : ExtraFields | Object {
 }
 
 
-export function parsedCardType(potentialCardTypes: Array<object>) : Array<object> {
+export function parsedCardType(potentialCardTypes: CardType) : ParsedCardType {
     const parsedCardTypeInfo = [];
     potentialCardTypes.forEach((card) => {
         const { type, niceType, code } = card;

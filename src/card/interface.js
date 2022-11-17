@@ -11,9 +11,9 @@ import { getLogger } from '../lib';
 import type {FeatureFlags} from '../types'
 
 import { getCardProps } from './props';
-import type { Card, ExtraFields } from './types';
+import type { Card, ExtraFields, CardFieldsState } from './types';
 import { type CardExports, type ExportsOptions } from './lib';
-import { parsedCardType } from './/lib/card-utils';
+import { parsedCardType } from './lib/card-utils';
 
 function getExportsByFrameName<T>(name: $Values<typeof FRAME_NAME>): ?CardExports<T> {
     try {
@@ -59,7 +59,7 @@ function isEmpty(value: string): boolean {
     return false
 }
 
-export function getCardFieldState(): object {
+export function getCardFieldState(): CardFieldsState {
     const { cardNameFrame, cardNumberFrame, cardCVVFrame, cardExpiryFrame, cardPostalFrame } = getCardFrames();
 
     const cardFieldsState = {
@@ -218,7 +218,7 @@ function reformatExpiry(expiry: ?string): ?string {
 }
 
 export function submitCardFields({ facilitatorAccessToken, extraFields, featureFlags } : SubmitCardFieldsOptions) : ZalgoPromise<void> {
-    const { intent, branded, vault, createOrder, onApprove, clientID } = getCardProps({ facilitatorAccessToken, featureFlags });
+    const { intent, createOrder, onApprove, onError } = getCardProps({ facilitatorAccessToken, featureFlags });
 
     resetGQLErrors();
 
