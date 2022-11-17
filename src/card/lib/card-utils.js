@@ -306,13 +306,10 @@ export function filterExtraFields(extraData : Object) : ExtraFields | Object {
 
 
 export function parsedCardType(potentialCardTypes: CardType) : ParsedCardType {
-    const parsedCardTypeInfo = [];
-    potentialCardTypes.forEach((card) => {
-        const { type, niceType, code } = card;
-        parsedCardTypeInfo.push( { type, niceType, code })
-    })
-
-    return parsedCardTypeInfo;
+    
+    return potentialCardTypes.map(({ type, niceType, code }) => ({
+        type, niceType, code
+      }));
     
 }
 
