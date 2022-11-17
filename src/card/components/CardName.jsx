@@ -90,17 +90,11 @@ export function CardName(
         if (typeof onFocus === 'function') {
             onFocus(event);
         }
-        if (!isValid) {
-            setInputState(newState => ({ ...newState }));
-        }
     };
 
     const onBlurEvent : (InputEvent) => void = (event : InputEvent) : void => {
         if (typeof onBlur === 'function') {
             onBlur(event);
-        }
-        if (!isValid) {
-            setInputState(newState => ({ ...newState }));
         }
     };
 
