@@ -83,7 +83,7 @@ export function CardNumber(
     } : CardNumberProps
 ) : mixed {
     const [ attributes, setAttributes ] : [ Object, (Object) => Object ] = useState({ placeholder });
-    const [ cardTypes, setCardTypes ] : [ CardType, (CardType) => CardType ] = useState([DEFAULT_CARD_TYPE]);
+    const [ cardTypes, setCardTypes ] : [ CardType, ($ReadOnlyArray<CardType>) => $ReadOnlyArray<CardType> ] = useState([DEFAULT_CARD_TYPE]);
     const [ maxLength, setMaxLength ] : [ number, (number) => number ] = useState(24);
     const [ inputState, setInputState ] : [ InputState, (InputState | InputState => InputState) => InputState ] = useState({ ...defaultInputState, ...state });
     const { inputValue, maskedInputValue, cursorStart, cursorEnd, keyStrokeCount, isValid, isPotentiallyValid, contentPasted } = inputState;

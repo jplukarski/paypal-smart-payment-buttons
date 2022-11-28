@@ -57,7 +57,7 @@ cardValidator.creditCardType.addCard({
 });
 
 // Detect the card type metadata for a card number
-export function detectCardType(cardNumber : string) : CardType {
+export function detectCardType(cardNumber : string) : $ReadOnlyArray<CardType> {
     if (cardNumber.length > 0) {
         const cardTypes = cardValidator.creditCardType.default(cardNumber);
         if (cardTypes.length > 0) {

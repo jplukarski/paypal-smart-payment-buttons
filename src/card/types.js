@@ -1,3 +1,4 @@
+/* eslint-disable flowtype/require-exact-type */
 /* @flow */
 
 import type { FeatureFlags } from "../types"
@@ -72,6 +73,7 @@ export type CardType = {|
     gaps : $ReadOnlyArray<number>,
     lengths : $ReadOnlyArray<number>,
     patterns : $ReadOnlyArray<number>,
+    matchStrength? : number,
     type : string,
     niceType : string,
     code : CardTypeCode
@@ -90,16 +92,16 @@ export type CardFieldState = {|
     isFocused: boolean
 |}
 
-export type CardFieldsState = {|
-    cards : ParsedCardType,
-    fields: {|
+export type CardFieldsState = {
+    cards : $ReadOnlyArray<ParsedCardType>,
+    fields: {
         cardName? : CardFieldState,
         cardNumber : CardFieldState,
         cardExpiry : CardFieldState,
         cardCvv : CardFieldState,
         cardPostalCode? : CardFieldState
-    |}
-|};
+    }
+};
 
 export type InputEvent = {|
     key : string,
@@ -165,3 +167,4 @@ export type InputOptions = {|
 export type ExtraFields = {|
     billingAddress? : string
 |};
+/* eslint-enable flowtype/require-exact-type */

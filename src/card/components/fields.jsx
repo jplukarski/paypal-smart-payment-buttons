@@ -241,7 +241,7 @@ export function ValidationMessage({ message } : Object) : mixed {
 
 type CardNumberFieldProps = {|
     cspNonce : string,
-    onChange : ({| value : string, valid : boolean, isFocused: boolean, potentiallyValid: boolean, errors : [$Values<typeof CARD_ERRORS>], potentialCardTypes: CardType | [] |}) => void,
+    onChange : ({| value : string, valid : boolean, isFocused: boolean, potentiallyValid: boolean, errors : [$Values<typeof CARD_ERRORS>] |[], potentialCardTypes: $ReadOnlyArray<CardType> | [] |}) => void,
     styleObject : CardStyle,
     placeholder : string,
     autoFocusRef : (mixed) => void,
@@ -313,7 +313,7 @@ export function CardNumberField({ cspNonce, onChange, styleObject = {}, placehol
 
 type CardExpiryFieldProps = {|
     cspNonce : string,
-    onChange : ({| value : string, valid : boolean, potentiallyValid: boolean, errors : [$Values<typeof CARD_ERRORS>] | [] |}) => void,
+    onChange : ({| value : string, valid : boolean, isFocused: boolean, potentiallyValid: boolean, errors : [$Values<typeof CARD_ERRORS>] | [] |}) => void,
     styleObject : CardStyle,
     placeholder : string,
     autoFocusRef : (mixed) => void,
@@ -372,7 +372,7 @@ export function CardExpiryField({ cspNonce, onChange, styleObject = {}, placehol
 }
 type CardCvvFieldProps = {|
     cspNonce : string,
-    onChange : ({| value : string, valid : boolean, potentiallyValid: boolean, errors : [$Values<typeof CARD_ERRORS>] | [] |}) => void,
+    onChange : ({| value : string, valid : boolean, isFocused: boolean, potentiallyValid: boolean, errors : [$Values<typeof CARD_ERRORS>] | [] |}) => void,
     styleObject : CardStyle,
     placeholder : string,
     autoFocusRef : (mixed) => void,
@@ -431,7 +431,7 @@ export function CardCVVField({ cspNonce, onChange, styleObject = {}, placeholder
 
 type CardNameFieldProps = {|
     cspNonce : string,
-    onChange : ({| value : string, valid : boolean, potentiallyValid: boolean, errors : [$Values<typeof CARD_ERRORS>] | [] |}) => void,
+    onChange : ({| value : string, valid : boolean, isFocused: boolean, potentiallyValid: boolean, errors : [$Values<typeof CARD_ERRORS>] | [] |}) => void,
     styleObject : CardStyle,
     placeholder : string,
     autoFocusRef : (mixed) => void,
@@ -489,7 +489,7 @@ export function CardNameField({ cspNonce, onChange, styleObject = {}, placeholde
 
 type CardPostalFieldProps = {|
     cspNonce : string,
-    onChange : ({| value : string, valid : boolean, potentiallyValid: boolean, errors : [$Values<typeof CARD_ERRORS>] | [] |}) => void,
+    onChange : ({| value : string, valid : boolean, isFocused: boolean, potentiallyValid: boolean, errors : [$Values<typeof CARD_ERRORS>] | [] |}) => void,
     styleObject : CardStyle,
     placeholder : string,
     minLength : number,

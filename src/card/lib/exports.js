@@ -1,13 +1,13 @@
 /* @flow */
 
 import { FRAME_NAME } from '../../constants';
-import { CardType } from '../types';
+import { type CardType } from '../types';
 
 export type ExportsOptions = {|
     name : $Values<typeof FRAME_NAME>,
     isFieldValid : () => boolean,
     isFieldPotentiallyValid : () => boolean,
-    getPotentialCardTypes : () => CardType,
+    getPotentialCardTypes : () => $ReadOnlyArray<CardType>,
     isFieldFocused : () => boolean,
     // eslint-disable-next-line no-undef
     getFieldValue : <T>() => T,
@@ -19,7 +19,7 @@ export type CardExports<V> = {|
     name : $Values<typeof FRAME_NAME>,
     isFieldValid : () => boolean,
     isFieldPotentiallyValid : () => boolean,
-    getPotentialCardTypes : () => CardType,
+    getPotentialCardTypes : () => $ReadOnlyArray<CardType>,
     isFieldFocused: () => boolean,
     getFieldValue : () => V,
     setGqlErrors : ({| field : string, errors : [] |}) => void,

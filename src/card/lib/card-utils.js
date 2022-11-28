@@ -21,6 +21,7 @@ export const defaultInputState : InputState = {
     maskedInputValue:   '',
     cursorStart:        0,
     cursorEnd:          0,
+    isFocused:          false,
     keyStrokeCount:     0,
     isPotentiallyValid:  true,
     isValid:            false
@@ -305,7 +306,7 @@ export function filterExtraFields(extraData : Object) : ExtraFields | Object {
 }
 
 
-export function parsedCardType(potentialCardTypes: CardType) : ParsedCardType {
+export function parsedCardType(potentialCardTypes: $ReadOnlyArray<CardType>) : $ReadOnlyArray<ParsedCardType> {
     
     return potentialCardTypes.map(({ type, niceType, code }) => ({
         type, niceType, code
