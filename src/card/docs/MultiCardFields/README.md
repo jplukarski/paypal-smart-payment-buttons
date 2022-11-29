@@ -238,3 +238,18 @@ Submit the payment information
       });
   });
 ```
+
+# on
+
+Subscribes a handler function to a named event. Returns a promise
+
+| Parameters | Type | Description |
+|------------|------|-------------|
+| event | string | The name of the event to which you are subscribing. |
+
+```js
+    cardField.on('focus')
+    .then((event, err) => {
+        console.log(event.emittedBy, "has focus")
+    })
+```
