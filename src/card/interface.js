@@ -306,6 +306,7 @@ export function submitCardFields({
     };
 
     if (intent === INTENT.TOKENIZE) {
+      // $FlowIgnore
       return tokenizeCard({ card }).then(({ paymentMethodToken }) => {
         return onApprove({ paymentMethodToken }, { restart });
       });

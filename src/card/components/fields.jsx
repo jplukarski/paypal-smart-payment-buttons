@@ -44,7 +44,7 @@ import { Icons, Icon } from './Icons';
 
 type CardFieldProps = {|
     cspNonce : string,
-    onChange : ({| value : Card, valid : boolean, errors : [$Values<typeof CARD_ERRORS>] | [] |}) => void,
+    onChange : ({ value : Card, valid : boolean, errors : [$Values<typeof CARD_ERRORS>] | [] }) => void,
     styleObject : CardStyle,
     placeholder : {| number? : string, expiry? : string, cvv? : string  |},
     autoFocusRef : (mixed) => void,

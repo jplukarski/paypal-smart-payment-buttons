@@ -9,13 +9,13 @@ export type SetupCardOptions = {|
     featureFlags: FeatureFlags
 |};
 
-export type Card = {|
+export type Card = {
     number : string,
     cvv? : string,
     expiry? : string,
     name? : string,
-    postalCode: string
-|};
+    postalCode? : string
+};
 
 export type FieldStyle = {|
     appearance? : string,

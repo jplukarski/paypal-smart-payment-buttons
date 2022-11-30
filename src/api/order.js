@@ -958,12 +958,12 @@ export function updateButtonClientConfig({ orderID, productFlow, fundingSource, 
 }
 
 type TokenizeCardOptions = {|
-    card : {|
-        number : string,
+    card : {
+        number? : string,
         cvv? : string,
         expiry? : string,
         name? : string
-    |}
+    }
 |};
 
 type TokenizeCardResult = {|
