@@ -13,7 +13,8 @@ export type Card = {|
     number : string,
     cvv? : string,
     expiry? : string,
-    name? : string
+    name? : string,
+    postalCode: string
 |};
 
 export type FieldStyle = {|

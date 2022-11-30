@@ -180,7 +180,7 @@ export function getCardFields(): ?Card {
       cvv: cardCVVFrame.getFieldValue(),
       expiry: cardExpiryFrame.getFieldValue(),
       name: cardNameFrame?.getFieldValue() || "",
-      postalCode: cardPostalFrame.getFieldValue() || ""
+      postalCode: cardPostalFrame?.getFieldValue() || ""
     };
   }
 
