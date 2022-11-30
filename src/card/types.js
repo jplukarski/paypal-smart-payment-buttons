@@ -10,11 +10,11 @@ export type SetupCardOptions = {|
 |};
 
 export type Card = {
-    number : string,
-    cvv? : string,
-    expiry? : string,
-    name? : string,
-    postalCode? : string
+    number : ?string,
+    cvv? : ?string,
+    expiry? : ?string,
+    name? : ?string,
+    postalCode? : ?string
 };
 
 export type FieldStyle = {|

@@ -1,5 +1,6 @@
 /* @flow */
 /** @jsx h */
+/* eslint-disable flowtype/require-exact-type */
 
 import { h, Fragment } from 'preact';
 import { noop } from '@krakenjs/belter';
@@ -549,3 +550,5 @@ export function CardPostalCodeField({ cspNonce, onChange, styleObject = {}, plac
         </Fragment>
     )
 }
+
+/* eslint-enable flowtype/require-exact-type */

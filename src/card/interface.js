@@ -262,11 +262,11 @@ type SubmitCardFieldsOptions = {|
 |};
 
 type CardValues = {|
-  number: string,
+  number: ?string,
   expiry?: ?string,
-  security_code?: string,
-  postalCode?: string,
-  name?: string,
+  security_code?: ?string,
+  postalCode?: ?string,
+  name?: ?string,
   ...ExtraFields
 |};
 
@@ -306,7 +306,6 @@ export function submitCardFields({
     };
 
     if (intent === INTENT.TOKENIZE) {
-      // $FlowIgnore
       return tokenizeCard({ card }).then(({ paymentMethodToken }) => {
         return onApprove({ paymentMethodToken }, { restart });
       });
