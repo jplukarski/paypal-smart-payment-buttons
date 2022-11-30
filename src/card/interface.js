@@ -8,6 +8,7 @@ import {
   isSameDomain
 } from "@krakenjs/cross-domain-utils/src";
 import { uniqueID } from "@krakenjs/belter/src";
+import EventEmitter from "@braintree/event-emitter";
 
 import { FRAME_NAME } from "../constants";
 import { tokenizeCard, confirmOrderAPI } from "../api";

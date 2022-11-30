@@ -137,6 +137,10 @@ function Page({ cspNonce, props, featureFlags } : PageProps) : mixed {
             },
             getState: () => {
                 return getCardFieldState()
+            },
+            on: (event, handler) => {
+                console.log('event to be subscribed to: ', event)
+                handler('payload')
             }
         });
     }, [ fieldValid, fieldValue, fieldFocus, fieldPotentiallyValid, cardTypes ]);
