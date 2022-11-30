@@ -1,5 +1,6 @@
 /* @flow */
 /** @jsx h */
+/* eslint-disable flowtype/require-exact-type */
 
 import { h, Fragment } from 'preact';
 import { noop } from '@krakenjs/belter';
@@ -24,7 +25,8 @@ import type {
     CardNameChangeEvent,
     CardPostalCodeChangeEvent,
     FieldValidity,
-    CardNavigation
+    CardNavigation,
+    CardType
 } from '../types';
 import {
     CARD_ERRORS,
@@ -43,7 +45,7 @@ import { Icons, Icon } from './Icons';
 
 type CardFieldProps = {|
     cspNonce : string,
-    onChange : ({| value : Card, valid : boolean, errors : [$Values<typeof CARD_ERRORS>] | [] |}) => void,
+    onChange : ({ value : Card, valid : boolean, errors : [$Values<typeof CARD_ERRORS>] | [] }) => void,
     styleObject : CardStyle,
     placeholder : {| number? : string, expiry? : string, cvv? : string  |},
     autoFocusRef : (mixed) => void,
@@ -240,7 +242,7 @@ export function ValidationMessage({ message } : Object) : mixed {
 
 type CardNumberFieldProps = {|
     cspNonce : string,
-    onChange : ({| value : string, valid : boolean, errors : [$Values<typeof CARD_ERRORS>] | [] |}) => void,
+    onChange : ({| value : string, valid : boolean, isFocused: boolean, potentiallyValid: boolean, errors : [$Values<typeof CARD_ERRORS>] |[], potentialCardTypes: $ReadOnlyArray<CardType> | [] |}) => void,
     styleObject : CardStyle,
     placeholder : string,
     autoFocusRef : (mixed) => void,
@@ -253,6 +255,8 @@ export function CardNumberField({ cspNonce, onChange, styleObject = {}, placehol
     const [ number, setNumber ] : [ string, (string) => string ] = useState('');
     const [ isCardEligible, setIsCardEligible ] : [ boolean, (boolean) => boolean ] = useState(true);
     const [ numberValidity, setNumberValidity ] : [ FieldValidity, (FieldValidity) => FieldValidity ] = useState(initFieldValidity);
+    const [cards, setCards] : [$ReadOnlyArray<CardType>, (CardType) => $ReadOnlyArray<CardType>] = useState([])
+    const [ hasFocus, setHasFocus ] : [ boolean, (boolean) => boolean ] = useState(false);
     const numberRef = useRef();
 
     const { isValid, isPotentiallyValid } = numberValidity;
@@ -283,8 +287,8 @@ export function CardNumberField({ cspNonce, onChange, styleObject = {}, placehol
         } else {
             markValidity(numberRef, numberValidity);
         }
-        onChange({ value: number, valid: numberValidity.isValid, errors });
-    }, [ number, isCardEligible, isValid, isPotentiallyValid ]);
+        onChange({ value: number, valid: numberValidity.isValid, isFocused: hasFocus, potentiallyValid: numberValidity.isPotentiallyValid, errors, potentialCardTypes: cards });
+    }, [ number, isCardEligible, isValid, hasFocus, isPotentiallyValid, cards ]);
 
     return (
         <Fragment>
@@ -300,6 +304,9 @@ export function CardNumberField({ cspNonce, onChange, styleObject = {}, placehol
                 onChange={ ({ cardNumber } : CardNumberChangeEvent) => setNumber(cardNumber) }
                 onEligibilityChange={ (eligibility : boolean) => setIsCardEligible(eligibility) }
                 onValidityChange={ (validity : FieldValidity) => setNumberValidity(validity) }
+                onPotentialCardTypesChange={(cardTypes : CardType) => setCards(cardTypes)}
+                onFocus={ () => setHasFocus(true) }
+                onBlur={ () => setHasFocus(false) }
             />
         </Fragment>
     );
@@ -307,7 +314,7 @@ export function CardNumberField({ cspNonce, onChange, styleObject = {}, placehol
 
 type CardExpiryFieldProps = {|
     cspNonce : string,
-    onChange : ({| value : string, valid : boolean, errors : [$Values<typeof CARD_ERRORS>] | [] |}) => void,
+    onChange : ({| value : string, valid : boolean, isFocused: boolean, potentiallyValid: boolean, errors : [$Values<typeof CARD_ERRORS>] | [] |}) => void,
     styleObject : CardStyle,
     placeholder : string,
     autoFocusRef : (mixed) => void,
@@ -320,6 +327,7 @@ export function CardExpiryField({ cspNonce, onChange, styleObject = {}, placehol
     const [ expiry, setExpiry ] : [ string, (string) => string ] = useState('');
     const [ expiryValidity, setExpiryValidity ] : [ FieldValidity, (FieldValidity) => FieldValidity ] = useState(initFieldValidity);
     const expiryRef = useRef();
+    const [ hasFocus, setHasFocus ] : [ boolean, (boolean) => boolean ] = useState(false);
 
     const { isValid, isPotentiallyValid } = expiryValidity;
 
@@ -341,8 +349,8 @@ export function CardExpiryField({ cspNonce, onChange, styleObject = {}, placehol
     useEffect(() => {
         const errors = setErrors({ isExpiryValid: expiryValidity.isValid });
         markValidity(expiryRef, expiryValidity);
-        onChange({ value: expiry, valid: expiryValidity.isValid, errors });
-    }, [ expiry, isValid, isPotentiallyValid ]);
+        onChange({ value: expiry, valid: expiryValidity.isValid, isFocused: hasFocus, potentiallyValid: expiryValidity.isPotentiallyValid, errors });
+    }, [ expiry, isValid, hasFocus, isPotentiallyValid ]);
 
     return (
         <Fragment>
@@ -357,13 +365,15 @@ export function CardExpiryField({ cspNonce, onChange, styleObject = {}, placehol
                 maxLength='7'
                 onChange={ ({ maskedDate } : CardExpiryChangeEvent) => setExpiry(convertDateFormat(maskedDate)) }
                 onValidityChange={ (validity : FieldValidity) => setExpiryValidity(validity) }
+                onFocus={ () => setHasFocus(true) }
+                onBlur={ () => setHasFocus(false) }
             />
         </Fragment>
     );
 }
 type CardCvvFieldProps = {|
     cspNonce : string,
-    onChange : ({| value : string, valid : boolean, errors : [$Values<typeof CARD_ERRORS>] | [] |}) => void,
+    onChange : ({| value : string, valid : boolean, isFocused: boolean, potentiallyValid: boolean, errors : [$Values<typeof CARD_ERRORS>] | [] |}) => void,
     styleObject : CardStyle,
     placeholder : string,
     autoFocusRef : (mixed) => void,
@@ -376,6 +386,7 @@ export function CardCVVField({ cspNonce, onChange, styleObject = {}, placeholder
     const [ cvv, setCvv ] : [ string, (string) => string ] = useState('');
     const [ cvvValidity, setCvvValidity ] : [ FieldValidity, (FieldValidity) => FieldValidity ] = useState(initFieldValidity);
     const cvvRef = useRef();
+    const [ hasFocus, setHasFocus ] : [ boolean, (boolean) => boolean ] = useState(false);
     
     const { isValid, isPotentiallyValid } = cvvValidity;
 
@@ -397,8 +408,8 @@ export function CardCVVField({ cspNonce, onChange, styleObject = {}, placeholder
     useEffect(() => {
         const errors = setErrors({ isCvvValid: cvvValidity.isValid });
         markValidity(cvvRef, cvvValidity);
-        onChange({ value: cvv, valid: cvvValidity.isValid, errors });
-    }, [ cvv, isValid, isPotentiallyValid  ]);
+        onChange({ value: cvv, valid: cvvValidity.isValid, isFocused: hasFocus, potentiallyValid: cvvValidity.isPotentiallyValid, errors });
+    }, [ cvv, isValid, hasFocus, isPotentiallyValid  ]);
 
     return (
         <Fragment>
@@ -412,6 +423,8 @@ export function CardCVVField({ cspNonce, onChange, styleObject = {}, placeholder
                 placeholder={ placeholder }
                 onChange={ ({ cardCvv } : CardCvvChangeEvent) => setCvv(cardCvv) }
                 onValidityChange={ (validity : FieldValidity) => setCvvValidity(validity) }
+                onFocus={ () => setHasFocus(true) }
+                onBlur={ () => setHasFocus(false) }
             />
         </Fragment>
     );
@@ -419,7 +432,7 @@ export function CardCVVField({ cspNonce, onChange, styleObject = {}, placeholder
 
 type CardNameFieldProps = {|
     cspNonce : string,
-    onChange : ({| value : string, valid : boolean, errors : [$Values<typeof CARD_ERRORS>] | [] |}) => void,
+    onChange : ({| value : string, valid : boolean, isFocused: boolean, potentiallyValid: boolean, errors : [$Values<typeof CARD_ERRORS>] | [] |}) => void,
     styleObject : CardStyle,
     placeholder : string,
     autoFocusRef : (mixed) => void,
@@ -431,6 +444,7 @@ export function CardNameField({ cspNonce, onChange, styleObject = {}, placeholde
     const [ name, setName ] : [ string, (string) => string ] = useState('');
     const [ nameValidity, setNameValidity ] : [ FieldValidity, (FieldValidity) => FieldValidity ] = useState(initFieldValidity);
     const nameRef = useRef();
+    const [ hasFocus, setHasFocus ] : [ boolean, (boolean) => boolean ] = useState(false);
     
     const { isValid, isPotentiallyValid } = nameValidity;
 
@@ -452,8 +466,8 @@ export function CardNameField({ cspNonce, onChange, styleObject = {}, placeholde
     useEffect(() => {
         const errors = setErrors({ isNameValid: nameValidity.isValid });
         markValidity(nameRef, nameValidity);
-        onChange({ value: name, valid: nameValidity.isValid, errors });
-    }, [ name, isValid, isPotentiallyValid  ]);
+        onChange({ value: name, valid: nameValidity.isValid, isFocused: hasFocus, potentiallyValid: nameValidity.isPotentiallyValid, errors });
+    }, [ name, isValid, hasFocus, isPotentiallyValid  ]);
 
     return (
         <Fragment>
@@ -467,6 +481,8 @@ export function CardNameField({ cspNonce, onChange, styleObject = {}, placeholde
                 maxLength='255'
                 onChange={ ({ cardName } : CardNameChangeEvent) => setName(cardName) }
                 onValidityChange={ (validity : FieldValidity) => setNameValidity(validity) }
+                onFocus={ () => setHasFocus(true) }
+                onBlur={ () => setHasFocus(false) }
             />
         </Fragment>
     );
@@ -474,7 +490,7 @@ export function CardNameField({ cspNonce, onChange, styleObject = {}, placeholde
 
 type CardPostalFieldProps = {|
     cspNonce : string,
-    onChange : ({| value : string, valid : boolean, errors : [$Values<typeof CARD_ERRORS>] | [] |}) => void,
+    onChange : ({| value : string, valid : boolean, isFocused: boolean, potentiallyValid: boolean, errors : [$Values<typeof CARD_ERRORS>] | [] |}) => void,
     styleObject : CardStyle,
     placeholder : string,
     minLength : number,
@@ -489,6 +505,7 @@ export function CardPostalCodeField({ cspNonce, onChange, styleObject = {}, plac
     const [ postalCode, setPostalCode ] : [ string, (string) => string ] = useState('');
     const [ postalCodeValidity, setPostalCodeValidity ] : [ FieldValidity, (FieldValidity) => FieldValidity ] = useState(initFieldValidity);
     const postalRef = useRef();
+    const [ hasFocus, setHasFocus ] : [ boolean, (boolean) => boolean ] = useState(false);
 
     const { isValid, isPotentiallyValid } = postalCodeValidity;
 
@@ -510,8 +527,8 @@ export function CardPostalCodeField({ cspNonce, onChange, styleObject = {}, plac
     useEffect(() => {
         const errors = setErrors({ isPostalCodeValid: postalCodeValidity.isValid });
         markValidity(postalRef, postalCodeValidity);
-        onChange({ value: postalCode, valid: postalCodeValidity.isValid, errors });
-    }, [ postalCode, isValid, isPotentiallyValid  ]);
+        onChange({ value: postalCode, valid: postalCodeValidity.isValid, isFocused: hasFocus, potentiallyValid: postalCodeValidity.isPotentiallyValid, errors });
+    }, [ postalCode, isValid, hasFocus, isPotentiallyValid  ]);
 
     return (
         <Fragment>
@@ -527,7 +544,11 @@ export function CardPostalCodeField({ cspNonce, onChange, styleObject = {}, plac
                 maxLength={ maxLength }
                 onChange={ ({ cardPostalCode } : CardPostalCodeChangeEvent) => setPostalCode(cardPostalCode) }
                 onValidityChange={ (validity : FieldValidity) => setPostalCodeValidity(validity) }
+                onFocus={ () => setHasFocus(true) }
+                onBlur={ () => setHasFocus(false) }
             />
         </Fragment>
     )
 }
+
+/* eslint-enable flowtype/require-exact-type */

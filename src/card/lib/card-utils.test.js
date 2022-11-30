@@ -15,7 +15,8 @@ import {
     getContext,
     markValidity,
     assertType,
-    shouldUseZeroPaddedExpiryPattern
+    shouldUseZeroPaddedExpiryPattern,
+    parsedCardType
 } from './card-utils';
 
 
@@ -492,4 +493,34 @@ describe('card utils', () => {
         });
 
     });
+
+  describe("parsedCardType", () => {
+    it("returns only the type, niceType, and code objecs returned from the card validator module", () => {
+      const cardType = [
+        {
+          niceType: "Visa",
+          type: "visa",
+          patterns: [4],
+          matchStrength: 1,
+          gaps: [4, 8, 12],
+          lengths: [16, 18, 19],
+          code: {
+            name: "CVV",
+            size: 3,
+          },
+        },
+      ];
+
+      expect(parsedCardType(cardType)).toStrictEqual([
+        {
+          niceType: "Visa",
+          type: "visa",
+          code: {
+            name: "CVV",
+            size: 3,
+          },
+        },
+      ])
+    });
+  });
 });

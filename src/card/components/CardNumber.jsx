@@ -60,7 +60,8 @@ type CardNumberProps = {|
     onFocus? : (event : InputEvent) => void,
     onBlur? : (event : InputEvent) => void,
     onValidityChange? : (numberValidity : FieldValidity) => void,
-    onEligibilityChange? : (isCardEligible : boolean) => void
+    onEligibilityChange? : (isCardEligible : boolean) => void,
+    onPotentialCardTypesChange? : (cardTypes : CardType) => void
 |};
 
 export function CardNumber(
@@ -77,14 +78,16 @@ export function CardNumber(
         onFocus,
         onBlur,
         onValidityChange,
-        onEligibilityChange
+        onEligibilityChange,
+        onPotentialCardTypesChange
     } : CardNumberProps
 ) : mixed {
     const [ attributes, setAttributes ] : [ Object, (Object) => Object ] = useState({ placeholder });
-    const [ cardType, setCardType ] : [ CardType, (CardType) => CardType ] = useState(DEFAULT_CARD_TYPE);
+    const [ cardTypes, setCardTypes ] : [ CardType, ($ReadOnlyArray<CardType>) => $ReadOnlyArray<CardType> ] = useState([DEFAULT_CARD_TYPE]);
     const [ maxLength, setMaxLength ] : [ number, (number) => number ] = useState(24);
     const [ inputState, setInputState ] : [ InputState, (InputState | InputState => InputState) => InputState ] = useState({ ...defaultInputState, ...state });
     const { inputValue, maskedInputValue, cursorStart, cursorEnd, keyStrokeCount, isValid, isPotentiallyValid, contentPasted } = inputState;
+    const [ cardType, setCardType ] : [ CardType, (CardType) => CardType ] = useState(DEFAULT_CARD_TYPE);
 
     const numberRef = useRef()
     const ariaMessageRef = useRef()
@@ -96,6 +99,10 @@ export function CardNumber(
     }, []);
 
     useEffect(() => {
+        setCardType(cardTypes[0])
+    }, [cardTypes])
+
+    useEffect(() => {
         const validity = cardValidator.number(inputValue);
         setInputState(newState => ({ ...newState, ...validity }));
     }, [ inputValue, maskedInputValue ]);
@@ -104,6 +111,11 @@ export function CardNumber(
         if (typeof onEligibilityChange === 'function') {
             onEligibilityChange(checkCardEligibility(inputValue, cardType));
         }
+        
+        if (typeof onPotentialCardTypesChange === 'function') {
+            onPotentialCardTypesChange(cardTypes);
+        }
+
         if (cardType && cardType.lengths) {
             // get the maximum card length for the given card type
             const cardMaxLength = cardType.lengths.reduce((previousValue, currentValue) => {
@@ -162,7 +174,7 @@ export function CardNumber(
 
         moveCursor(event.target, startCursorPosition, endCursorPosition);
 
-        setCardType(detectedCardType);
+        setCardTypes(detectedCardType);
         setInputState({
             ...inputState,
             inputValue:       value,
@@ -185,12 +197,8 @@ export function CardNumber(
         if (element) {
             element.classList.add('display-icon');
         }
-
         const maskedValue = addGapsToCardNumber(inputValue);
         const updatedState = { ...inputState, maskedInputValue: maskedValue, displayCardIcon: true };
-        if (!isValid) {
-            updatedState.isPotentiallyValid = true;
-        }
 
         setInputState((newState) => ({ ...newState, ...updatedState }));
     };
@@ -209,8 +217,6 @@ export function CardNumber(
 
         if (isValid) {
             updatedState.maskedInputValue = maskValidCard(maskedInputValue);
-        } else {
-            updatedState.isPotentiallyValid = false;
         }
 
         if (typeof onBlur === 'function') {

@@ -1,3 +1,4 @@
+/* eslint-disable flowtype/require-exact-type */
 /* @flow */
 
 import type { FeatureFlags } from "../types"
@@ -8,12 +9,13 @@ export type SetupCardOptions = {|
     featureFlags: FeatureFlags
 |};
 
-export type Card = {|
-    number : string,
-    cvv? : string,
-    expiry? : string,
-    name? : string
-|};
+export type Card = {
+    number : ?string,
+    cvv? : ?string,
+    expiry? : ?string,
+    name? : ?string,
+    postalCode? : ?string
+};
 
 export type FieldStyle = {|
     appearance? : string,
@@ -63,17 +65,44 @@ export type CardPlaceholder = {|
     postal?: string
 |};
 
+export type CardTypeCode = {|
+    name : string,
+    size : number
+ |}
+
 export type CardType = {|
     gaps : $ReadOnlyArray<number>,
     lengths : $ReadOnlyArray<number>,
     patterns : $ReadOnlyArray<number>,
+    matchStrength? : number,
     type : string,
     niceType : string,
-    code : {|
-        name : string,
-        size : number
-     |}
+    code : CardTypeCode
 |};
+
+export type ParsedCardType = {|
+    type: string,
+    niceType: string,
+    code : CardTypeCode
+|};
+
+export type CardFieldState = {|
+    isEmpty: boolean,
+    isValid: boolean,
+    isPotentiallyValid: boolean,
+    isFocused: boolean
+|}
+
+export type CardFieldsState = {
+    cards : $ReadOnlyArray<ParsedCardType>,
+    fields: {
+        cardName? : CardFieldState,
+        cardNumber : CardFieldState,
+        cardExpiry : CardFieldState,
+        cardCvv : CardFieldState,
+        cardPostalCode? : CardFieldState
+    }
+};
 
 export type InputEvent = {|
     key : string,
@@ -125,6 +154,7 @@ export type InputState = {|
     cursorEnd : number,
     keyStrokeCount : number,
     isPotentiallyValid : boolean,
+    isFocused : boolean,
     isValid : boolean,
     contentPasted? : boolean,
     displayCardIcon?: boolean
@@ -138,3 +168,4 @@ export type InputOptions = {|
 export type ExtraFields = {|
     billingAddress? : string
 |};
+/* eslint-enable flowtype/require-exact-type */

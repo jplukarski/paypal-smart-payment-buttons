@@ -1,5 +1,6 @@
 /* @flow */
 /* eslint max-lines: 0 */
+/* eslint-disable flowtype/require-exact-type */
 
 import { ZalgoPromise } from '@krakenjs/zalgo-promise/src';
 import { CURRENCY, FPTI_KEY, FUNDING, WALLET_INSTRUMENT, INTENT } from '@paypal/sdk-constants/src';
@@ -957,14 +958,14 @@ export function updateButtonClientConfig({ orderID, productFlow, fundingSource, 
     });
 }
 
-type TokenizeCardOptions = {|
-    card : {|
-        number : string,
-        cvv? : string,
-        expiry? : string,
-        name? : string
-    |}
-|};
+type TokenizeCardOptions = {
+    card : {
+        number : ?string,
+        cvv : ?string,
+        expiry : ?string,
+        name? : ?string
+    }
+};
 
 type TokenizeCardResult = {|
     paymentMethodToken : string
@@ -1023,3 +1024,5 @@ export function approveCardPayment({ card, orderID, clientID, branded } : Approv
         return gqlResult;
     });
 }
+
+/* eslint-enable flowtype/require-exact-type */
