@@ -139,7 +139,8 @@ export function hasCardFields(): boolean {
     cardFrame,
     cardNumberFrame,
     cardCVVFrame,
-    cardExpiryFrame
+    cardExpiryFrame,
+    cardPostalFrame
   } = getCardFrames();
 
   if (cardFrame || (cardNumberFrame && cardCVVFrame && cardExpiryFrame)) {
@@ -160,7 +161,8 @@ export function getCardFields(): ?Card {
     cardNumberFrame,
     cardCVVFrame,
     cardExpiryFrame,
-    cardNameFrame
+    cardNameFrame,
+    cardPostalFrame
   } = getCardFrames();
 
   if (
@@ -170,13 +172,16 @@ export function getCardFields(): ?Card {
     cardCVVFrame.isFieldValid() &&
     cardExpiryFrame &&
     cardExpiryFrame.isFieldValid() &&
-    (cardNameFrame ? cardNameFrame.isFieldValid() : true)
+    // cardNameFrame and cardPostalFrame are optional fields so we only want to check the validity if they are rendered.
+    (cardNameFrame ? cardNameFrame.isFieldValid() : true) &&
+    (cardPostalFrame ? cardPostalFrame.isFieldValid() : true)
   ) {
     return {
       number: cardNumberFrame.getFieldValue(),
       cvv: cardCVVFrame.getFieldValue(),
       expiry: cardExpiryFrame.getFieldValue(),
-      name: cardNameFrame?.getFieldValue() || ""
+      name: cardNameFrame?.getFieldValue() || "",
+      postalCode: cardPostalFrame.getFieldValue() || ""
     };
   }
 
