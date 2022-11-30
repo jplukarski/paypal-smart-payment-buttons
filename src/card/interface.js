@@ -140,7 +140,6 @@ export function hasCardFields(): boolean {
     cardNumberFrame,
     cardCVVFrame,
     cardExpiryFrame,
-    cardPostalFrame
   } = getCardFrames();
 
   if (cardFrame || (cardNumberFrame && cardCVVFrame && cardExpiryFrame)) {
