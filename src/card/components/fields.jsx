@@ -258,14 +258,9 @@ export function CardNumberField({ emitter, cspNonce, onChange, styleObject = {},
     const [ numberValidity, setNumberValidity ] : [ FieldValidity, (FieldValidity) => FieldValidity ] = useState(initFieldValidity);
     const [ cards, setCards] : [$ReadOnlyArray<CardType>, (CardType) => $ReadOnlyArray<CardType>] = useState([])
     const [ hasFocus, setHasFocus ] : [ boolean, (boolean) => boolean ] = useState(false);
-    const [eventEmitter, setEventEmitter] = useState(emitter)
     const numberRef = useRef();
 
     const { isValid, isPotentiallyValid } = numberValidity;
-
-    useEffect(() => {
-        setEventEmitter(emitter)
-    }, [emitter])
 
     useEffect(() => {
         autoFocusRef(numberRef);

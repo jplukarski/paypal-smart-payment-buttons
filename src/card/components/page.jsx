@@ -14,7 +14,6 @@ import type { SetupCardOptions} from '../types';
 import type {FeatureFlags } from '../../types'
 
 import { CardField, CardNumberField, CardCVVField, CardExpiryField, CardNameField, CardPostalCodeField } from './fields';
-import { eventEmitter } from '@krakenjs/belter/src';
 
 type PageProps = {|
     cspNonce : string,
@@ -32,7 +31,7 @@ function Page({ cspNonce, props, featureFlags } : PageProps) : mixed {
     const [fieldFocus, setFieldFocus ] = useState(false);
     const [ fieldErrors, setFieldErrors ] = useState([]);
     const [ mainRef, setRef ] = useState();
-    const [ eventEmitter, setEventEmitter ] = useState(new EventEmitter())
+    const eventEmitter = new EventEmitter();
     const [ fieldGQLErrors, setFieldGQLErrors ] = useState({ singleField: {}, numberField: [], expiryField: [], cvvField: [], nameField: [], postalCodeField: [] });
     const initialRender = useRef(true)
 
@@ -143,7 +142,7 @@ function Page({ cspNonce, props, featureFlags } : PageProps) : mixed {
             },
             on: (event, handler) => {
                 console.log('Subscribed to event: ', eventEmitter)
-                eventEmitter.on("focus", (data) => {
+                eventEmitter.on(event, (data) => {
                     console.log('data', data)
                     handler(data)
                 })

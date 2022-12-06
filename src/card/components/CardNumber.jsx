@@ -90,7 +90,6 @@ export function CardNumber(
     const [ inputState, setInputState ] : [ InputState, (InputState | InputState => InputState) => InputState ] = useState({ ...defaultInputState, ...state });
     const { inputValue, maskedInputValue, cursorStart, cursorEnd, keyStrokeCount, isValid, isPotentiallyValid, contentPasted } = inputState;
     const [ cardType, setCardType ] : [ CardType, (CardType) => CardType ] = useState(DEFAULT_CARD_TYPE);
-    const [eventEmitter, setEventEmitter ] = useState(emitter)
 
     const numberRef = useRef()
     const ariaMessageRef = useRef()
@@ -100,10 +99,6 @@ export function CardNumber(
             exportMethods(numberRef, setAttributes, setInputState, ariaMessageRef);
         }
     }, []);
-
-    useEffect(() => {
-        setEventEmitter(emitter)
-    }, [emitter])
 
     useEffect(() => {
         setCardType(cardTypes[0])
@@ -200,8 +195,8 @@ export function CardNumber(
             onFocus(event);
         }
         console.log('card number focused')
-        console.log(eventEmitter)
-        eventEmitter.emit("focus", {payload: "card number focused"}) 
+        console.log(emitter)
+        emitter.emit("focus", {payload: "card number focused"}) 
 
         const element = numberRef?.current;
         if (element) {
