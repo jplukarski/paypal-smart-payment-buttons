@@ -3,6 +3,7 @@
 
 import { h, render, Fragment } from 'preact';
 import { useState, useEffect, useRef } from 'preact/hooks';
+import EventEmitter from '@braintree/event-emitter';
 
 import { getBody } from '../../lib';
 import { setupExports, autoFocusOnFirstInput, filterExtraFields } from '../lib';
@@ -13,6 +14,7 @@ import type { SetupCardOptions} from '../types';
 import type {FeatureFlags } from '../../types'
 
 import { CardField, CardNumberField, CardCVVField, CardExpiryField, CardNameField, CardPostalCodeField } from './fields';
+import { eventEmitter } from '@krakenjs/belter/src';
 
 type PageProps = {|
     cspNonce : string,
@@ -30,6 +32,7 @@ function Page({ cspNonce, props, featureFlags } : PageProps) : mixed {
     const [fieldFocus, setFieldFocus ] = useState(false);
     const [ fieldErrors, setFieldErrors ] = useState([]);
     const [ mainRef, setRef ] = useState();
+    const [ eventEmitter, setEventEmitter ] = useState(new EventEmitter())
     const [ fieldGQLErrors, setFieldGQLErrors ] = useState({ singleField: {}, numberField: [], expiryField: [], cvvField: [], nameField: [], postalCodeField: [] });
     const initialRender = useRef(true)
 
@@ -139,11 +142,14 @@ function Page({ cspNonce, props, featureFlags } : PageProps) : mixed {
                 return getCardFieldState()
             },
             on: (event, handler) => {
-                console.log('event to be subscribed to: ', event)
-                handler('payload')
+                console.log('Subscribed to event: ', eventEmitter)
+                eventEmitter.on("focus", (data) => {
+                    console.log('data', data)
+                    handler(data)
+                })
             }
         });
-    }, [ fieldValid, fieldValue, fieldFocus, fieldPotentiallyValid, cardTypes ]);
+    }, [ fieldValid, fieldValue, fieldFocus, fieldPotentiallyValid, cardTypes, eventEmitter ]);
 
     const onFieldChange = ({ value, valid, isFocused, potentiallyValid, errors, potentialCardTypes }) => {
         setFieldValue(value);
@@ -173,6 +179,7 @@ function Page({ cspNonce, props, featureFlags } : PageProps) : mixed {
             {
                 (type === CARD_FIELD_TYPE.NUMBER)
                     ? <CardNumberField
+                            emitter={eventEmitter}
                             ref={ mainRef }
                             gqlErrors={ fieldGQLErrors.numberField }
                             cspNonce={ cspNonce }

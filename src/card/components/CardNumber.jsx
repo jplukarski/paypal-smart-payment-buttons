@@ -61,7 +61,8 @@ type CardNumberProps = {|
     onBlur? : (event : InputEvent) => void,
     onValidityChange? : (numberValidity : FieldValidity) => void,
     onEligibilityChange? : (isCardEligible : boolean) => void,
-    onPotentialCardTypesChange? : (cardTypes : CardType) => void
+    onPotentialCardTypesChange? : (cardTypes : CardType) => void,
+    emitter : object
 |};
 
 export function CardNumber(
@@ -79,7 +80,8 @@ export function CardNumber(
         onBlur,
         onValidityChange,
         onEligibilityChange,
-        onPotentialCardTypesChange
+        onPotentialCardTypesChange,
+        emitter
     } : CardNumberProps
 ) : mixed {
     const [ attributes, setAttributes ] : [ Object, (Object) => Object ] = useState({ placeholder });
@@ -88,6 +90,7 @@ export function CardNumber(
     const [ inputState, setInputState ] : [ InputState, (InputState | InputState => InputState) => InputState ] = useState({ ...defaultInputState, ...state });
     const { inputValue, maskedInputValue, cursorStart, cursorEnd, keyStrokeCount, isValid, isPotentiallyValid, contentPasted } = inputState;
     const [ cardType, setCardType ] : [ CardType, (CardType) => CardType ] = useState(DEFAULT_CARD_TYPE);
+    const [eventEmitter, setEventEmitter ] = useState(emitter)
 
     const numberRef = useRef()
     const ariaMessageRef = useRef()
@@ -97,6 +100,10 @@ export function CardNumber(
             exportMethods(numberRef, setAttributes, setInputState, ariaMessageRef);
         }
     }, []);
+
+    useEffect(() => {
+        setEventEmitter(emitter)
+    }, [emitter])
 
     useEffect(() => {
         setCardType(cardTypes[0])
@@ -192,6 +199,9 @@ export function CardNumber(
         if (typeof onFocus === 'function') {
             onFocus(event);
         }
+        console.log('card number focused')
+        console.log(eventEmitter)
+        eventEmitter.emit("focus", {payload: "card number focused"}) 
 
         const element = numberRef?.current;
         if (element) {

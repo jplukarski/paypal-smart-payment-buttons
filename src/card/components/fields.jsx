@@ -241,6 +241,7 @@ export function ValidationMessage({ message } : Object) : mixed {
 }
 
 type CardNumberFieldProps = {|
+    emitter : object,
     cspNonce : string,
     onChange : ({| value : string, valid : boolean, isFocused: boolean, potentiallyValid: boolean, errors : [$Values<typeof CARD_ERRORS>] |[], potentialCardTypes: $ReadOnlyArray<CardType> | [] |}) => void,
     styleObject : CardStyle,
@@ -250,16 +251,21 @@ type CardNumberFieldProps = {|
     gqlErrors : []
 |};
 
-export function CardNumberField({ cspNonce, onChange, styleObject = {}, placeholder, autoFocusRef, autocomplete, gqlErrors = [] } : CardNumberFieldProps) : mixed {
+export function CardNumberField({ emitter, cspNonce, onChange, styleObject = {}, placeholder, autoFocusRef, autocomplete, gqlErrors = [] } : CardNumberFieldProps) : mixed {
     const [ cssText, setCSSText ] : [ string, (string) => string ] = useState('');
     const [ number, setNumber ] : [ string, (string) => string ] = useState('');
     const [ isCardEligible, setIsCardEligible ] : [ boolean, (boolean) => boolean ] = useState(true);
     const [ numberValidity, setNumberValidity ] : [ FieldValidity, (FieldValidity) => FieldValidity ] = useState(initFieldValidity);
-    const [cards, setCards] : [$ReadOnlyArray<CardType>, (CardType) => $ReadOnlyArray<CardType>] = useState([])
+    const [ cards, setCards] : [$ReadOnlyArray<CardType>, (CardType) => $ReadOnlyArray<CardType>] = useState([])
     const [ hasFocus, setHasFocus ] : [ boolean, (boolean) => boolean ] = useState(false);
+    const [eventEmitter, setEventEmitter] = useState(emitter)
     const numberRef = useRef();
 
     const { isValid, isPotentiallyValid } = numberValidity;
+
+    useEffect(() => {
+        setEventEmitter(emitter)
+    }, [emitter])
 
     useEffect(() => {
         autoFocusRef(numberRef);
@@ -297,6 +303,7 @@ export function CardNumberField({ cspNonce, onChange, styleObject = {}, placehol
             </style>
             <Icons />
             <CardNumber
+                emitter={ emitter }
                 ref={ numberRef }
                 type='text'
                 autocomplete={ autocomplete }
