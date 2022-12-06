@@ -3,12 +3,10 @@
 
 import { h, render, Fragment } from 'preact';
 import { useState, useEffect, useRef } from 'preact/hooks';
-import EventEmitter from '@braintree/event-emitter';
-
 import { getBody } from '../../lib';
 import { setupExports, autoFocusOnFirstInput, filterExtraFields } from '../lib';
 import { CARD_FIELD_TYPE_TO_FRAME_NAME, CARD_FIELD_TYPE } from '../constants';
-import { submitCardFields, getCardFieldState } from '../interface';
+import { submitCardFields, getCardFieldState, eventEmitter } from '../interface';
 import { getCardProps, type CardProps } from '../props';
 import type { SetupCardOptions} from '../types';
 import type {FeatureFlags } from '../../types'
@@ -31,7 +29,6 @@ function Page({ cspNonce, props, featureFlags } : PageProps) : mixed {
     const [fieldFocus, setFieldFocus ] = useState(false);
     const [ fieldErrors, setFieldErrors ] = useState([]);
     const [ mainRef, setRef ] = useState();
-    const eventEmitter = new EventEmitter();
     const [ fieldGQLErrors, setFieldGQLErrors ] = useState({ singleField: {}, numberField: [], expiryField: [], cvvField: [], nameField: [], postalCodeField: [] });
     const initialRender = useRef(true)
 
@@ -148,7 +145,7 @@ function Page({ cspNonce, props, featureFlags } : PageProps) : mixed {
                 })
             }
         });
-    }, [ fieldValid, fieldValue, fieldFocus, fieldPotentiallyValid, cardTypes, eventEmitter ]);
+    }, [ fieldValid, fieldValue, fieldFocus, fieldPotentiallyValid, cardTypes]);
 
     const onFieldChange = ({ value, valid, isFocused, potentiallyValid, errors, potentialCardTypes }) => {
         setFieldValue(value);
@@ -178,7 +175,6 @@ function Page({ cspNonce, props, featureFlags } : PageProps) : mixed {
             {
                 (type === CARD_FIELD_TYPE.NUMBER)
                     ? <CardNumberField
-                            emitter={eventEmitter}
                             ref={ mainRef }
                             gqlErrors={ fieldGQLErrors.numberField }
                             cspNonce={ cspNonce }

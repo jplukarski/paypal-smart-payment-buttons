@@ -27,6 +27,7 @@ import type {
     CardType,
     InputEvent
 } from '../types';
+import { eventEmitter } from '../interface';
 import {  DEFAULT_CARD_TYPE } from '../constants';
 
 import { Icon } from './Icons';
@@ -62,7 +63,6 @@ type CardNumberProps = {|
     onValidityChange? : (numberValidity : FieldValidity) => void,
     onEligibilityChange? : (isCardEligible : boolean) => void,
     onPotentialCardTypesChange? : (cardTypes : CardType) => void,
-    emitter : object
 |};
 
 export function CardNumber(
@@ -81,7 +81,6 @@ export function CardNumber(
         onValidityChange,
         onEligibilityChange,
         onPotentialCardTypesChange,
-        emitter
     } : CardNumberProps
 ) : mixed {
     const [ attributes, setAttributes ] : [ Object, (Object) => Object ] = useState({ placeholder });
@@ -195,8 +194,8 @@ export function CardNumber(
             onFocus(event);
         }
         console.log('card number focused')
-        console.log(emitter)
-        emitter.emit("focus", {payload: "card number focused"}) 
+        console.log(eventEmitter)
+        eventEmitter.emit("focus", {payload: "card number focused"}) 
 
         const element = numberRef?.current;
         if (element) {

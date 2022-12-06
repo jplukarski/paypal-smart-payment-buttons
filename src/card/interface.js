@@ -353,4 +353,6 @@ export function submitCardFields({
     }
   });
 }
+
+export const eventEmitter = new EventEmitter()
 /* eslint-enable flowtype/require-exact-type */
