@@ -2,13 +2,14 @@
 /** @jsx h */
 
 import { h, Fragment } from 'preact';
-import { useState, useEffect, useRef } from 'preact/hooks';
+import { useState, useEffect, useRef, useContext } from 'preact/hooks';
 import cardValidator from 'card-validator';
 
 import { getPostRobot } from '../../lib';
 import { DEFAULT_CARD_TYPE } from '../constants';
 import { removeNonDigits, defaultNavigation, defaultInputState, navigateOnKeyDown, exportMethods, getContext } from '../lib';
 import type { CardType, CardCvvChangeEvent, CardNavigation, FieldValidity, InputState, InputEvent } from '../types';
+import { EventContext } from './page';
 
 import { AriaMessage } from './AriaMessage'
 
@@ -49,7 +50,7 @@ export function CardCVV(
     const [ cardType, setCardType ] : [ CardType, (CardType) => CardType ] = useState(DEFAULT_CARD_TYPE);
     const [ touched, setTouched ] = useState(false);
     const { inputValue, keyStrokeCount, isValid, isPotentiallyValid } = inputState;
-
+    const emitter = useContext(EventContext);
     const cvvRef = useRef()
     const ariaMessageRef = useRef()
 
@@ -120,7 +121,9 @@ export function CardCVV(
         }
         if (typeof onFocus === 'function') {
             onFocus(event);
+            emitter.emit("focus", {payload: "card CVV focused"})
         }
+        emitter.emit("focus", {payload: "card CVV focused"})
     };
 
     const onBlurEvent : (InputEvent) => void = (event : InputEvent) : void => {

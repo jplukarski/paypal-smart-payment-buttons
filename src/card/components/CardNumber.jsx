@@ -2,7 +2,7 @@
 /** @jsx h */
 
 import { h, Fragment } from 'preact';
-import { useState, useEffect, useRef } from 'preact/hooks';
+import { useState, useEffect, useRef, useContext } from 'preact/hooks';
 import cardValidator from 'card-validator';
 
 import { getPostRobot } from '../../lib';
@@ -27,11 +27,11 @@ import type {
     CardType,
     InputEvent
 } from '../types';
-import { eventEmitter } from '../interface';
 import {  DEFAULT_CARD_TYPE } from '../constants';
 
 import { Icon } from './Icons';
 import { AriaMessage } from './AriaMessage'
+import { EventContext } from './page';
 
 // Helper method to check if navigation to next field should be allowed
 function validateNavigation({ allowNavigation,  inputState } : {| allowNavigation : boolean, inputState : InputState |}) : boolean {
@@ -89,6 +89,8 @@ export function CardNumber(
     const [ inputState, setInputState ] : [ InputState, (InputState | InputState => InputState) => InputState ] = useState({ ...defaultInputState, ...state });
     const { inputValue, maskedInputValue, cursorStart, cursorEnd, keyStrokeCount, isValid, isPotentiallyValid, contentPasted } = inputState;
     const [ cardType, setCardType ] : [ CardType, (CardType) => CardType ] = useState(DEFAULT_CARD_TYPE);
+    
+    const emitter = useContext(EventContext);
 
     const numberRef = useRef()
     const ariaMessageRef = useRef()
@@ -192,10 +194,11 @@ export function CardNumber(
     const onFocusEvent : (InputEvent) => void = (event : InputEvent) : void => {
         if (typeof onFocus === 'function') {
             onFocus(event);
+            emitter.emit("focus", {payload: "card number focused"})
         }
         console.log('card number focused')
-        console.log(eventEmitter)
-        eventEmitter.emit("focus", {payload: "card number focused"}) 
+        console.log(emitter)
+        emitter.emit("focus", {payload: "card number focused"}) 
 
         const element = numberRef?.current;
         if (element) {

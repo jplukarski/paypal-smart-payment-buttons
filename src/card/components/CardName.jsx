@@ -2,9 +2,9 @@
 /** @jsx h */
 
 import { h, Fragment } from 'preact';
-import { useState, useEffect, useRef } from 'preact/hooks';
+import { useState, useEffect, useRef, useContext } from 'preact/hooks';
 import cardValidator from 'card-validator';
-
+import { EventContext } from './page';
 import { defaultNavigation, defaultInputState, navigateOnKeyDown, exportMethods } from '../lib';
 import type { CardNameChangeEvent, CardNavigation, FieldValidity, InputState, InputEvent } from '../types';
 
@@ -45,7 +45,7 @@ export function CardName(
     const [ attributes, setAttributes ] : [ Object, (Object) => Object ] = useState({ placeholder });
     const [ inputState, setInputState ] : [ InputState, (InputState | InputState => InputState) => InputState ] = useState({ ...defaultInputState, ...state });
     const { inputValue, keyStrokeCount, isValid, isPotentiallyValid } = inputState;
-
+    const emitter = useContext(EventContext);
     const nameRef = useRef()
     const ariaMessageRef = useRef()
 
@@ -89,7 +89,9 @@ export function CardName(
     const onFocusEvent : (InputEvent) => void = (event : InputEvent) : void => {
         if (typeof onFocus === 'function') {
             onFocus(event);
+            emitter.emit("focus", {payload: "card name focused"})
         }
+        emitter.emit("focus", {payload: "card name focused"})
     };
 
     const onBlurEvent : (InputEvent) => void = (event : InputEvent) : void => {

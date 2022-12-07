@@ -1,7 +1,7 @@
 /* @flow */
 /** @jsx h */
 
-import { h, render, Fragment } from 'preact';
+import { h, render, Fragment , createContext} from 'preact';
 import { useState, useEffect, useRef } from 'preact/hooks';
 import { getBody } from '../../lib';
 import { setupExports, autoFocusOnFirstInput, filterExtraFields } from '../lib';
@@ -9,7 +9,7 @@ import { CARD_FIELD_TYPE_TO_FRAME_NAME, CARD_FIELD_TYPE } from '../constants';
 import { submitCardFields, getCardFieldState, eventEmitter } from '../interface';
 import { getCardProps, type CardProps } from '../props';
 import type { SetupCardOptions} from '../types';
-import type {FeatureFlags } from '../../types'
+import type {FeatureFlags } from '../../types';
 
 import { CardField, CardNumberField, CardCVVField, CardExpiryField, CardNameField, CardPostalCodeField } from './fields';
 
@@ -18,6 +18,7 @@ type PageProps = {|
     props : CardProps,
     featureFlags: FeatureFlags
 |};
+export const EventContext = createContext();
 
 function Page({ cspNonce, props, featureFlags } : PageProps) : mixed {
     const { facilitatorAccessToken, style, disableAutocomplete, placeholder, type, onChange, export: xport, minLength, maxLength } = props;
@@ -27,11 +28,13 @@ function Page({ cspNonce, props, featureFlags } : PageProps) : mixed {
     const [ fieldPotentiallyValid, setFieldPotentiallyValid] = useState(true);
     const [cardTypes, setCardTypes] = useState([]);
     const [fieldFocus, setFieldFocus ] = useState(false);
+    const [emitter, setEmitter] = useState(eventEmitter);
     const [ fieldErrors, setFieldErrors ] = useState([]);
+
     const [ mainRef, setRef ] = useState();
     const [ fieldGQLErrors, setFieldGQLErrors ] = useState({ singleField: {}, numberField: [], expiryField: [], cvvField: [], nameField: [], postalCodeField: [] });
-    const initialRender = useRef(true)
-
+    const initialRender = useRef(true);
+    console.log('type:',type,'emitter', emitter);
     let autocomplete;
     if (disableAutocomplete) {
         autocomplete = 'off';
@@ -138,14 +141,14 @@ function Page({ cspNonce, props, featureFlags } : PageProps) : mixed {
                 return getCardFieldState()
             },
             on: (event, handler) => {
-                console.log('Subscribed to event: ', eventEmitter)
-                eventEmitter.on(event, (data) => {
+                emitter.on(event, (data) => {
                     console.log('data', data)
                     handler(data)
-                })
+                });
+                
             }
         });
-    }, [ fieldValid, fieldValue, fieldFocus, fieldPotentiallyValid, cardTypes]);
+    }, [ fieldValid, fieldValue, fieldFocus, fieldPotentiallyValid, cardTypes, emitter]);
 
     const onFieldChange = ({ value, valid, isFocused, potentiallyValid, errors, potentialCardTypes }) => {
         setFieldValue(value);
@@ -174,21 +177,27 @@ function Page({ cspNonce, props, featureFlags } : PageProps) : mixed {
 
             {
                 (type === CARD_FIELD_TYPE.NUMBER)
-                    ? <CardNumberField
-                            ref={ mainRef }
-                            gqlErrors={ fieldGQLErrors.numberField }
-                            cspNonce={ cspNonce }
-                            autocomplete={ autocomplete }
-                            onChange={ onFieldChange }
-                            styleObject={ style }
-                            placeholder={ placeholder }
-                            autoFocusRef={ (ref) => setRef(ref.current.base) }
-                    /> : null
+                    ?
+                   <EventContext.Provider value={emitter}>
+                    <CardNumberField
+                    ref={ mainRef }
+                    gqlErrors={ fieldGQLErrors.numberField }
+                    cspNonce={ cspNonce }
+                    autocomplete={ autocomplete }
+                    onChange={ onFieldChange }
+                    styleObject={ style }
+                    placeholder={ placeholder }
+                    autoFocusRef={ (ref) => setRef(ref.current.base) }
+            /> 
+                   </EventContext.Provider> 
+: null
             }
 
             {
                 (type === CARD_FIELD_TYPE.CVV)
-                    ? <CardCVVField
+                    ?
+                    <EventContext.Provider value={emitter}>
+                     <CardCVVField
                             ref={ mainRef }
                             gqlErrors={ fieldGQLErrors.cvvField }
                             cspNonce={ cspNonce }
@@ -197,12 +206,16 @@ function Page({ cspNonce, props, featureFlags } : PageProps) : mixed {
                             styleObject={ style }
                             placeholder={ placeholder }
                             autoFocusRef={ (ref) => setRef(ref.current.base) }
-                    /> : null
+                    /> 
+                    </EventContext.Provider> 
+                    : null
             }
 
             {
                 (type === CARD_FIELD_TYPE.EXPIRY)
-                    ? <CardExpiryField
+                    ? 
+                    <EventContext.Provider value={emitter}>
+                    <CardExpiryField
                             ref={ mainRef }
                             gqlErrors={ fieldGQLErrors.expiryField }
                             cspNonce={ cspNonce }
@@ -211,12 +224,16 @@ function Page({ cspNonce, props, featureFlags } : PageProps) : mixed {
                             styleObject={ style }
                             placeholder={ placeholder }
                             autoFocusRef={ (ref) => setRef(ref.current.base) }
-                    /> : null
+                    /> 
+                    </EventContext.Provider> 
+                    : null
             }
 
             {
                 (type === CARD_FIELD_TYPE.NAME)
-                    ? <CardNameField
+                    ? 
+                    <EventContext.Provider value={emitter}>
+                    <CardNameField
                             ref={ mainRef }
                             gqlErrors={ fieldGQLErrors.nameField }
                             cspNonce={ cspNonce }
@@ -224,12 +241,16 @@ function Page({ cspNonce, props, featureFlags } : PageProps) : mixed {
                             styleObject={ style }
                             placeholder={ placeholder }
                             autoFocusRef={ (ref) => setRef(ref.current.base) }
-                    /> : null
+                    /> 
+                    </EventContext.Provider> 
+                    : null
             }
 
             {
                 (type === CARD_FIELD_TYPE.POSTAL)
-                    ? <CardPostalCodeField
+                    ?
+                    <EventContext.Provider value={emitter}> 
+                    <CardPostalCodeField
                             ref={ mainRef }
                             gqlErrors={ fieldGQLErrors.postalCodeField }
                             cspNonce={ cspNonce }
@@ -239,7 +260,9 @@ function Page({ cspNonce, props, featureFlags } : PageProps) : mixed {
                             minLength={ minLength }
                             maxLength={ maxLength || 10}
                             autoFocusRef={ (ref) => setRef(ref.current.base) }
-                    /> : null
+                    /> 
+                    </EventContext.Provider> 
+                    : null
             }
         </Fragment>
     );

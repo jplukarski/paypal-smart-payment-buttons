@@ -2,11 +2,11 @@
 /** @jsx h */
 
 import { h, Fragment } from 'preact';
-import { useState, useEffect, useRef } from 'preact/hooks';
+import { useState, useEffect, useRef, useContext } from 'preact/hooks';
 import cardValidator from 'card-validator';
-
 import { defaultNavigation, defaultInputState, navigateOnKeyDown, exportMethods } from '../lib';
 import type { CardPostalCodeChangeEvent, CardNavigation, FieldValidity, InputState, InputEvent } from '../types';
+import { EventContext } from './page';
 
 import { AriaMessage } from './AriaMessage'
 
@@ -50,6 +50,8 @@ export function CardPostalCode(
     const postalCodeRef = useRef();
     const ariaMessageRef = useRef()
 
+    const emitter = useContext(EventContext);
+
     useEffect(() => {
         exportMethods(postalCodeRef, setAttributes, setInputState, ariaMessageRef);
     }, []);
@@ -90,7 +92,9 @@ export function CardPostalCode(
     const onFocusEvent : (InputEvent) => void = (event : InputEvent) : void => {
         if (typeof onFocus === 'function') {
             onFocus(event);
+            emitter.emit("focus", {payload: "card postal focused"})
         }
+        emitter.emit("focus", {payload: "card postal focused"})
     };
 
     const onBlurEvent : (InputEvent) => void = (event : InputEvent) : void => {

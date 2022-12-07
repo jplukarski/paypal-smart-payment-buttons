@@ -2,10 +2,10 @@
 /** @jsx h */
 
 import { h, Fragment } from 'preact';
-import { useState, useEffect, useRef } from 'preact/hooks';
+import { useState, useEffect, useRef, useContext } from 'preact/hooks';
 import cardValidator from 'card-validator';
 import RestrictedInput from 'restricted-input';
-
+import { EventContext } from './page';
 import {
     defaultNavigation,
     defaultInputState,
@@ -56,7 +56,7 @@ export function CardExpiry(
     const [ inputState, setInputState ] : [ InputState, (InputState | (InputState) => InputState) => InputState ] = useState({ ...defaultInputState, ...state });
     const { inputValue, maskedInputValue, isValid, isPotentiallyValid } = inputState;
     const [restrictedInput, setRestrictedInput] : [Object, (Object) => Object] = useState({})
-
+    const emitter = useContext(EventContext);
     const expiryRef = useRef()
     const ariaMessageRef = useRef()
 
@@ -115,7 +115,9 @@ export function CardExpiry(
     const onFocusEvent : (InputEvent) => void = (event : InputEvent) : void => {
         if (typeof onFocus === 'function') {
             onFocus(event);
+            emitter.emit("focus", {payload: "card expiry focused"})
         }
+        emitter.emit("focus", {payload: "card expiry focused"})
     };
 
     const onBlurEvent : (InputEvent) => void = (event : InputEvent) : void => {
