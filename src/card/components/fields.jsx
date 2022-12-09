@@ -458,6 +458,7 @@ export function CardNameField({ cspNonce, onChange, styleObject = {}, placeholde
 
     useEffect(() => {
         const hasGQLErrors = gqlErrors.length > 0;
+        console.log('graphQL errors:', gqlErrors)
         if (hasGQLErrors) {
             setNameValidity({ isPotentiallyValid: false, isValid: false });
         }

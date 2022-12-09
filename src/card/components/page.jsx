@@ -7,7 +7,7 @@ import { useState, useEffect, useRef } from 'preact/hooks';
 import { getBody } from '../../lib';
 import { setupExports, autoFocusOnFirstInput, filterExtraFields } from '../lib';
 import { CARD_FIELD_TYPE_TO_FRAME_NAME, CARD_FIELD_TYPE } from '../constants';
-import { submitCardFields, getCardFieldState } from '../interface';
+import { submitCardFields, getCardFieldState, getFieldErrors } from '../interface';
 import { getCardProps, type CardProps } from '../props';
 import type { SetupCardOptions} from '../types';
 import type {FeatureFlags } from '../../types'
@@ -104,15 +104,31 @@ function Page({ cspNonce, props, featureFlags } : PageProps) : mixed {
         // useRef to store the value of initialRender as
         // we want that to persist across re-renders.
         // See: https://reactjs.org/docs/hooks-faq.html#is-there-something-like-instance-variables
-        if ( initialRender.current ) {
+        // console.log('value of initialRender before if check: ', initialRender.current)
+        // console.log('value of field: ', fieldValue)
+        // console.log('field:', type)
+        if ( initialRender.current && fieldValue === '') {
             initialRender.current = false
-        } else if(typeof onChange === 'function') {
+        // console.log('value of initialRender after if check: ', initialRender.current)
+        // console.log('value of field: ', fieldValue)
+        // console.log('field:', type)
+        } else if( !initialRender.current && typeof onChange === 'function' ) {
+            // console.log('value of initialRender after else if check: ', initialRender.current)
+            // console.log('value of field: ', fieldValue)
+            // console.log('field:', type)
+            const {cards, fields} = getCardFieldState()
+            // console.log('cards: ', cards)
+            // console.log('fields', fields)
+            
             onChange({
+                cards,
+                fields,
+                emittedBy: type,
                 isValid: fieldValid,
-                errors: fieldErrors
+                errors: getFieldErrors(fields)
             });
         }
-    }, [ fieldValid ]);
+    }, [ fieldValue ]);
 
     useEffect(() => {
         autoFocusOnFirstInput(mainRef);
@@ -142,6 +158,7 @@ function Page({ cspNonce, props, featureFlags } : PageProps) : mixed {
     }, [ fieldValid, fieldValue, fieldFocus, fieldPotentiallyValid, cardTypes ]);
 
     const onFieldChange = ({ value, valid, isFocused, potentiallyValid, errors, potentialCardTypes }) => {
+        // console.log('value passed to setFieldValue:', value)
         setFieldValue(value);
         setFieldErrors([ ...errors ]);
         setFieldFocus(isFocused)

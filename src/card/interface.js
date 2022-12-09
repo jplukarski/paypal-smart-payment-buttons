@@ -71,7 +71,8 @@ function getCardFrames(): {
 }
 
 function isEmpty(value: string): boolean {
-  if (value.length === 0) {
+  // console.log('value from isEMpty: ', value)
+  if (value && value.length === 0) {
     return true;
   }
   return false;
@@ -351,5 +352,15 @@ export function submitCardFields({
         });
     }
   });
+}
+
+export const getFieldErrors = (fields) => {
+  let errors = []
+  Object.keys(fields).forEach(field => {
+    if(!fields[field].isValid){
+      errors.push(`${field} is not valid`)
+    }
+  })
+  return errors 
 }
 /* eslint-enable flowtype/require-exact-type */
