@@ -104,21 +104,10 @@ function Page({ cspNonce, props, featureFlags } : PageProps) : mixed {
         // useRef to store the value of initialRender as
         // we want that to persist across re-renders.
         // See: https://reactjs.org/docs/hooks-faq.html#is-there-something-like-instance-variables
-        // console.log('value of initialRender before if check: ', initialRender.current)
-        // console.log('value of field: ', fieldValue)
-        // console.log('field:', type)
         if ( initialRender.current && fieldValue === '') {
             initialRender.current = false
-        // console.log('value of initialRender after if check: ', initialRender.current)
-        // console.log('value of field: ', fieldValue)
-        // console.log('field:', type)
         } else if( !initialRender.current && typeof onChange === 'function' ) {
-            // console.log('value of initialRender after else if check: ', initialRender.current)
-            // console.log('value of field: ', fieldValue)
-            // console.log('field:', type)
             const {cards, fields} = getCardFieldState()
-            // console.log('cards: ', cards)
-            // console.log('fields', fields)
             
             onChange({
                 cards,
@@ -158,7 +147,6 @@ function Page({ cspNonce, props, featureFlags } : PageProps) : mixed {
     }, [ fieldValid, fieldValue, fieldFocus, fieldPotentiallyValid, cardTypes ]);
 
     const onFieldChange = ({ value, valid, isFocused, potentiallyValid, errors, potentialCardTypes }) => {
-        // console.log('value passed to setFieldValue:', value)
         setFieldValue(value);
         setFieldErrors([ ...errors ]);
         setFieldFocus(isFocused)

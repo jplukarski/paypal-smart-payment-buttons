@@ -71,8 +71,7 @@ function getCardFrames(): {
 }
 
 function isEmpty(value: string): boolean {
-  // console.log('value from isEMpty: ', value)
-  if (value && value.length === 0) {
+  if (value.length === 0) {
     return true;
   }
   return false;
