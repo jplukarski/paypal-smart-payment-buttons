@@ -352,4 +352,14 @@ export function submitCardFields({
     }
   });
 }
+
+export const getFieldErrors = (fields) => {
+  const errors = [];
+  Object.keys(fields).forEach(field => {
+    if(!fields[field].isValid){
+      errors.push(`INVALID_${field.toUpperCase()}`);
+    }
+  })
+  return errors;
+}
 /* eslint-enable flowtype/require-exact-type */

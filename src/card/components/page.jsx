@@ -21,8 +21,8 @@ type PageProps = {|
 |};
 
 function Page({ cspNonce, props, featureFlags } : PageProps) : mixed {
-    const { facilitatorAccessToken, style, disableAutocomplete, placeholder, type, onChange, export: xport, minLength, maxLength } = props;
-
+    const { facilitatorAccessToken, style, disableAutocomplete, placeholder, type, onChange, export: xport, minLength, maxLength, onFocusCallback } = props;
+    console.log("onChange", onChange, "onFocusCallback", onFocusCallback);
     const [ fieldValue, setFieldValue ] = useState();
     const [ fieldValid, setFieldValid ] = useState(false);
     const [ fieldPotentiallyValid, setFieldPotentiallyValid] = useState(true);
@@ -112,7 +112,17 @@ function Page({ cspNonce, props, featureFlags } : PageProps) : mixed {
                 errors: fieldErrors
             });
         }
-    }, [ fieldValid ]);
+    }, [ fieldValue, fieldValid ]);
+    useEffect(() => {
+        console.log("inside onFocus hook")
+        console.log(`onFocus ${onFocusCallback} && typeof onfocus ${typeof onFocusCallback}`);
+        if ( initialRender.current && fieldValue === '') {
+            initialRender.current = false
+        } else if(!initialRender.current && typeof onFocusCallback === 'function'){
+            console.log("in else if ")
+            onFocusCallback({message: `${type} is focused ${fieldFocus}`});
+        }
+    },[fieldFocus])
 
     useEffect(() => {
         autoFocusOnFirstInput(mainRef);
@@ -151,6 +161,11 @@ function Page({ cspNonce, props, featureFlags } : PageProps) : mixed {
         setCardTypes(potentialCardTypes);
     };
 
+    const onFieldFocus = ({isFocused}) => {
+        console.log("inside onFieldFocus", isFocused);
+        setFieldFocus(isFocused)
+    }
+
     return (
         <Fragment>
             {
@@ -174,6 +189,7 @@ function Page({ cspNonce, props, featureFlags } : PageProps) : mixed {
                             cspNonce={ cspNonce }
                             autocomplete={ autocomplete }
                             onChange={ onFieldChange }
+                            onFocus={onFieldFocus}
                             styleObject={ style }
                             placeholder={ placeholder }
                             autoFocusRef={ (ref) => setRef(ref.current.base) }
@@ -188,6 +204,7 @@ function Page({ cspNonce, props, featureFlags } : PageProps) : mixed {
                             cspNonce={ cspNonce }
                             autocomplete={ autocomplete }
                             onChange={ onFieldChange }
+                            onFocus={onFieldFocus}
                             styleObject={ style }
                             placeholder={ placeholder }
                             autoFocusRef={ (ref) => setRef(ref.current.base) }
@@ -202,6 +219,7 @@ function Page({ cspNonce, props, featureFlags } : PageProps) : mixed {
                             cspNonce={ cspNonce }
                             autocomplete={ autocomplete }
                             onChange={ onFieldChange }
+                            onFocus={onFieldFocus}
                             styleObject={ style }
                             placeholder={ placeholder }
                             autoFocusRef={ (ref) => setRef(ref.current.base) }
@@ -215,6 +233,7 @@ function Page({ cspNonce, props, featureFlags } : PageProps) : mixed {
                             gqlErrors={ fieldGQLErrors.nameField }
                             cspNonce={ cspNonce }
                             onChange={ onFieldChange }
+                            onFocus={onFieldFocus}
                             styleObject={ style }
                             placeholder={ placeholder }
                             autoFocusRef={ (ref) => setRef(ref.current.base) }
@@ -228,6 +247,7 @@ function Page({ cspNonce, props, featureFlags } : PageProps) : mixed {
                             gqlErrors={ fieldGQLErrors.postalCodeField }
                             cspNonce={ cspNonce }
                             onChange={ onFieldChange }
+                            onFocus={onFieldFocus}
                             styleObject={ style }
                             placeholder={ placeholder }
                             minLength={ minLength }

@@ -29,6 +29,10 @@ export type OnChange = ({|
     errors : [$Values<typeof CARD_ERRORS>] | []
 |}) => ZalgoPromise<void>;
 
+export type OnFocus = ({|
+message : string,
+|}) => ZalgoPromise<void>;
+
 export type CardXProps = {|
     ...XProps,
 
@@ -40,6 +44,7 @@ export type CardXProps = {|
     cardSessionID : string,
     fundingEligibility : FundingEligibilityType,
     onChange : OnChange,
+    onFocusCallback : OnFocus,
     export : CardExport,
     parent? : {|
         props : XProps,
@@ -61,6 +66,7 @@ export type CardProps = {|
     fundingEligibility : FundingEligibilityType,
     export : CardExport,
     onChange : OnChange,
+    onFocusCallback: OnFocus,
     facilitatorAccessToken : string,
     disableAutocomplete? : boolean
 |};
@@ -82,11 +88,13 @@ export function getCardProps({ facilitatorAccessToken, featureFlags } : GetCardP
         maxLength,
         fundingEligibility,
         onChange,
+        onFocusCallback,
         branded = fundingEligibility?.card?.branded ?? true,
         parent,
         experience,
         export: xport
     } = xprops;
+    console.log("props.js onFocus", onFocusCallback, "onCHange", onChange, xprops);
 
     const props = getProps({ facilitatorAccessToken, branded, paymentSource: null, featureFlags });
 
@@ -101,6 +109,7 @@ export function getCardProps({ facilitatorAccessToken, featureFlags } : GetCardP
         cardSessionID,
         fundingEligibility,
         onChange,
+        onFocusCallback,
         inlinexo: experience === EXPERIENCE.INLINE,
         export:   parent ? parent.export : xport,
         facilitatorAccessToken
