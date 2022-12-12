@@ -22,7 +22,6 @@ type PageProps = {|
 
 function Page({ cspNonce, props, featureFlags } : PageProps) : mixed {
     const { facilitatorAccessToken, style, disableAutocomplete, placeholder, type, onChange, export: xport, minLength, maxLength, onFocusCallback } = props;
-    console.log("onChange", onChange, "onFocusCallback", onFocusCallback);
     const [ fieldValue, setFieldValue ] = useState();
     const [ fieldValid, setFieldValid ] = useState(false);
     const [ fieldPotentiallyValid, setFieldPotentiallyValid] = useState(true);
@@ -104,23 +103,22 @@ function Page({ cspNonce, props, featureFlags } : PageProps) : mixed {
         // useRef to store the value of initialRender as
         // we want that to persist across re-renders.
         // See: https://reactjs.org/docs/hooks-faq.html#is-there-something-like-instance-variables
-        if ( initialRender.current ) {
+        if ( initialRender.current && fieldValue === '') {
             initialRender.current = false
-        } else if(typeof onChange === 'function') {
+        } else if(!initialRender.current && typeof onChange === 'function') {
             onChange({
                 isValid: fieldValid,
                 errors: fieldErrors
             });
         }
-    }, [ fieldValue, fieldValid ]);
+    }, [ fieldValue ]);
     useEffect(() => {
-        console.log("inside onFocus hook")
-        console.log(`onFocus ${onFocusCallback} && typeof onfocus ${typeof onFocusCallback}`);
         if ( initialRender.current && fieldValue === '') {
             initialRender.current = false
         } else if(!initialRender.current && typeof onFocusCallback === 'function'){
-            console.log("in else if ")
-            onFocusCallback({message: `${type} is focused ${fieldFocus}`});
+            if(fieldFocus) {
+                onFocusCallback({message: `${type} is focused ${fieldFocus}`});
+            }
         }
     },[fieldFocus])
 
@@ -162,7 +160,6 @@ function Page({ cspNonce, props, featureFlags } : PageProps) : mixed {
     };
 
     const onFieldFocus = ({isFocused}) => {
-        console.log("inside onFieldFocus", isFocused);
         setFieldFocus(isFocused)
     }
 

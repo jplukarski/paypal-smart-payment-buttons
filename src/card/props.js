@@ -94,7 +94,6 @@ export function getCardProps({ facilitatorAccessToken, featureFlags } : GetCardP
         experience,
         export: xport
     } = xprops;
-    console.log("props.js onFocus", onFocusCallback, "onCHange", onChange, xprops);
 
     const props = getProps({ facilitatorAccessToken, branded, paymentSource: null, featureFlags });
 

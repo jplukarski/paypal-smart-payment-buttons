@@ -292,7 +292,6 @@ export function CardNumberField({ cspNonce, onChange, onFocus, styleObject = {},
     }, [ number, isCardEligible, isValid, hasFocus, isPotentiallyValid, cards ]);
 
     useEffect(() => {
-        console.log(`onFocus in field.jsx ${onFocus}`);
         onFocus({isFocused: hasFocus})
     }, [hasFocus]);
 
