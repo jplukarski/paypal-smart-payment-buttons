@@ -45,6 +45,7 @@ export type CardXProps = {|
     fundingEligibility : FundingEligibilityType,
     onChange : OnChange,
     onFocusCallback : OnFocus,
+    onBlur : OnFocus,
     export : CardExport,
     parent? : {|
         props : XProps,
@@ -67,6 +68,7 @@ export type CardProps = {|
     export : CardExport,
     onChange : OnChange,
     onFocusCallback: OnFocus,
+    onBlur: OnFocus,
     facilitatorAccessToken : string,
     disableAutocomplete? : boolean
 |};
@@ -89,6 +91,7 @@ export function getCardProps({ facilitatorAccessToken, featureFlags } : GetCardP
         fundingEligibility,
         onChange,
         onFocusCallback,
+        onBlur,
         branded = fundingEligibility?.card?.branded ?? true,
         parent,
         experience,
@@ -109,6 +112,7 @@ export function getCardProps({ facilitatorAccessToken, featureFlags } : GetCardP
         fundingEligibility,
         onChange,
         onFocusCallback,
+        onBlur,
         inlinexo: experience === EXPERIENCE.INLINE,
         export:   parent ? parent.export : xport,
         facilitatorAccessToken

@@ -21,7 +21,7 @@ type PageProps = {|
 |};
 
 function Page({ cspNonce, props, featureFlags } : PageProps) : mixed {
-    const { facilitatorAccessToken, style, disableAutocomplete, placeholder, type, onChange, export: xport, minLength, maxLength, onFocusCallback } = props;
+    const { facilitatorAccessToken, style, disableAutocomplete, placeholder, type, onChange, export: xport, minLength, maxLength, onFocusCallback, onBlur } = props;
     const [ fieldValue, setFieldValue ] = useState();
     const [ fieldValid, setFieldValid ] = useState(false);
     const [ fieldPotentiallyValid, setFieldPotentiallyValid] = useState(true);
@@ -118,6 +118,8 @@ function Page({ cspNonce, props, featureFlags } : PageProps) : mixed {
         } else if(!initialRender.current && typeof onFocusCallback === 'function'){
             if(fieldFocus) {
                 onFocusCallback({message: `${type} is focused ${fieldFocus}`});
+            } else if(!fieldFocus) {
+                onBlur({message: `${type} is blurred ${fieldFocus}`})
             }
         }
     },[fieldFocus])
