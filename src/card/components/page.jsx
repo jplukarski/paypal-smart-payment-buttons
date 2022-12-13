@@ -5,9 +5,9 @@ import { h, render, Fragment } from 'preact';
 import { useState, useEffect, useRef } from 'preact/hooks';
 
 import { getBody } from '../../lib';
-import { setupExports, autoFocusOnFirstInput, filterExtraFields } from '../lib';
+import { setupExports, autoFocusOnFirstInput, filterExtraFields, kebabToCamelCase} from '../lib';
 import { CARD_FIELD_TYPE_TO_FRAME_NAME, CARD_FIELD_TYPE } from '../constants';
-import { submitCardFields, getCardFieldState, getFieldErrors } from '../interface';
+import { submitCardFields, getCardFieldState, getFieldErrors, isEmpty } from '../interface';
 import { getCardProps, type CardProps } from '../props';
 import type { SetupCardOptions} from '../types';
 import type {FeatureFlags } from '../../types'
@@ -108,7 +108,13 @@ function Page({ cspNonce, props, featureFlags } : PageProps) : mixed {
             initialRender.current = false
         } else if( !initialRender.current && typeof onChange === 'function' ) {
             const {cards, fields} = getCardFieldState()
-            
+            fields[kebabToCamelCase(CARD_FIELD_TYPE_TO_FRAME_NAME[type])] = {
+                isEmpty: isEmpty(fieldValue),
+                isFocused: fieldFocus,
+                isFieldPotentiallyValid: fieldPotentiallyValid,
+                isValid: fieldValid
+            }
+ 
             onChange({
                 cards,
                 fields,

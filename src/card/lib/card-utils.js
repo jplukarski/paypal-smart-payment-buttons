@@ -317,3 +317,7 @@ export function parsedCardType(potentialCardTypes: $ReadOnlyArray<CardType>) : $
 export function getContext(win : Object) : string {
     return win.xprops?.parent?.uid || win.xprops?.uid;
 }
+
+export function kebabToCamelCase(field: string) : string {
+    return field.toLowerCase().replace(/[^a-zA-Z0-9]+(.)/g, (m, field) => field.toUpperCase())
+}

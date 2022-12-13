@@ -16,7 +16,8 @@ import {
     markValidity,
     assertType,
     shouldUseZeroPaddedExpiryPattern,
-    parsedCardType
+    parsedCardType,
+    kebabToCamelCase
 } from './card-utils';
 
 
@@ -523,4 +524,12 @@ describe('card utils', () => {
       ])
     });
   });
+
+    describe.only("kebabToCamelCase", () => {
+        it('converts a string from kebab-case to camelCase', () => {
+            const string = 'kebab-case-string';
+
+            expect(kebabToCamelCase(string)).toStrictEqual('kebabCaseString')
+        })
+    })
 });

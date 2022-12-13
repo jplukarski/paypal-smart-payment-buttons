@@ -128,7 +128,6 @@ export type CardCvvChangeEvent = {|
 |};
 
 export type CardNameChangeEvent = {|
-    event : InputEvent,
     cardName : string
 |};
 

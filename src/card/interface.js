@@ -70,8 +70,8 @@ function getCardFrames(): {
   };
 }
 
-function isEmpty(value: string): boolean {
-  if (value.length === 0) {
+export function isEmpty(value: string): boolean {
+  if (value.length == 0) {
     return true;
   }
   return false;
@@ -81,6 +81,7 @@ function formatCardFrameFieldName(fieldName: string): string {
   const res = fieldName.split("-");
   res.pop();
   res[1] = res[1]?.replace(/^\w/, c => c.toUpperCase());
+  res.push('Field')
   return res.join("");
 }
 export function getCardFieldState(): CardFieldsState {
@@ -111,19 +112,19 @@ export function getCardFieldState(): CardFieldsState {
     cards: parsedCardType(cardNumberFrame.getPotentialCardTypes()),
     fields: {
       ...optionalFields,
-      cardNumber: {
+      cardNumberField: {
         isEmpty: isEmpty(cardNumberFrame.getFieldValue()),
         isValid: cardNumberFrame.isFieldValid(),
         isPotentiallyValid: cardNumberFrame.isFieldPotentiallyValid(),
         isFocused: cardNumberFrame.isFieldFocused()
       },
-      cardExpiry: {
+      cardExpiryField: {
         isEmpty: isEmpty(cardExpiryFrame.getFieldValue()),
         isValid: cardExpiryFrame.isFieldValid(),
         isPotentiallyValid: cardExpiryFrame.isFieldPotentiallyValid(),
         isFocused: cardExpiryFrame.isFieldFocused()
       },
-      cardCvv: {
+      cardCvvField: {
         isEmpty: isEmpty(cardCVVFrame.getFieldValue()),
         isValid: cardCVVFrame.isFieldValid(),
         isPotentiallyValid: cardCVVFrame.isFieldPotentiallyValid(),
@@ -354,12 +355,12 @@ export function submitCardFields({
 }
 
 export const getFieldErrors = (fields) => {
-  let errors = []
+  const errors = [];
   Object.keys(fields).forEach(field => {
     if(!fields[field].isValid){
-      errors.push(`${field} is not valid`)
+      errors.push(`INVALID_${field.toUpperCase()}`);
     }
   })
-  return errors 
+  return errors;
 }
 /* eslint-enable flowtype/require-exact-type */
