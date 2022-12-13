@@ -15,7 +15,7 @@ import { getLogger } from "../lib";
 import type { FeatureFlags } from "../types";
 
 import { getCardProps } from "./props";
-import type { Card, ExtraFields, CardFieldsState } from "./types";
+import type { Card, ExtraFields, CardFieldsState, FieldsState } from "./types";
 import { type CardExports, type ExportsOptions } from "./lib";
 import { parsedCardType } from "./lib/card-utils";
 
@@ -71,7 +71,7 @@ function getCardFrames(): {
 }
 
 export function isEmpty(value: string): boolean {
-  if (value.length == 0) {
+  if (value.length === 0) {
     return true;
   }
   return false;
@@ -354,10 +354,10 @@ export function submitCardFields({
   });
 }
 
-export const getFieldErrors = (fields) => {
+export const getFieldErrors = (fields : FieldsState ) : Array<string> => {
   const errors = [];
   Object.keys(fields).forEach(field => {
-    if(!fields[field].isValid){
+    if(fields[field] && !fields[field].isValid){
       errors.push(`INVALID_${field.toUpperCase()}`);
     }
   })

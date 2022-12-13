@@ -103,9 +103,10 @@ export function CardNumber(
     }, [cardTypes])
 
     useEffect(() => {
-        const validity = cardValidator.number(inputValue);
-        setInputState(newState => ({ ...newState, ...validity }));
-    }, [ inputValue, maskedInputValue ]);
+
+        const maskedValue = addGapsToCardNumber(inputState.inputValue);
+        onChange({ cardNumber: inputState.inputValue, cardMaskedNumber: maskedValue});
+    }, [ inputState ]);
 
     useEffect(() => {
         if (typeof onEligibilityChange === 'function') {
@@ -154,8 +155,8 @@ export function CardNumber(
         const { value: rawValue, selectionStart, selectionEnd } = event.target;
         const value = removeNonDigits(rawValue);
         const detectedCardType = detectCardType(value);
+        const validity = cardValidator.number(value);
         const maskedValue = addGapsToCardNumber(value);
-
         let startCursorPosition = selectionStart;
         let endCursorPosition = selectionEnd;
         
@@ -177,6 +178,7 @@ export function CardNumber(
         setCardTypes(detectedCardType);
         setInputState({
             ...inputState,
+            ...validity,
             inputValue:       value,
             maskedInputValue: maskedValue,
             cursorStart:      startCursorPosition,
@@ -185,7 +187,6 @@ export function CardNumber(
             keyStrokeCount:   keyStrokeCount + 1
         });
 
-        onChange({ event, cardNumber: value, cardMaskedNumber: maskedValue });
     };
 
     const onFocusEvent : (InputEvent) => void = (event : InputEvent) : void => {
