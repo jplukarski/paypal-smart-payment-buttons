@@ -75,9 +75,8 @@ export function CardExpiry(
     }, []);
 
     useEffect(() => {
-        const validity = cardValidator.expirationDate(maskedInputValue);
-        setInputState(newState => ({ ...newState, ...validity }));
-    }, [ inputValue, maskedInputValue ]);
+        onChange({date: inputState.value, maskedDate: inputState.maskedInputValue});
+    }, [ inputState ]);
 
     useEffect(() => {
         if (typeof onValidityChange === 'function') {
@@ -91,6 +90,7 @@ export function CardExpiry(
 
     const formatExpiryDate : (InputEvent) => void = (event: InputEvent) : void => {
         const value = event.target.value
+        const validity = cardValidator.expirationDate(value);
         if(!value.includes("/")) {
             if (shouldUseZeroPaddedExpiryPattern(value, event.key)) {
                 restrictedInput.setPattern(ZERO_PADDED_EXPIRY_PATTERN)
@@ -100,10 +100,10 @@ export function CardExpiry(
         }
         setInputState({
             ...inputState,
+            ...validity,
             inputValue: restrictedInput.getUnformattedValue(),
             maskedInputValue: expiryRef.current.value
         });
-        onChange({event, date: expiryRef.current.value, maskedDate: expiryRef.current.value});
     }
 
     const onKeyDownEvent : (InputEvent) => void = (event : InputEvent) : void => {
