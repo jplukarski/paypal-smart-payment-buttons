@@ -17,7 +17,8 @@ import type { FeatureFlags } from "../types";
 import { getCardProps } from "./props";
 import type { Card, ExtraFields, CardFieldsState, FieldsState } from "./types";
 import { type CardExports, type ExportsOptions } from "./lib";
-import { parsedCardType } from "./lib/card-utils";
+import { parsedCardType, kebabToCamelCase } from "./lib/card-utils";
+import { CARD_ERRORS } from "./constants";
 
 function getExportsByFrameName<T>(
   name: $Values<typeof FRAME_NAME>
@@ -358,7 +359,25 @@ export const getFieldErrors = (fields : FieldsState ) : Array<string> => {
   const errors = [];
   Object.keys(fields).forEach(field => {
     if(fields[field] && !fields[field].isValid){
-      errors.push(`INVALID_${field.toUpperCase()}`);
+      switch(field) {
+        case kebabToCamelCase(FRAME_NAME.CARD_NAME_FIELD):
+          errors.push(CARD_ERRORS.INVALID_NAME)
+          break;
+        case kebabToCamelCase(FRAME_NAME.CARD_NUMBER_FIELD):
+          errors.push(CARD_ERRORS.INVALID_NUMBER)
+          break;
+        case kebabToCamelCase(FRAME_NAME.CARD_EXPIRY_FIELD):
+          errors.push(CARD_ERRORS.INVALID_EXPIRY)
+          break;
+        case kebabToCamelCase(FRAME_NAME.CARD_CVV_FIELD):
+          errors.push(CARD_ERRORS.INVALID_CVV)
+          break;
+        case kebabToCamelCase(FRAME_NAME.CARD_POSTAL_FIELD):
+          errors.push(CARD_ERRORS.INVALID_POSTAL)
+          break;
+        default:
+          // noop
+      }
     }
   })
   return errors;
