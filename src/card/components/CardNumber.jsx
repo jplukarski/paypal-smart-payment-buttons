@@ -61,7 +61,6 @@ type CardNumberProps = {|
     onBlur? : (event : InputEvent) => void,
     onValidityChange? : (numberValidity : FieldValidity) => void,
     onEligibilityChange? : (isCardEligible : boolean) => void,
-    onPotentialCardTypesChange? : (cardTypes : CardType) => void
 |};
 
 export function CardNumber(
@@ -79,7 +78,6 @@ export function CardNumber(
         onBlur,
         onValidityChange,
         onEligibilityChange,
-        onPotentialCardTypesChange
     } : CardNumberProps
 ) : mixed {
     const [ attributes, setAttributes ] : [ Object, (Object) => Object ] = useState({ placeholder });
@@ -105,7 +103,7 @@ export function CardNumber(
     useEffect(() => {
 
         const maskedValue = addGapsToCardNumber(inputState.inputValue);
-        onChange({ cardNumber: inputState.inputValue, cardMaskedNumber: maskedValue});
+        onChange({ cardNumber: inputState.inputValue, cardMaskedNumber: maskedValue, potentialCardTypes: cardTypes});
     }, [ inputState ]);
 
     useEffect(() => {
@@ -113,10 +111,6 @@ export function CardNumber(
             onEligibilityChange(checkCardEligibility(inputValue, cardType));
         }
         
-        if (typeof onPotentialCardTypesChange === 'function') {
-            onPotentialCardTypesChange(cardTypes);
-        }
-
         if (cardType && cardType.lengths) {
             // get the maximum card length for the given card type
             const cardMaxLength = cardType.lengths.reduce((previousValue, currentValue) => {

@@ -5,7 +5,7 @@ import { h, render, Fragment } from 'preact';
 import { useState, useEffect, useRef } from 'preact/hooks';
 
 import { getBody } from '../../lib';
-import { setupExports, autoFocusOnFirstInput, filterExtraFields, kebabToCamelCase} from '../lib';
+import { setupExports, autoFocusOnFirstInput, filterExtraFields, kebabToCamelCase, parsedCardType} from '../lib';
 import { CARD_FIELD_TYPE_TO_FRAME_NAME, CARD_FIELD_TYPE } from '../constants';
 import { submitCardFields, getCardFieldState, getFieldErrors, isEmpty } from '../interface';
 import { getCardProps, type CardProps } from '../props';
@@ -26,8 +26,8 @@ function Page({ cspNonce, props, featureFlags } : PageProps) : mixed {
     const [ fieldValue, setFieldValue ] = useState();
     const [ fieldValid, setFieldValid ] = useState(false);
     const [ fieldPotentiallyValid, setFieldPotentiallyValid] = useState(true);
-    const [cardTypes, setCardTypes] = useState([]);
-    const [fieldFocus, setFieldFocus ] = useState(false);
+    const [ cardTypes, setCardTypes ] = useState([]);
+    const [ fieldFocus, setFieldFocus ] = useState(false);
     const [ fieldErrors, setFieldErrors ] = useState([]);
     const [ mainRef, setRef ] = useState();
     const [ fieldGQLErrors, setFieldGQLErrors ] = useState({ singleField: {}, numberField: [], expiryField: [], cvvField: [], nameField: [], postalCodeField: [] });
@@ -107,8 +107,9 @@ function Page({ cspNonce, props, featureFlags } : PageProps) : mixed {
         if ( initialRender.current && fieldValue === '') {
             initialRender.current = false
         } else if( !initialRender.current && typeof onChange === 'function' ) {
-            const {cards, fields} = getCardFieldState()
+            const { fields } = getCardFieldState()
             const currentField = kebabToCamelCase(CARD_FIELD_TYPE_TO_FRAME_NAME[type])
+            const potentialCardTypes = parsedCardType(cardTypes)
             fields[currentField] = {
                 isEmpty: isEmpty(fieldValue),
                 isFocused: fieldFocus,
@@ -117,8 +118,8 @@ function Page({ cspNonce, props, featureFlags } : PageProps) : mixed {
             }
  
             onChange({
-                cards,
                 fields,
+                potentialCardTypes,
                 emittedBy: type,
                 isValid: fieldValid,
                 errors: getFieldErrors(fields)

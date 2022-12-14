@@ -290,6 +290,11 @@ export function CardNumberField({ cspNonce, onChange, styleObject = {}, placehol
         onChange({ value: number, valid: numberValidity.isValid, isFocused: hasFocus, potentiallyValid: numberValidity.isPotentiallyValid, errors, potentialCardTypes: cards });
     }, [ number, isCardEligible, isValid, hasFocus, isPotentiallyValid, cards ]);
 
+    const handleInputChange = (cardNumber, potentialCardTypes) => {
+       setNumber(cardNumber)
+       setCards(potentialCardTypes)
+    }
+
     return (
         <Fragment>
             <style nonce={ cspNonce }>
@@ -301,10 +306,9 @@ export function CardNumberField({ cspNonce, onChange, styleObject = {}, placehol
                 type='text'
                 autocomplete={ autocomplete }
                 placeholder={ placeholder ?? DEFAULT_PLACEHOLDERS.number }
-                onChange={ ({ cardNumber } : CardNumberChangeEvent) => setNumber(cardNumber) }
+                onChange={ ({ cardNumber, potentialCardTypes } : CardNumberChangeEvent) => handleInputChange(cardNumber, potentialCardTypes) }
                 onEligibilityChange={ (eligibility : boolean) => setIsCardEligible(eligibility) }
                 onValidityChange={ (validity : FieldValidity) => setNumberValidity(validity) }
-                onPotentialCardTypesChange={(cardTypes : CardType) => setCards(cardTypes)}
                 onFocus={ () => setHasFocus(true) }
                 onBlur={ () => setHasFocus(false) }
             />
