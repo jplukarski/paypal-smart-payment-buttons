@@ -116,7 +116,7 @@ function Page({ cspNonce, props, featureFlags } : PageProps) : mixed {
                 isFieldPotentiallyValid: fieldPotentiallyValid,
                 isValid: fieldValid
             }
-            if(currentField === 'cardNumberField') {
+            if (currentField === 'cardNumberField') {
                 potentialCardTypes = parsedCardType(cardTypes)
             } else {
                 potentialCardTypes = cards
