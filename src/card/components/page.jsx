@@ -107,14 +107,19 @@ function Page({ cspNonce, props, featureFlags } : PageProps) : mixed {
         if ( initialRender.current && fieldValue === '') {
             initialRender.current = false
         } else if( !initialRender.current && typeof onChange === 'function' ) {
-            const { fields } = getCardFieldState()
+            const { cards, fields } = getCardFieldState()
             const currentField = kebabToCamelCase(CARD_FIELD_TYPE_TO_FRAME_NAME[type])
-            const potentialCardTypes = parsedCardType(cardTypes)
+            let potentialCardTypes
             fields[currentField] = {
                 isEmpty: isEmpty(fieldValue),
                 isFocused: fieldFocus,
                 isFieldPotentiallyValid: fieldPotentiallyValid,
                 isValid: fieldValid
+            }
+            if(currentField === 'cardNumberField') {
+                potentialCardTypes = parsedCardType(cardTypes)
+            } else {
+                potentialCardTypes = cards
             }
  
             onChange({
