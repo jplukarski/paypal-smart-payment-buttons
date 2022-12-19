@@ -21,8 +21,7 @@ type PageProps = {|
 |};
 
 function Page({ cspNonce, props, featureFlags } : PageProps) : mixed {
-    const { facilitatorAccessToken, style, disableAutocomplete, placeholder, type, onChange, export: xport, minLength, maxLength } = props;
-
+    const { facilitatorAccessToken, style, disableAutocomplete, placeholder, type, onChange, export: xport, minLength, maxLength, onFocusCallback, onBlur } = props;
     const [ fieldValue, setFieldValue ] = useState();
     const [ fieldValid, setFieldValid ] = useState(false);
     const [ fieldPotentiallyValid, setFieldPotentiallyValid] = useState(true);
@@ -130,6 +129,17 @@ function Page({ cspNonce, props, featureFlags } : PageProps) : mixed {
             });
         }
     }, [ fieldValue ]);
+    useEffect(() => {
+        if ( initialRender.current && fieldValue === '') {
+            initialRender.current = false
+        } else if(!initialRender.current && typeof onFocusCallback === 'function'){
+            if(fieldFocus) {
+                onFocusCallback({message: `${type} is focused ${fieldFocus}`});
+            } else if(!fieldFocus) {
+                onBlur({message: `${type} is blurred ${fieldFocus}`})
+            }
+        }
+    },[fieldFocus])
 
     useEffect(() => {
         autoFocusOnFirstInput(mainRef);
@@ -167,6 +177,10 @@ function Page({ cspNonce, props, featureFlags } : PageProps) : mixed {
         setCardTypes(potentialCardTypes);
     };
 
+    const onFieldFocus = ({isFocused}) => {
+        setFieldFocus(isFocused)
+    }
+
     return (
         <Fragment>
             {
@@ -190,6 +204,7 @@ function Page({ cspNonce, props, featureFlags } : PageProps) : mixed {
                             cspNonce={ cspNonce }
                             autocomplete={ autocomplete }
                             onChange={ onFieldChange }
+                            onFocus={onFieldFocus}
                             styleObject={ style }
                             placeholder={ placeholder }
                             autoFocusRef={ (ref) => setRef(ref.current.base) }
@@ -204,6 +219,7 @@ function Page({ cspNonce, props, featureFlags } : PageProps) : mixed {
                             cspNonce={ cspNonce }
                             autocomplete={ autocomplete }
                             onChange={ onFieldChange }
+                            onFocus={onFieldFocus}
                             styleObject={ style }
                             placeholder={ placeholder }
                             autoFocusRef={ (ref) => setRef(ref.current.base) }
@@ -218,6 +234,7 @@ function Page({ cspNonce, props, featureFlags } : PageProps) : mixed {
                             cspNonce={ cspNonce }
                             autocomplete={ autocomplete }
                             onChange={ onFieldChange }
+                            onFocus={onFieldFocus}
                             styleObject={ style }
                             placeholder={ placeholder }
                             autoFocusRef={ (ref) => setRef(ref.current.base) }
@@ -231,6 +248,7 @@ function Page({ cspNonce, props, featureFlags } : PageProps) : mixed {
                             gqlErrors={ fieldGQLErrors.nameField }
                             cspNonce={ cspNonce }
                             onChange={ onFieldChange }
+                            onFocus={onFieldFocus}
                             styleObject={ style }
                             placeholder={ placeholder }
                             autoFocusRef={ (ref) => setRef(ref.current.base) }
@@ -244,6 +262,7 @@ function Page({ cspNonce, props, featureFlags } : PageProps) : mixed {
                             gqlErrors={ fieldGQLErrors.postalCodeField }
                             cspNonce={ cspNonce }
                             onChange={ onFieldChange }
+                            onFocus={onFieldFocus}
                             styleObject={ style }
                             placeholder={ placeholder }
                             minLength={ minLength }
