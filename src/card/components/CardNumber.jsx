@@ -101,9 +101,7 @@ export function CardNumber(
     }, [cardTypes])
 
     useEffect(() => {
-
-        const maskedValue = addGapsToCardNumber(inputState.inputValue);
-        onChange({ cardNumber: inputState.inputValue, cardMaskedNumber: maskedValue, potentialCardTypes: cardTypes});
+        onChange({ cardNumber: inputState.inputValue, potentialCardTypes: cardTypes});
     }, [ inputState ]);
 
     useEffect(() => {

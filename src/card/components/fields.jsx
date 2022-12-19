@@ -242,7 +242,7 @@ export function ValidationMessage({ message } : Object) : mixed {
 
 type CardNumberFieldProps = {|
     cspNonce : string,
-    onChange : ({| value : string, valid : boolean, isFocused: boolean, potentiallyValid: boolean, errors : [$Values<typeof CARD_ERRORS>] |[], potentialCardTypes: $ReadOnlyArray<CardType> | [] |}) => void,
+    onChange : ({| value : string, valid : boolean, isFocused: boolean, potentiallyValid: boolean, potentialCardTypes: $ReadOnlyArray<CardType> | [] |}) => void,
     styleObject : CardStyle,
     placeholder : string,
     autoFocusRef : (mixed) => void,
@@ -277,7 +277,6 @@ export function CardNumberField({ cspNonce, onChange, styleObject = {}, placehol
     }, [ gqlErrors ]);
 
     useEffect(() => {
-        const errors = setErrors({ isCardEligible, isNumberValid: numberValidity.isValid, gqlErrorsObject: { field: CARD_FIELD_TYPE.NUMBER, errors: gqlErrors } });
         if (!isCardEligible) {
             const element = numberRef?.current?.base;
             if (element) {
@@ -287,7 +286,7 @@ export function CardNumberField({ cspNonce, onChange, styleObject = {}, placehol
         } else {
             markValidity(numberRef, numberValidity);
         }
-        onChange({ value: number, valid: numberValidity.isValid, isFocused: hasFocus, potentiallyValid: numberValidity.isPotentiallyValid, errors, potentialCardTypes: cards });
+        onChange({ value: number, valid: numberValidity.isValid, isFocused: hasFocus, potentiallyValid: numberValidity.isPotentiallyValid, potentialCardTypes: cards });
     }, [ number, isCardEligible, isValid, hasFocus, isPotentiallyValid, cards ]);
 
     const handleInputChange = (cardNumber, potentialCardTypes) => {
@@ -318,7 +317,7 @@ export function CardNumberField({ cspNonce, onChange, styleObject = {}, placehol
 
 type CardExpiryFieldProps = {|
     cspNonce : string,
-    onChange : ({| value : string, valid : boolean, isFocused: boolean, potentiallyValid: boolean, errors : [$Values<typeof CARD_ERRORS>] | [] |}) => void,
+    onChange : ({| value : string, valid : boolean, isFocused: boolean, potentiallyValid: boolean |}) => void,
     styleObject : CardStyle,
     placeholder : string,
     autoFocusRef : (mixed) => void,
@@ -351,9 +350,8 @@ export function CardExpiryField({ cspNonce, onChange, styleObject = {}, placehol
     }, [ gqlErrors ]);
     
     useEffect(() => {
-        const errors = setErrors({ isExpiryValid: expiryValidity.isValid });
         markValidity(expiryRef, expiryValidity);
-        onChange({ value: expiry, valid: expiryValidity.isValid, isFocused: hasFocus, potentiallyValid: expiryValidity.isPotentiallyValid, errors });
+        onChange({ value: expiry, valid: expiryValidity.isValid, isFocused: hasFocus, potentiallyValid: expiryValidity.isPotentiallyValid });
     }, [ expiry, isValid, hasFocus, isPotentiallyValid ]);
 
     return (
@@ -377,7 +375,7 @@ export function CardExpiryField({ cspNonce, onChange, styleObject = {}, placehol
 }
 type CardCvvFieldProps = {|
     cspNonce : string,
-    onChange : ({| value : string, valid : boolean, isFocused: boolean, potentiallyValid: boolean, errors : [$Values<typeof CARD_ERRORS>] | [] |}) => void,
+    onChange : ({| value : string, valid : boolean, isFocused: boolean, potentiallyValid: boolean |}) => void,
     styleObject : CardStyle,
     placeholder : string,
     autoFocusRef : (mixed) => void,
@@ -410,9 +408,8 @@ export function CardCVVField({ cspNonce, onChange, styleObject = {}, placeholder
     }, [ gqlErrors ]);
 
     useEffect(() => {
-        const errors = setErrors({ isCvvValid: cvvValidity.isValid });
         markValidity(cvvRef, cvvValidity);
-        onChange({ value: cvv, valid: cvvValidity.isValid, isFocused: hasFocus, potentiallyValid: cvvValidity.isPotentiallyValid, errors });
+        onChange({ value: cvv, valid: cvvValidity.isValid, isFocused: hasFocus, potentiallyValid: cvvValidity.isPotentiallyValid });
     }, [ cvv, isValid, hasFocus, isPotentiallyValid  ]);
 
     return (
@@ -436,7 +433,7 @@ export function CardCVVField({ cspNonce, onChange, styleObject = {}, placeholder
 
 type CardNameFieldProps = {|
     cspNonce : string,
-    onChange : ({| value : string, valid : boolean, isFocused: boolean, potentiallyValid: boolean, errors : [$Values<typeof CARD_ERRORS>] | [] |}) => void,
+    onChange : ({| value : string, valid : boolean, isFocused: boolean, potentiallyValid: boolean |}) => void,
     styleObject : CardStyle,
     placeholder : string,
     autoFocusRef : (mixed) => void,
@@ -468,9 +465,8 @@ export function CardNameField({ cspNonce, onChange, styleObject = {}, placeholde
     }, [ gqlErrors ]);
 
     useEffect(() => {
-        const errors = setErrors({ isNameValid: nameValidity.isValid });
         markValidity(nameRef, nameValidity);
-        onChange({ value: name, valid: nameValidity.isValid, isFocused: hasFocus, potentiallyValid: nameValidity.isPotentiallyValid, errors });
+        onChange({ value: name, valid: nameValidity.isValid, isFocused: hasFocus, potentiallyValid: nameValidity.isPotentiallyValid });
     }, [ name, isValid, hasFocus, isPotentiallyValid  ]);
 
     return (
@@ -494,7 +490,7 @@ export function CardNameField({ cspNonce, onChange, styleObject = {}, placeholde
 
 type CardPostalFieldProps = {|
     cspNonce : string,
-    onChange : ({| value : string, valid : boolean, isFocused: boolean, potentiallyValid: boolean, errors : [$Values<typeof CARD_ERRORS>] | [] |}) => void,
+    onChange : ({| value : string, valid : boolean, isFocused: boolean, potentiallyValid: boolean|}) => void,
     styleObject : CardStyle,
     placeholder : string,
     minLength : number,
@@ -529,9 +525,8 @@ export function CardPostalCodeField({ cspNonce, onChange, styleObject = {}, plac
     }, [ gqlErrors ]);
 
     useEffect(() => {
-        const errors = setErrors({ isPostalCodeValid: postalCodeValidity.isValid });
         markValidity(postalRef, postalCodeValidity);
-        onChange({ value: postalCode, valid: postalCodeValidity.isValid, isFocused: hasFocus, potentiallyValid: postalCodeValidity.isPotentiallyValid, errors });
+        onChange({ value: postalCode, valid: postalCodeValidity.isValid, isFocused: hasFocus, potentiallyValid: postalCodeValidity.isPotentiallyValid });
     }, [ postalCode, isValid, hasFocus, isPotentiallyValid  ]);
 
     return (

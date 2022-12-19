@@ -73,7 +73,7 @@ export function CardCVV(
     }, []);
 
     useEffect(() => {
-        onChange({cardCvv: inputState.inputValue, valid: inputState.isValid});
+        onChange({cardCvv: inputState.inputValue});
     }, [ inputState ]);
 
     useEffect(() => {

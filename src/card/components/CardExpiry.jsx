@@ -54,7 +54,7 @@ export function CardExpiry(
 ) : mixed {
     const [ attributes, setAttributes ] : [ Object, (Object) => Object ] = useState({ placeholder });
     const [ inputState, setInputState ] : [ InputState, (InputState | (InputState) => InputState) => InputState ] = useState({ ...defaultInputState, ...state });
-    const { inputValue, maskedInputValue, isValid, isPotentiallyValid } = inputState;
+    const { maskedInputValue, isValid, isPotentiallyValid } = inputState;
     const [restrictedInput, setRestrictedInput] : [Object, (Object) => Object] = useState({})
 
     const expiryRef = useRef()
@@ -75,7 +75,7 @@ export function CardExpiry(
     }, []);
 
     useEffect(() => {
-        onChange({date: inputState.value, maskedDate: inputState.maskedInputValue});
+        onChange({maskedDate: inputState.maskedInputValue});
     }, [ inputState ]);
 
     useEffect(() => {

@@ -114,12 +114,11 @@ export type InputEvent = {|
 
 export type CardNumberChangeEvent = {|
     cardNumber : string,
-    cardMaskedNumber : string
+    potentialCardTypes : CardType,
 |};
 
 export type CardExpiryChangeEvent = {|
     maskedDate : string,
-    date : string
 |};
 
 export type CardCvvChangeEvent = {|
@@ -131,7 +130,7 @@ export type CardNameChangeEvent = {|
 |};
 
 export type CardPostalCodeChangeEvent = {|
-    event : InputEvent,
+    event? : InputEvent,
     cardPostalCode : string
 |};
 

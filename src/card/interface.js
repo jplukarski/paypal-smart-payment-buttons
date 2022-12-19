@@ -355,7 +355,7 @@ export function submitCardFields({
   });
 }
 
-export const getFieldErrors = (fields : FieldsState ) : Array<string> => {
+export const getFieldErrors = (fields : FieldsState ) : [$Values<typeof CARD_ERRORS>] | [] => {
   const errors = [];
   Object.keys(fields).forEach(field => {
     if(fields[field] && !fields[field].isValid){

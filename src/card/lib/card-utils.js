@@ -319,5 +319,5 @@ export function getContext(win : Object) : string {
 }
 
 export function kebabToCamelCase(field: string) : string {
-    return field.toLowerCase().replace(/[^a-zA-Z0-9]+(.)/g, (m, field) => field.toUpperCase())
+    return field.toLowerCase().replace(/[^a-zA-Z0-9]+(.)/g, (m, value) => value.toUpperCase())
 }

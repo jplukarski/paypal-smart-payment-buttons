@@ -55,7 +55,7 @@ export function CardPostalCode(
     }, []);
 
     useEffect(() => {
-        onChange({ cardPostalCode: inputState.inputValue, valid: inputState.valid });
+        onChange({ cardPostalCode: inputState.inputValue });
     }, [ inputState ]);
 
     useEffect(() => {
