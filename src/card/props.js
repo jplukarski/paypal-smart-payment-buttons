@@ -33,8 +33,25 @@ export type OnChange = ({|
 |}) => ZalgoPromise<void>;
 
 export type OnFocus = ({|
-message : string,
+    potentialCardTypes : $ReadOnlyArray<ParsedCardType>,
+    emittedBy: string,
+    fields: FieldsState,
+    errors : [$Values<typeof CARD_ERRORS>] | []
 |}) => ZalgoPromise<void>;
+
+export type InputEventState = ({|
+    potentialCardTypes : $ReadOnlyArray<ParsedCardType>,
+    emittedBy: string,
+    fields: FieldsState,
+    errors : [$Values<typeof CARD_ERRORS>] | [],
+    
+|}) => ZalgoPromise<void>;
+
+export type InputEvents = {|
+    onChange? : OnChange,
+    onFocus? : OnFocus,
+    onBlur? : OnFocus,
+|}
 
 export type CardXProps = {|
     ...XProps,
@@ -46,9 +63,7 @@ export type CardXProps = {|
     maxLength? : number,
     cardSessionID : string,
     fundingEligibility : FundingEligibilityType,
-    onChange : OnChange,
-    onFocusCallback : OnFocus,
-    onBlur : OnFocus,
+    inputEvents : InputEvents,
     export : CardExport,
     parent? : {|
         props : XProps,
@@ -69,9 +84,7 @@ export type CardProps = {|
     inlinexo : boolean,
     fundingEligibility : FundingEligibilityType,
     export : CardExport,
-    onChange : OnChange,
-    onFocusCallback: OnFocus,
-    onBlur: OnFocus,
+    inputEvents : InputEvents,
     facilitatorAccessToken : string,
     disableAutocomplete? : boolean
 |};
@@ -92,9 +105,7 @@ export function getCardProps({ facilitatorAccessToken, featureFlags } : GetCardP
         minLength,
         maxLength,
         fundingEligibility,
-        onChange,
-        onFocusCallback,
-        onBlur,
+        inputEvents,
         branded = fundingEligibility?.card?.branded ?? true,
         parent,
         experience,
@@ -113,9 +124,7 @@ export function getCardProps({ facilitatorAccessToken, featureFlags } : GetCardP
         maxLength,
         cardSessionID,
         fundingEligibility,
-        onChange,
-        onFocusCallback,
-        onBlur,
+        inputEvents,
         inlinexo: experience === EXPERIENCE.INLINE,
         export:   parent ? parent.export : xport,
         facilitatorAccessToken

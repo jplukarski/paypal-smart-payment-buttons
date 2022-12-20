@@ -21,7 +21,8 @@ type PageProps = {|
 |};
 
 function Page({ cspNonce, props, featureFlags } : PageProps) : mixed {
-    const { facilitatorAccessToken, style, disableAutocomplete, placeholder, type, onChange, export: xport, minLength, maxLength, onFocusCallback, onBlur } = props;
+    const { facilitatorAccessToken, style, disableAutocomplete, placeholder, type, export: xport, inputEvents, minLength, maxLength } = props;
+    const { onChange, onFocus, onBlur } = inputEvents;
     const [ fieldValue, setFieldValue ] = useState();
     const [ fieldValid, setFieldValid ] = useState(false);
     const [ fieldPotentiallyValid, setFieldPotentiallyValid] = useState(true);
@@ -92,6 +93,24 @@ function Page({ cspNonce, props, featureFlags } : PageProps) : mixed {
         setFieldGQLErrors({ singleField: {}, numberField: [], expiryField: [], cvvField: [], nameField: [], postalCodeField: [] });
     };
 
+    const getStateObject = () => {
+        const { cards, fields } = getCardFieldState()
+        const currentField = kebabToCamelCase(CARD_FIELD_TYPE_TO_FRAME_NAME[type])
+        let potentialCardTypes
+        fields[currentField] = {
+            isEmpty: isEmpty(fieldValue),
+            isFocused: fieldFocus,
+            isFieldPotentiallyValid: fieldPotentiallyValid,
+            isValid: fieldValid
+        }
+        if (currentField === 'cardNumberField') {
+            potentialCardTypes = parsedCardType(cardTypes)
+        } else {
+            potentialCardTypes = cards
+        }
+        return { fields, potentialCardTypes }
+    }
+
     useEffect(() => {
         // useEffect is fired on first render as well as when
         // any value in the depenency array has changed. We
@@ -105,21 +124,7 @@ function Page({ cspNonce, props, featureFlags } : PageProps) : mixed {
         if ( initialRender.current && fieldValue === '') {
             initialRender.current = false
         } else if( !initialRender.current && typeof onChange === 'function' ) {
-            const { cards, fields } = getCardFieldState()
-            const currentField = kebabToCamelCase(CARD_FIELD_TYPE_TO_FRAME_NAME[type])
-            let potentialCardTypes
-            fields[currentField] = {
-                isEmpty: isEmpty(fieldValue),
-                isFocused: fieldFocus,
-                isFieldPotentiallyValid: fieldPotentiallyValid,
-                isValid: fieldValid
-            }
-            if (currentField === 'cardNumberField') {
-                potentialCardTypes = parsedCardType(cardTypes)
-            } else {
-                potentialCardTypes = cards
-            }
- 
+            const {fields, potentialCardTypes} = getStateObject();
             onChange({
                 fields,
                 potentialCardTypes,
@@ -132,11 +137,19 @@ function Page({ cspNonce, props, featureFlags } : PageProps) : mixed {
     useEffect(() => {
         if ( initialRender.current && fieldValue === '') {
             initialRender.current = false
-        } else if(!initialRender.current && typeof onFocusCallback === 'function'){
+        } else if(!initialRender.current && typeof onFocus === 'function'){
+            const {fields, potentialCardTypes} = getStateObject();
+            const fieldStateObject = {
+                fields,
+                potentialCardTypes,
+                emittedBy: type,
+                errors: getFieldErrors(fields)
+            }
+
             if(fieldFocus) {
-                onFocusCallback({message: `${type} is focused ${fieldFocus}`});
+                onFocus({...fieldStateObject});
             } else if(!fieldFocus) {
-                onBlur({message: `${type} is blurred ${fieldFocus}`})
+                onBlur({...fieldStateObject})
             }
         }
     },[fieldFocus])

@@ -53,7 +53,7 @@ type CardFieldProps = {|
     gqlErrorsObject : {| field : string, errors : [] |}
 |};
 
-export function CardField({ cspNonce, onChange, styleObject = {}, placeholder = {}, gqlErrorsObject = {}, autoFocusRef, autocomplete, onFocus } : CardFieldProps) : mixed {
+export function CardField({ cspNonce, onChange, styleObject = {}, placeholder = {}, gqlErrorsObject = {}, autoFocusRef, autocomplete } : CardFieldProps) : mixed {
     const [ attributes, setAttributes ] : [ Object, (Object) => Object ] = useState({});
     const [ cssText, setCSSText ] : [ string, (string) => string ] = useState('');
     const [ number, setNumber ] : [ string, (string) => string ] = useState('');
