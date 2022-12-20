@@ -25,33 +25,27 @@ export type CardExport = ({|
 |}) => ZalgoPromise<void>;
 
 export type OnChange = ({|
-    potentialCardTypes : $ReadOnlyArray<ParsedCardType>,
+    ...InputEventState,
     isValid : boolean,
-    emittedBy: string,
-    fields: FieldsState,
-    errors : [$Values<typeof CARD_ERRORS>] | []
 |}) => ZalgoPromise<void>;
 
-export type OnFocus = ({|
-    potentialCardTypes : $ReadOnlyArray<ParsedCardType>,
-    emittedBy: string,
-    fields: FieldsState,
-    errors : [$Values<typeof CARD_ERRORS>] | []
-|}) => ZalgoPromise<void>;
+export type OnBlur = (InputEventState) => ZalgoPromise<void>
 
-export type InputEventState = ({|
+export type OnFocus = (InputEventState) => ZalgoPromise<void>
+
+export type InputEventState = {|
     potentialCardTypes : $ReadOnlyArray<ParsedCardType>,
     emittedBy: string,
     fields: FieldsState,
     errors : [$Values<typeof CARD_ERRORS>] | [],
     
-|}) => ZalgoPromise<void>;
+|}
 
-export type InputEvents = {|
+export type InputEvents = {
     onChange? : OnChange,
     onFocus? : OnFocus,
-    onBlur? : OnFocus,
-|}
+    onBlur? : OnBlur,
+}
 
 export type CardXProps = {|
     ...XProps,

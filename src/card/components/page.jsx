@@ -22,7 +22,7 @@ type PageProps = {|
 
 function Page({ cspNonce, props, featureFlags } : PageProps) : mixed {
     const { facilitatorAccessToken, style, disableAutocomplete, placeholder, type, export: xport, inputEvents, minLength, maxLength } = props;
-    const { onChange, onFocus, onBlur } = inputEvents;
+    const { onChange, onFocus, onBlur } = inputEvents || {};
     const [ fieldValue, setFieldValue ] = useState();
     const [ fieldValid, setFieldValid ] = useState(false);
     const [ fieldPotentiallyValid, setFieldPotentiallyValid] = useState(true);
@@ -148,7 +148,7 @@ function Page({ cspNonce, props, featureFlags } : PageProps) : mixed {
 
             if(fieldFocus) {
                 onFocus({...fieldStateObject});
-            } else if(!fieldFocus) {
+            } else if(typeof onBlur === 'function' && !fieldFocus) {
                 onBlur({...fieldStateObject})
             }
         }
