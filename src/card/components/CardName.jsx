@@ -83,10 +83,12 @@ export function CardName(
     };
 
     const onKeyDownEvent : (InputEvent) => void = (event : InputEvent) : void => {
-        if(event.keyCode === 13){
-            onKeyDown(true)
-        } else {
-            onKeyDown(false)
+        if (typeof onKeyDown === 'function') {
+            if(event.keyCode === 13){
+                onKeyDown(true)
+            } else {
+                onKeyDown(false)
+            }
         }
 
         if (allowNavigation) {
@@ -103,6 +105,8 @@ export function CardName(
     const onBlurEvent : (InputEvent) => void = (event : InputEvent) : void => {
         if (typeof onBlur === 'function') {
             onBlur(event);
+        }
+        if ( typeof onKeyDown === 'function') {
             onKeyDown(false)
         }
     };

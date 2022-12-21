@@ -161,7 +161,7 @@ function Page({ cspNonce, props, featureFlags } : PageProps) : mixed {
     // fire the handler when key code is 13
     //
     useEffect(() => {
-        if(inputSubmit) {
+        if(inputSubmit && typeof onInputSubmitRequest === 'function') {
             const {fields, potentialCardTypes} = getStateObject();
             const errors = getFieldErrors(fields)
             const fieldStateObject = {

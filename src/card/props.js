@@ -30,12 +30,12 @@ export type InputEventState = {|
     emittedBy: string,
     fields: FieldsState,
     errors : [$Values<typeof CARD_ERRORS>] | [],
+    isFormValid : boolean,
 |}
 
 export type OnChange = ({|
     ...InputEventState,
-    isValid : boolean,
-|}) => ZalgoPromise<void>;
+ |}) => ZalgoPromise<void>;
 
 
 export type OnBlur = (InputEventState) => ZalgoPromise<void>

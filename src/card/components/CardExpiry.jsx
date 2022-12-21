@@ -109,13 +109,15 @@ export function CardExpiry(
     }
 
     const onKeyDownEvent : (InputEvent) => void = (event : InputEvent) : void => {
-        if(event.keyCode === 13){
-            onKeyDown(true)
-        } else {
-            onKeyDown(false)
-        }
-        if (allowNavigation) {
-            navigateOnKeyDown(event, navigation);
+        if (typeof onKeyDown === 'function') {
+            if(event.keyCode === 13){
+                onKeyDown(true)
+            } else {
+                onKeyDown(false)
+            }
+            if (allowNavigation) {
+                navigateOnKeyDown(event, navigation);
+            }
         }
     };
 
@@ -128,7 +130,9 @@ export function CardExpiry(
     const onBlurEvent : (InputEvent) => void = (event : InputEvent) : void => {
         if (typeof onBlur === 'function') {
             onBlur(event);
-            onKeyDown(false);
+        }
+        if ( typeof onKeyDown === 'function') {
+            onKeyDown(false)
         }
     };
 
