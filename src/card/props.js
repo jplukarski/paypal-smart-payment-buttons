@@ -33,6 +33,8 @@ export type OnBlur = (InputEventState) => ZalgoPromise<void>
 
 export type OnFocus = (InputEventState) => ZalgoPromise<void>
 
+export type OnInputSubmitRequest = (InputEventState) => ZalgoPromise<void>
+
 export type InputEventState = {|
     potentialCardTypes : $ReadOnlyArray<ParsedCardType>,
     emittedBy: string,
@@ -45,6 +47,7 @@ export type InputEvents = {
     onChange? : OnChange,
     onFocus? : OnFocus,
     onBlur? : OnBlur,
+    onInputSubmitRequest? : OnInputSubmitRequest,
 }
 
 export type CardXProps = {|

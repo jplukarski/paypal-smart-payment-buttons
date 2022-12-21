@@ -22,12 +22,13 @@ type PageProps = {|
 
 function Page({ cspNonce, props, featureFlags } : PageProps) : mixed {
     const { facilitatorAccessToken, style, disableAutocomplete, placeholder, type, export: xport, inputEvents, minLength, maxLength } = props;
-    const { onChange, onFocus, onBlur } = inputEvents || {};
+    const { onChange, onFocus, onBlur, onInputSubmitRequest } = inputEvents || {};
     const [ fieldValue, setFieldValue ] = useState();
     const [ fieldValid, setFieldValid ] = useState(false);
     const [ fieldPotentiallyValid, setFieldPotentiallyValid] = useState(true);
     const [ cardTypes, setCardTypes ] = useState([]);
     const [ fieldFocus, setFieldFocus ] = useState(false);
+    const [ inputSubmit, setInputSubmit ] = useState(false);
     const [ mainRef, setRef ] = useState();
     const [ fieldGQLErrors, setFieldGQLErrors ] = useState({ singleField: {}, numberField: [], expiryField: [], cvvField: [], nameField: [], postalCodeField: [] });
     const initialRender = useRef(true)
@@ -154,6 +155,25 @@ function Page({ cspNonce, props, featureFlags } : PageProps) : mixed {
         }
     },[fieldFocus])
 
+    // fire the handler when key code is 13
+    //
+    useEffect(() => {
+        if(inputSubmit) {
+            const {fields, potentialCardTypes} = getStateObject();
+            const fieldStateObject = {
+                fields,
+                potentialCardTypes,
+                emittedBy: type,
+                errors: getFieldErrors(fields)
+            }
+
+            onInputSubmitRequest({...fieldStateObject})
+            setInputSubmit(false)
+        }
+        
+    }, [inputSubmit])
+
+
     useEffect(() => {
         autoFocusOnFirstInput(mainRef);
     }, [ mainRef ]);
@@ -194,6 +214,11 @@ function Page({ cspNonce, props, featureFlags } : PageProps) : mixed {
         setFieldFocus(isFocused)
     }
 
+    const onInputSubmit = ({isInputSubmitRequest}) => {
+        console.log("input submit in onInputSubmit", isInputSubmitRequest);
+        setInputSubmit(isInputSubmitRequest)
+    }
+
     return (
         <Fragment>
             {
@@ -218,6 +243,7 @@ function Page({ cspNonce, props, featureFlags } : PageProps) : mixed {
                             autocomplete={ autocomplete }
                             onChange={ onFieldChange }
                             onFocus={onFieldFocus}
+                            onKeyDown={onInputSubmit}
                             styleObject={ style }
                             placeholder={ placeholder }
                             autoFocusRef={ (ref) => setRef(ref.current.base) }
@@ -232,6 +258,7 @@ function Page({ cspNonce, props, featureFlags } : PageProps) : mixed {
                             cspNonce={ cspNonce }
                             autocomplete={ autocomplete }
                             onChange={ onFieldChange }
+                            onKeyDown={onInputSubmit}
                             onFocus={onFieldFocus}
                             styleObject={ style }
                             placeholder={ placeholder }
@@ -248,6 +275,7 @@ function Page({ cspNonce, props, featureFlags } : PageProps) : mixed {
                             autocomplete={ autocomplete }
                             onChange={ onFieldChange }
                             onFocus={onFieldFocus}
+                            onKeyDown={onInputSubmit}
                             styleObject={ style }
                             placeholder={ placeholder }
                             autoFocusRef={ (ref) => setRef(ref.current.base) }
@@ -262,6 +290,7 @@ function Page({ cspNonce, props, featureFlags } : PageProps) : mixed {
                             cspNonce={ cspNonce }
                             onChange={ onFieldChange }
                             onFocus={onFieldFocus}
+                            onKeyDown={onInputSubmit}
                             styleObject={ style }
                             placeholder={ placeholder }
                             autoFocusRef={ (ref) => setRef(ref.current.base) }
@@ -276,6 +305,7 @@ function Page({ cspNonce, props, featureFlags } : PageProps) : mixed {
                             cspNonce={ cspNonce }
                             onChange={ onFieldChange }
                             onFocus={onFieldFocus}
+                            onKeyDown={onInputSubmit}
                             styleObject={ style }
                             placeholder={ placeholder }
                             minLength={ minLength }
