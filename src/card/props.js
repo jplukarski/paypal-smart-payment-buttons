@@ -1,4 +1,5 @@
 /* @flow */
+/* eslint-disable flowtype/require-exact-type */
 
 import { ZalgoPromise } from '@krakenjs/zalgo-promise/src';
 import { FUNDING, CARD, type FundingEligibilityType } from '@paypal/sdk-constants/src';
@@ -24,24 +25,24 @@ export type CardExport = ({|
     getState : () => CardFieldsState
 |}) => ZalgoPromise<void>;
 
+export type InputEventState = {|
+    potentialCardTypes : $ReadOnlyArray<ParsedCardType>,
+    emittedBy: string,
+    fields: FieldsState,
+    errors : [$Values<typeof CARD_ERRORS>] | [],
+|}
+
 export type OnChange = ({|
     ...InputEventState,
     isValid : boolean,
 |}) => ZalgoPromise<void>;
+
 
 export type OnBlur = (InputEventState) => ZalgoPromise<void>
 
 export type OnFocus = (InputEventState) => ZalgoPromise<void>
 
 export type OnInputSubmitRequest = (InputEventState) => ZalgoPromise<void>
-
-export type InputEventState = {|
-    potentialCardTypes : $ReadOnlyArray<ParsedCardType>,
-    emittedBy: string,
-    fields: FieldsState,
-    errors : [$Values<typeof CARD_ERRORS>] | [],
-    
-|}
 
 export type InputEvents = {
     onChange? : OnChange,
@@ -127,3 +128,5 @@ export function getCardProps({ facilitatorAccessToken, featureFlags } : GetCardP
         facilitatorAccessToken
     };
 }
+
+/* eslint-enable flowtype/require-exact-type */

@@ -6,35 +6,9 @@ import { h, Fragment } from 'preact';
 import { noop } from '@krakenjs/belter';
 import { useState, useEffect, useRef } from 'preact/hooks';
 
-import {
-    setErrors,
-    initFieldValidity,
-    goToNextField,
-    goToPreviousField,
-    convertDateFormat,
-    getCSSText,
-    markValidity,
-    exportMethods
-} from '../lib';
-import type {
-    CardStyle,
-    Card,
-    CardNumberChangeEvent,
-    CardExpiryChangeEvent,
-    CardCvvChangeEvent,
-    CardNameChangeEvent,
-    CardPostalCodeChangeEvent,
-    FieldValidity,
-    CardNavigation,
-    CardType
-} from '../types';
-import {
-    CARD_ERRORS,
-    DEFAULT_STYLE_MULTI_CARD,
-    DEFAULT_STYLE_SINGLE_CARD,
-    DEFAULT_PLACEHOLDERS,
-    CARD_FIELD_TYPE
-} from '../constants';
+import { setErrors, initFieldValidity, goToNextField, goToPreviousField, convertDateFormat, getCSSText, markValidity, exportMethods } from '../lib';
+import type { CardStyle, Card, CardNumberChangeEvent, CardExpiryChangeEvent, CardCvvChangeEvent, CardNameChangeEvent, CardPostalCodeChangeEvent, FieldValidity, CardNavigation, CardType } from '../types';
+import { CARD_ERRORS, DEFAULT_STYLE_MULTI_CARD, DEFAULT_STYLE_SINGLE_CARD, DEFAULT_PLACEHOLDERS, CARD_FIELD_TYPE } from '../constants';
 
 import { CardNumber } from './CardNumber';
 import { CardExpiry } from './CardExpiry';
