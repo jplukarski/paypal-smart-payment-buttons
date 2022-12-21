@@ -1,6 +1,6 @@
 /* @flow */
 
-import { getFieldErrors, isEmpty } from "./interface";
+import { getFieldErrors, isEmpty, reformatExpiry } from "./interface";
 
 describe("interface", () => {
   describe("isEmpty", () => {
@@ -14,6 +14,13 @@ describe("interface", () => {
 
         expect(isEmpty(string)).toStrictEqual(false)
     })
+  });
+  describe('reformatExpiry', () => {
+    it('reformats a date from MM/YYYY to YYYY-MM', () => {
+        const date = "02/2025"
+
+        expect(reformatExpiry(date)).toStrictEqual('2025-02')
+    });
   });
   describe("getFieldErrors", () => {
     let fields;

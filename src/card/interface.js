@@ -266,7 +266,7 @@ type CardValues = {|
 |};
 
 // Reformat MM/YYYY to YYYY-MM
-function reformatExpiry(expiry: ?string): ?string {
+export function reformatExpiry(expiry: ?string): ?string {
   if (typeof expiry === "string") {
     const [month, year] = expiry.split("/");
     return `${year}-${month}`;
