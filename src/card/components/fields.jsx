@@ -448,7 +448,7 @@ export function CardCVVField({ cspNonce, onChange, onFocus, styleObject = {}, pl
 type CardNameFieldProps = {|
     cspNonce : string,
     onChange : ({| value : string, valid : boolean, isFocused: boolean, potentiallyValid: boolean |}) => void,
-    onFocus : ({ isFocused? : boolean }) => void,
+    onFocus : ({ isFocused : boolean }) => void,
     styleObject : CardStyle,
     placeholder : string,
     autoFocusRef : (mixed) => void,

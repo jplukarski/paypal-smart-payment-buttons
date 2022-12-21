@@ -318,6 +318,11 @@ export function getContext(win : Object) : string {
     return win.xprops?.parent?.uid || win.xprops?.uid;
 }
 
-export function kebabToCamelCase(field: string) : string {
-    return field.toLowerCase().replace(/[^a-zA-Z0-9]+(.)/g, (m, value) => value.toUpperCase())
+export function kebabToCamelCase(field: string): string {
+    const camelCase = field.split("-");
+    camelCase.forEach((word, i) => {
+        camelCase[i] =  i !== 0 ? word.toLowerCase().replace(/^\w/, c => c.toUpperCase()) : word.toLowerCase();
+        
+    })
+    return camelCase.join("");
 }
