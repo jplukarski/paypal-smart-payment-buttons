@@ -21,6 +21,7 @@ type CardPostalCodeProps = {|
     onChange : (expiryEvent : CardPostalCodeChangeEvent) => void,
     onFocus? : (event : InputEvent) => void,
     onBlur? : (event : InputEvent) => void,
+    onKeyDown? : (keyDown : boolean) => void,
     allowNavigation : boolean,
     onValidityChange? : (numberValidity : FieldValidity) => void,
     minLength: number
@@ -39,6 +40,7 @@ export function CardPostalCode(
         onChange,
         onFocus,
         onBlur,
+        onKeyDown,
         onValidityChange,
         minLength
     } : CardPostalCodeProps
@@ -80,6 +82,12 @@ export function CardPostalCode(
     };
 
     const onKeyDownEvent : (InputEvent) => void = (event : InputEvent) : void => {
+        if(event.keyCode === 13){
+             onKeyDown(true)
+        } else {
+            onKeyDown(false)
+        }
+
         if (allowNavigation) {
             navigateOnKeyDown(event, navigation);
         }
@@ -94,6 +102,7 @@ export function CardPostalCode(
     const onBlurEvent : (InputEvent) => void = (event : InputEvent) : void => {
         if (typeof onBlur === 'function') {
             onBlur(event);
+            onKeyDown(false)
         }
     };
 

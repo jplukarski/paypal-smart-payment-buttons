@@ -226,14 +226,13 @@ export function CardNumber(
 
     const onKeyDownEvent : (InputEvent) => void = (event : InputEvent) : void => {
         if(event.keyCode === 13){
-            console.log("event", event);
             onKeyDown(true)
         } else {
             onKeyDown(false)
         }
 
         if (allowNavigation) {
-            navigateonKeyDown(event, navigation);
+            navigateOnKeyDown(event, navigation);
         }
     };
 

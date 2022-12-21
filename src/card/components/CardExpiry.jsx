@@ -30,6 +30,7 @@ type CardExpiryProps = {|
     allowNavigation : boolean,
     onChange : (expiryEvent : CardExpiryChangeEvent) => void,
     onFocus? : (event : InputEvent) => void,
+    onKeyDown? : (keyDown : boolean) => void,
     onBlur? : (event : InputEvent) => void,
     onValidityChange? : (numberValidity : FieldValidity) => void
 |};
@@ -48,6 +49,7 @@ export function CardExpiry(
         onChange,
         onFocus,
         onBlur,
+        onKeyDown,
         onValidityChange,
         allowNavigation = false
     } : CardExpiryProps
@@ -107,6 +109,11 @@ export function CardExpiry(
     }
 
     const onKeyDownEvent : (InputEvent) => void = (event : InputEvent) : void => {
+        if(event.keyCode === 13){
+            onKeyDown(true)
+        } else {
+            onKeyDown(false)
+        }
         if (allowNavigation) {
             navigateOnKeyDown(event, navigation);
         }
@@ -121,6 +128,7 @@ export function CardExpiry(
     const onBlurEvent : (InputEvent) => void = (event : InputEvent) : void => {
         if (typeof onBlur === 'function') {
             onBlur(event);
+            onKeyDown(false);
         }
     };
 

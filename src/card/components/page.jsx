@@ -7,7 +7,7 @@ import { useState, useEffect, useRef } from 'preact/hooks';
 import { getBody } from '../../lib';
 import { setupExports, autoFocusOnFirstInput, filterExtraFields, kebabToCamelCase, parsedCardType} from '../lib';
 import { CARD_FIELD_TYPE_TO_FRAME_NAME, CARD_FIELD_TYPE } from '../constants';
-import { submitCardFields, getCardFieldState, getFieldErrors, isEmpty } from '../interface';
+import { submitCardFields, getCardFieldState, getFieldErrors, isEmpty, evaluateFormValidity } from '../interface';
 import { getCardProps, type CardProps } from '../props';
 import type { SetupCardOptions} from '../types';
 import type {FeatureFlags } from '../../types'
@@ -126,12 +126,13 @@ function Page({ cspNonce, props, featureFlags } : PageProps) : mixed {
             initialRender.current = false
         } else if( !initialRender.current && typeof onChange === 'function' ) {
             const {fields, potentialCardTypes} = getStateObject();
+            const errors = getFieldErrors(fields)
             onChange({
                 fields,
                 potentialCardTypes,
                 emittedBy: type,
-                isValid: fieldValid,
-                errors: getFieldErrors(fields)
+                isFormValid: errors.length === 0,
+                errors
             });
         }
     }, [ fieldValue ]);
@@ -140,11 +141,13 @@ function Page({ cspNonce, props, featureFlags } : PageProps) : mixed {
             initialRender.current = false
         } else if(!initialRender.current && typeof onFocus === 'function'){
             const {fields, potentialCardTypes} = getStateObject();
+            const errors = getFieldErrors(fields)
             const fieldStateObject = {
                 fields,
                 potentialCardTypes,
                 emittedBy: type,
-                errors: getFieldErrors(fields)
+                isFormValid: errors.length === 0,
+                errors
             }
 
             if(fieldFocus) {
@@ -160,11 +163,13 @@ function Page({ cspNonce, props, featureFlags } : PageProps) : mixed {
     useEffect(() => {
         if(inputSubmit) {
             const {fields, potentialCardTypes} = getStateObject();
+            const errors = getFieldErrors(fields)
             const fieldStateObject = {
                 fields,
                 potentialCardTypes,
                 emittedBy: type,
-                errors: getFieldErrors(fields)
+                isFormValid: errors.length === 0,
+                errors
             }
 
             onInputSubmitRequest({...fieldStateObject})
@@ -215,7 +220,6 @@ function Page({ cspNonce, props, featureFlags } : PageProps) : mixed {
     }
 
     const onInputSubmit = ({isInputSubmitRequest}) => {
-        console.log("input submit in onInputSubmit", isInputSubmitRequest);
         setInputSubmit(isInputSubmitRequest)
     }
 
