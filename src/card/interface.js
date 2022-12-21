@@ -78,13 +78,6 @@ export function isEmpty(value: string): boolean {
   return false;
 }
 
-function formatCardFrameFieldName(fieldName: string): string {
-  const res = fieldName.split("-");
-  res.pop();
-  res[1] = res[1]?.replace(/^\w/, c => c.toUpperCase());
-  res.push('Field')
-  return res.join("");
-}
 export function getCardFieldState(): CardFieldsState {
   const {
     cardNameFrame,
@@ -100,7 +93,7 @@ export function getCardFieldState(): CardFieldsState {
   const cardFrameFields = [cardNameFrame, cardPostalFrame];
   cardFrameFields.forEach(cardFrame => {
     if (cardFrame) {
-      optionalFields[formatCardFrameFieldName(cardFrame.name)] = {
+      optionalFields[kebabToCamelCase(cardFrame.name)] = {
         isEmpty: isEmpty(cardFrame?.getFieldValue()),
         isValid: cardFrame?.isFieldValid(),
         isPotentiallyValid: cardFrame.isFieldPotentiallyValid(),
