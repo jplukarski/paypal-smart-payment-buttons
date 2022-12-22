@@ -120,7 +120,7 @@ export function CardCVV(
 
     const onKeyDownEvent : (InputEvent) => void = (event : InputEvent) : void => {
         if (typeof onKeyDown === 'function') {
-            if(event.keyCode === 13){
+            if(event.key === "Enter"){
                 onKeyDown(true)
             } else {
                 onKeyDown(false)
