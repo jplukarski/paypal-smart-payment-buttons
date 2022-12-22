@@ -100,6 +100,8 @@ if (cardFields.isEligible()) {
 
 #### Validation
 
+## Validate Individual Fieldas
+
 ```js
 const cardFields = paypal.CardFields({/* styleObject, createOrder, onApprove */});
 
@@ -107,11 +109,28 @@ const cardContainer = document.getElementById("#card-number-field-container")
 
 const cardNumberField = cardFields.NumberField({
     // add valid or invalid class when the validation changes on the field
-    onChange: (data) => {
-        cardContainer.className = data.isValid ? 'valid' : 'invalid';
+    inputEvents: {
+
+        onChange: (data) => {
+            cardContainer.className = data.fields.cardNumberField.isValid ? 'valid' : 'invalid';
+        }
     }
 })
 
+```
+
+## Validate Entire Card Form
+
+```js
+const formContainer = document.getElementById("form-container")
+
+const cardFields = paypal.CardFields({
+    inputEvents: {
+        onChange: (data) => {
+            formContainer.className = data.isFormValid ? 'valid' : 'invalid'
+        }
+    }
+});
 ```
 
 #### Methods
@@ -156,10 +175,6 @@ nameField.focus();
 # getState
 
 Returns an object that includes the state of all fields and possible card types
-
-# on
-
-Subscribes a handled function to a named event.
 
 # removeAttribute
 
@@ -239,17 +254,108 @@ Submit the payment information
   });
 ```
 
-# on
+#### Input Events
 
-Subscribes a handler function to a named event. Returns a promise
+You can pass an optional `inputEvents` object into either the parent `CardFields` component, which will pass down each callback as props to the child components (each individual field), or directly into each field component. If you pass the `inputEvents` object into both the `CardFields` and individual field components, the object passed into the field components directly will take precedent.
 
-| Parameters | Type | Description |
-|------------|------|-------------|
-| event | string | The name of the event to which you are subscribing. |
+##### Input Events Callbacks:
+
+- onChange: gets called when the input in any field changes
+- onFocus: gets called when any field gets focus
+- onBlur: gets called when any field loses focus
+- onInputSubmitRequest: gets called when a user attempts to submit the field by pressing the enter key in any of the fields
+
+##### Passing the `inputEvents` object into the parent `CardFields` component
 
 ```js
-    cardField.on('focus')
-    .then((event, err) => {
-        console.log(event.emittedBy, "has focus")
-    })
+const cardField = paypal.CardFields({
+    inputEvents: {
+        onChange: function(data) => {
+            // do something when an input changes
+        },
+        onFocus: function(data) => {
+            // do something when a field gets focus
+        },
+        onBlur: function(data) => {
+            // do something when a field loses focus
+        }
+        onInputSubmitRequest: function(data) => {
+            if (data.isFormValid) {
+                // submit the card form for the user
+            } else {
+                // inform buyer that some field(s) are not yet valid
+            }
+        }
+    }
+})
+```
+##### Passing the `inputEvents` object into each individual field component
+
+```js
+
+const cardField = paypal.CardFields({...})
+const nameField = cardField.NameField({
+       inputEvents: {
+        onChange: function(data) => {
+            // do something when only the input of the name field changes
+        },
+        onFocus: function(data) => {
+            // do something when only the name field gets focus
+        },
+        onBlur: function(data) => {
+            // do something when only the name field loses focus
+        }
+        onInputSubmitRequest: function(data) => {
+            if (data.isFormValid) {
+                // submit the card form for the user
+            } else {
+                // inform buyer that some field(s) are not yet valid
+            }
+        }
+    } 
+});
+```
+
+##### Payload of these CallBacks
+
+Each of these callbacks will return a state object that looks like:
+
+```js
+data: {
+    cards: ['array of potential card types'],
+    emittedBy: 'field that emitted the event',
+    isFormValid: 'boolean showing whether the field is valid or not',
+    fields: {
+        nameField: {
+            isFocused: 'boolean showing if field is currently focused or not',
+            isEmpty: 'boolean showing if field is currently empty or not',
+            isValid: 'boolean showing if field is currently valid or not'
+            isPotentiallyValid: 'boolean showing if field can be valid or not'
+        },
+        numberField: {
+            isFocused: 'boolean showing if field is currently focused or not',
+            isEmpty: 'boolean showing if field is currently empty or not',
+            isValid: 'boolean showing if field is currently valid or not'
+            isPotentiallyValid: 'boolean showing if field can be valid or not'
+        },
+        cvvField: {
+            isFocused: 'boolean showing if field is currently focused or not',
+            isEmpty: 'boolean showing if field is currently empty or not',
+            isValid: 'boolean showing if field is currently valid or not'
+            isPotentiallyValid: 'boolean showing if field can be valid or not'
+        },
+        expiryField: {
+            isFocused: 'boolean showing if field is currently focused or not',
+            isEmpty: 'boolean showing if field is currently empty or not',
+            isValid: 'boolean showing if field is currently valid or not'
+            isPotentiallyValid: 'boolean showing if field can be valid or not'
+        },
+        postalCodeField: {
+            isFocused: 'boolean showing if field is currently focused or not',
+            isEmpty: 'boolean showing if field is currently empty or not',
+            isValid: 'boolean showing if field is currently valid or not'
+            isPotentiallyValid: 'boolean showing if field can be valid or not'
+        },
+    },
+}
 ```
