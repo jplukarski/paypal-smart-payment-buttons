@@ -1,13 +1,15 @@
 # Multi Card Fields
 
-* [Rendering](#Rendering)
-* [Callbacks](#Callbacks)
-* [Styling](#Styling)
-* [Eligibility](#Eligibility)
-* [Validation](#Validation)
-* [Methods](#Methods)
+* [Rendering](#rendering)
+* [Styling](#styling)
+* [Eligibility](#eligibility)
+* [Validation](#validation)
+* [Methods](#methods)
+* [Input Events](#input-events)
 
-#### Rendering
+### Rendering
+
+Render the card fields component on your website, by creating an instance of paypal `CardFields` as below: 
 
 ```js
 const cardFields = paypal.CardFields();
@@ -17,7 +19,9 @@ cardFields.CVVField().render('#card-cvv-field-container');
 cardFields.ExpiryField().render('#card-expiry-field-container');
 ```
 
-#### Styling
+### Styling
+
+Override the styles for your card fields instance by leveraging the following style [properties](#properties) and [selectors](#selectors)
 
 ##### Properties
 
@@ -58,7 +62,7 @@ cardFields.ExpiryField().render('#card-expiry-field-container');
 - `.invalid`
 - `@media`
 
-##### Example
+#### Example
 
 ```js
 const cardStyle = {
@@ -84,7 +88,7 @@ paypal.CardFields({
 }).render('#card-field-container');
 ```
 
-#### Eligibility
+## Eligibility
 
 ##### Detect Eligibility
 
@@ -98,9 +102,9 @@ if (cardFields.isEligible()) {
 }
 ```
 
-#### Validation
+## Validation
 
-## Validate Individual Fieldas
+##### Validate Individual Fields
 
 ```js
 const cardFields = paypal.CardFields({/* styleObject, createOrder, onApprove */});
@@ -119,7 +123,7 @@ const cardNumberField = cardFields.NumberField({
 
 ```
 
-## Validate Entire Card Form
+#### Validate Entire Card Form
 
 ```js
 const formContainer = document.getElementById("form-container")
@@ -133,9 +137,9 @@ const cardFields = paypal.CardFields({
 });
 ```
 
-#### Methods
+## Methods
 
-# addClass
+#### addClass
 
 Add a class to a field. Useful for updating field styles when events occur elsewhere in your checkout
 
@@ -150,7 +154,7 @@ numberField.render(cardNumberContainer);
 numberField.addClass("purple");
 ```
 
-# clear
+### clear
 
 Clears the value of a field.
 
@@ -161,7 +165,7 @@ nameField.render(cardNameContainer);
 nameField.clear();
 ```
 
-# focus
+### focus
 
 Programmatically focus a field.
 
@@ -172,11 +176,36 @@ nameField.render(cardNameContainer);
 nameField.focus();
 ```
 
-# getState
+### getState
 
-Returns an object that includes the state of all fields and possible card types
+Returns a promise that resolves into [state object](#state-object). It includes the state of all fields and possible card types
 
-# removeAttribute
+#### Example
+```js
+const cardField = paypal.CardFields({...})
+const nameField = cardField.NameField({...});
+nameField.render(cardNameContainer);
+
+cardField.getState()
+    .then((res) => {
+        //checking if each field is empty
+        const emptyField = Object.keys(res.fields).forEach((field) => {
+        return res.fields[field].isEmpty;
+      });
+    })
+    .catch(err => {
+        console.log(err);
+})
+
+
+
+var formValid = Object.keys(state.fields).every(function (key) {
+  return state.fields[key].isValid;
+});
+```
+ 
+
+### removeAttribute
 
 Removes a supported attribute from a field.
 
@@ -191,7 +220,7 @@ numberField.render(cardNumberContainer);
 numberField.removeAttribute("placeholder");
 ```
 
-# removeClass
+### removeClass
 
 Removes a class from a field. Useful for updating field styles when events occur elsewhere in your checkout.
 
@@ -206,7 +235,7 @@ numberField.render(cardNumberContainer);
 numberField.removeClass("purple");
 ```
 
-# setAttribute
+### setAttribute
 
 Sets an attribute of a field. Supported attributes are `aria-invalid`, `aria-required`, `disabled`, and `placeholder`.
 
@@ -221,7 +250,7 @@ const nameField = cardField.NameField({...});
 nameField.render(cardNameContainer);
 nameField.setAttribute("placeholder", "Enter your full name");
 ```
-# setMessage
+### setMessage
 
 Sets a visually hidden message for screen readers on a field
 
@@ -236,7 +265,7 @@ nameField.render(cardNameContainer);
 nameField.setMessage("Please type your name as it appears on your credit card");
 ```
 
-# submit
+### submit
 
 Submit the payment information
 
@@ -254,16 +283,18 @@ Submit the payment information
   });
 ```
 
-#### Input Events
+## Input Events
 
 You can pass an optional `inputEvents` object into either the parent `CardFields` component, which will pass down each callback as props to the child components (each individual field), or directly into each field component. If you pass the `inputEvents` object into both the `CardFields` and individual field components, the object passed into the field components directly will take precedent.
 
-##### Input Events Callbacks:
+#### Input Events Callbacks:
 
 - onChange: gets called when the input in any field changes
 - onFocus: gets called when any field gets focus
 - onBlur: gets called when any field loses focus
 - onInputSubmitRequest: gets called when a user attempts to submit the field by pressing the enter key in any of the fields
+
+#### Examples
 
 ##### Passing the `inputEvents` object into the parent `CardFields` component
 
@@ -316,9 +347,9 @@ const nameField = cardField.NameField({
 });
 ```
 
-##### Payload of these CallBacks
+### State Object
 
-Each of these callbacks will return a state object that looks like:
+Each of the event callbacks will return a state object as follows:
 
 ```js
 data: {
