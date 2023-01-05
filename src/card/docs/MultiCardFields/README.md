@@ -19,6 +19,16 @@ cardFields.CVVField().render('#card-cvv-field-container');
 cardFields.ExpiryField().render('#card-expiry-field-container');
 ```
 
+#### Options
+
+You can pass the following options when instantiating the card fields component:
+
+- A Custom Style Object (optional, see [styling](#styling) for allowed properties)
+- [Callbacks](Callbacks) (Required, unless passing in a Save action for vaulting)
+- A [Save action](Actions) (used for vaulting)
+
+If you are vaulting, you must pass either a Save action or define the callbacks separately.
+
 ### Styling
 
 Override the styles for your card fields instance by leveraging the following style [properties](#properties) and [selectors](#selectors)
