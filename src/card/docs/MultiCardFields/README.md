@@ -107,7 +107,7 @@ if (cardFields.isEligible()) {
 ##### Validate Individual Fields
 
 ```js
-const cardFields = paypal.CardFields({/* styleObject, createOrder, onApprove */});
+const cardFields = paypal.CardFields({/* options */});
 
 const cardContainer = document.getElementById("#card-number-field-container")
 
@@ -148,8 +148,8 @@ Add a class to a field. Useful for updating field styles when events occur elsew
 |classname   | string | The class to be added. |
 
 ```js
-const cardField = paypal.CardFields({...})
-const numberField = cardField.NumberField({...});
+const cardField = paypal.CardFields(/* options */)
+const numberField = cardField.NumberField(/* options */);
 numberField.render(cardNumberContainer);
 numberField.addClass("purple");
 ```
@@ -159,8 +159,8 @@ numberField.addClass("purple");
 Clears the value of a field.
 
 ```js
-const cardField = paypal.CardFields({...})
-const nameField = cardField.NameField({...});
+const cardField = paypal.CardFields(/* options */)
+const nameField = cardField.NameField(/* options */);
 nameField.render(cardNameContainer);
 nameField.clear();
 ```
@@ -170,8 +170,8 @@ nameField.clear();
 Programmatically focus a field.
 
 ```js
-const cardField = paypal.CardFields({...})
-const nameField = cardField.NameField({...});
+const cardField = paypal.CardFields(/* options */)
+const nameField = cardField.NameField(/* options */);
 nameField.render(cardNameContainer);
 nameField.focus();
 ```
@@ -182,8 +182,8 @@ Returns a promise that resolves into [state object](#state-object). It includes 
 
 #### Example
 ```js
-const cardField = paypal.CardFields({...})
-const nameField = cardField.NameField({...});
+const cardField = paypal.CardFields(/* options */)
+const nameField = cardField.NameField(/* options */);
 nameField.render(cardNameContainer);
 
 cardField.getState()
@@ -214,8 +214,8 @@ Removes a supported attribute from a field.
 |attribute | string | The name of the attribute you wish to remove from the field.|
 
 ```js
-const cardField = paypal.CardFields({...})
-const numberField = cardField.NumberField({...});
+const cardField = paypal.CardFields(/* options */)
+const numberField = cardField.NumberField(/* options */);
 numberField.render(cardNumberContainer);
 numberField.removeAttribute("placeholder");
 ```
@@ -229,8 +229,8 @@ Removes a class from a field. Useful for updating field styles when events occur
 |classname   | string | The class to be removed. |
 
 ```js
-const cardField = paypal.CardFields({...})
-const numberField = cardField.NumberField({...});
+const cardField = paypal.CardFields(/* options */)
+const numberField = cardField.NumberField(/* options */);
 numberField.render(cardNumberContainer);
 numberField.removeClass("purple");
 ```
@@ -245,8 +245,8 @@ Sets an attribute of a field. Supported attributes are `aria-invalid`, `aria-req
 |value | string | The value for the attribute |
 
 ```js
-const cardField = paypal.CardFields({...})
-const nameField = cardField.NameField({...});
+const cardField = paypal.CardFields(/* options */)
+const nameField = cardField.NameField(/* options */);
 nameField.render(cardNameContainer);
 nameField.setAttribute("placeholder", "Enter your full name");
 ```
@@ -259,8 +259,8 @@ Sets a visually hidden message for screen readers on a field
 |message | string | The message to set for screen readers. |
 
 ```js
-const cardField = paypal.CardFields({...})
-const nameField = cardField.NameField({...});
+const cardField = paypal.CardFields(/* options */)
+const nameField = cardField.NameField(/* options */);
 nameField.render(cardNameContainer);
 nameField.setMessage("Please type your name as it appears on your credit card");
 ```
@@ -324,7 +324,7 @@ const cardField = paypal.CardFields({
 
 ```js
 
-const cardField = paypal.CardFields({...})
+const cardField = paypal.CardFields(/* options */)
 const nameField = cardField.NameField({
        inputEvents: {
         onChange: function(data) => {
