@@ -12,7 +12,7 @@
 Render the card fields component on your website, by creating an instance of paypal `CardFields` as below: 
 
 ```js
-const cardFields = paypal.CardFields();
+const cardFields = paypal.CardFields({/* options */});
 
 cardFields.NumberField().render('#card-number-field-container');
 cardFields.CVVField().render('#card-cvv-field-container');
