@@ -223,6 +223,8 @@ curl -v -X POST https://api-m.sandbox.paypal.com/v2/checkout/orders/<order_id>/c
 }
 ```
 
+TODO: Add section for each field, including placeholders
+
 ### Styling
 
 Override the styles for your card fields instance by leveraging the following style [properties](#properties) and [selectors](#selectors)
@@ -268,6 +270,10 @@ Override the styles for your card fields instance by leveraging the following st
 
 #### Example
 
+Style objects can be passed into the parent `CardFields` component to apply the style object to every field, or can be passed into each card field individually to apply the style only to that field.
+
+##### Passing the Style Object to the parent CardField
+
 ```js
 const cardStyle = {
     'input': {
@@ -277,19 +283,29 @@ const cardStyle = {
         'color': '#ccc',
     },
     '.invalid': {
-        'color': 'red',
+        'color': 'purple',
     },
 }
-
-const cardPlaceholders = {
-    number: 'XXXX-XXXX-XXXX-XXXX',
-    expiry: 'MM/YY',
-    cvv:    'CVV'
-};
 
 paypal.CardFields({
     style: cardStyle
 }).render('#card-field-container');
+```
+
+##### Passing the style object to an individual field
+
+```js
+const nameFieldStyle = {
+    'input': {
+        'color': 'blue'
+    }
+    '.invalid': {
+        'color': 'purple',
+    },
+}
+const nameField = cardField.NameField({
+    style: nameFieldStyle
+});
 ```
 
 ## Eligibility
@@ -515,7 +531,6 @@ var formValid = Object.keys(state.fields).every(function (key) {
   return state.fields[key].isValid;
 });
 ```
- 
 
 ### removeAttribute
 
@@ -562,6 +577,7 @@ const nameField = cardField.NameField(/* options */);
 nameField.render(cardNameContainer);
 nameField.setAttribute("placeholder", "Enter your full name");
 ```
+
 ### setMessage
 
 Sets a visually hidden message for screen readers on a field
