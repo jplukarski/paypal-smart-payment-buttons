@@ -25,7 +25,7 @@ You can pass the following options when instantiating the card fields component:
 
 - style: a custom style object (Optional, see [styling](#styling) for allowed properties)
 - [createOrder](#createOrder): callback to create the order on your server (Required)
-- [onApprove](onApprove): callback to capture the order (Required)
+- [onApprove](onApprove): callback to capture the order on your server (Required)
 
 # createOrder
 
