@@ -2,7 +2,6 @@
 
 * [createOrder](#createOrder)
 * [onApprove](#onApprove)
-* [createVaultToken](#createVaultToken)
 
 # createOrder
 
