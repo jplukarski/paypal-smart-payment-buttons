@@ -23,9 +23,9 @@ const cardFields = paypal.CardFields({
 
 You can pass the following options when instantiating the card fields component:
 
-- A Custom Style Object (optional, see [styling](#styling) for allowed properties)
-- [createOrder](#createOrder) (Required)
-- [onApprove](onApprove) (Required)
+- style: a custom style object (Optional, see [styling](#styling) for allowed properties)
+- [createOrder](#createOrder): callback to create the order on your server (Required)
+- [onApprove](onApprove): callback to capture the order (Required)
 
 # createOrder
 
