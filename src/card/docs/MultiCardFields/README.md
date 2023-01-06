@@ -680,4 +680,4 @@ Submit the payment information
 
 ## Full Example
 
-See our [full example](full-example) of a basic integration for an idea on how to get started
+See our [full example](full-example.md) of a basic integration for an idea on how to get started
