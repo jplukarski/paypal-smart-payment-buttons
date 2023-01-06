@@ -3,9 +3,9 @@
 * [Rendering](#rendering)
 * [Styling](#styling)
 * [Eligibility](#eligibility)
+* [Input Events](#input-events)
 * [Validation](#validation)
 * [Methods](#methods)
-* [Input Events](#input-events)
 
 ### Rendering
 
@@ -24,7 +24,7 @@ cardFields.ExpiryField().render('#card-expiry-field-container');
 You can pass the following options when instantiating the card fields component:
 
 - A Custom Style Object (optional, see [styling](#styling) for allowed properties)
-- [Callbacks](Callbacks) (Required)
+- [Callbacks](../Callbacks) (Required)
 
 ### Styling
 
