@@ -225,6 +225,14 @@ curl -v -X POST https://api-m.sandbox.paypal.com/v2/checkout/orders/<order_id>/c
 
 TODO: Add section for each field, including placeholders
 
+### Available Fields
+
+#### Card Name Field
+#### Card Number Field
+#### Card Expiry Date Field
+#### Card CVV Field
+#### Card Postal Code Field
+
 ### Styling
 
 Override the styles for your card fields instance by leveraging the following style [properties](#properties) and [selectors](#selectors)
