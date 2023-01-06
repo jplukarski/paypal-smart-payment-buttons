@@ -12,11 +12,11 @@
 Render the card fields component on your website, by creating an instance of paypal `CardFields` as below: 
 
 ```js
-const cardFields = paypal.CardFields({/* options */});
-
-cardFields.NumberField().render('#card-number-field-container');
-cardFields.CVVField().render('#card-cvv-field-container');
-cardFields.ExpiryField().render('#card-expiry-field-container');
+const cardFields = paypal.CardFields({
+    style,
+    createOrder,
+    onApprove
+});
 ```
 
 #### Options
@@ -227,11 +227,72 @@ TODO: Add section for each field, including placeholders
 
 ### Available Fields
 
-#### Card Name Field
+#### Card Name Field (optional)
+
+Render an optional name field.
+
+```js
+const cardNameContainer = document.getElementById("card-name-field-container");
+
+const nameField = cardField.NameField();
+nameField.render(cardNameContainer); 
+```
 #### Card Number Field
+
+Render a card number field. This field is required to capture a payment.
+
+```js
+const cardNumberContainer = document.getElementById("card-number-field-container");
+
+const numberField = cardField.NumberField();
+numberField.render(cardNumberContainer);
+```
+
 #### Card Expiry Date Field
+
+Render a card expiry date field. This field is required to capture a payment.
+
+```js
+const cardExpiryContainer = document.getElementById("card-expiry-field-container");
+
+const expiryField = cardField.ExpiryField();
+expiryField.render(cardExpiryContainer);
+```
+
 #### Card CVV Field
-#### Card Postal Code Field
+
+Render a card cvv field. This field is required to capture a payment.
+
+```js
+const cardCvvContainer = document.getElementById("card-cvv-field-container");
+
+const cvvField = cardField.CVVField();
+cvvField.render(cardCvvContainer);
+```
+
+#### Card Postal Code Field (optional)
+
+Render an optional postal code field. You can also specify the maximum and minimum length of the postal code field for validation. If no values are entered then the default `maxLength` will be 10 characters.
+
+```js
+const cardPostalCodeContainer = document.getElementById("card-postal-code-field-container");
+
+const postalCodeField = cardField.PostalCodeField({
+    minLength: 4,
+    maxLength: 9,
+});
+postalCodeField.render(cardPostalCodeContainer);
+```
+
+#### Placeholders
+
+Each card field has a default placeholder text. You can override this text by passing a placeholder object when creating the field.
+
+```js
+const nameField = cardField.NameField({
+    placeholder: 'Enter your full name as it appears on your card'
+});
+```
 
 ### Styling
 
