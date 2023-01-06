@@ -4,15 +4,25 @@ import type { CrossDomainWindowType } from '@krakenjs/cross-domain-utils/src';
 import type { ZalgoPromise } from '@krakenjs/zalgo-promise/src';
 import { COUNTRY, LANG, CARD, CURRENCY, WALLET_INSTRUMENT, FUNDING } from '@paypal/sdk-constants/src';
 import type { ProxyWindow as _ProxyWindow } from '@krakenjs/post-robot/src';
+import type { SecondaryInstruments } from '@paypal/checkout-components/src/types';
 
 import { CONTEXT, QRCODE_STATE } from './constants';
 import type { OnShippingChangeData } from './props/onShippingChange';
 import type { OnShippingAddressChangeData } from './props/onShippingAddressChange';
 import type { OnShippingOptionsChangeData } from './props/onShippingOptionsChange';
 import type { ConfirmData } from './api/order';
+import type { onSmartWalletEligible } from './props/props';
 
 // export something to force webpack to see this as an ES module
 export const TYPES = true;
+
+// This type is shared with smartcomponentnodeweb
+// When we move to typescript we should figure out
+// how to share this type between the two code bases
+export type FeatureFlags = $Shape<{|
+    isLsatUpgradable: boolean;
+    shouldThrowIntegrationError: boolean
+|}>
 
 export type ProxyWindow = _ProxyWindow;
 
@@ -50,6 +60,7 @@ export type CheckoutProps = {|
     onApprove : ({| accelerated? : boolean, payerID : string, paymentID : ?string, billingToken : ?string, subscriptionID : ?string, authCode : ?string |}) => ZalgoPromise<void> | void,
     onComplete : () => ZalgoPromise<void> | void,
     onAuth : ({| accessToken : string |}) => ZalgoPromise<void> | void,
+    onSmartWalletEligible? : onSmartWalletEligible,
     onCancel : () => ZalgoPromise<void> | void,
     onShippingChange : ?(data : OnShippingChangeData, {| resolve : () => ZalgoPromise<void>, reject : (string) => ZalgoPromise<void> |}) => ZalgoPromise<void> | void,
     onShippingAddressChange : ?(data : OnShippingAddressChangeData, {| resolve : () => ZalgoPromise<void>, reject : (string) => ZalgoPromise<void> |}) => ZalgoPromise<void> | void,
@@ -208,7 +219,9 @@ export type WalletInstrument = {|
     vendor? : $Values<typeof CARD>,
     oneClick : boolean,
     accessToken? : ?string,
-    branded : boolean | null
+    branded : boolean | null,
+    planID? : ?string,
+    secondaryInstruments? : SecondaryInstruments
 |};
 
 export type WalletPaymentType = {|

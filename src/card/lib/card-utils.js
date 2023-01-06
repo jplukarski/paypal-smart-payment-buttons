@@ -2,7 +2,7 @@
 
 import { values } from '@krakenjs/belter';
 
-import type { InputState, FieldValidity, ExtraFields } from '../types';
+import type { InputState, FieldValidity, ExtraFields, CardType, ParsedCardType } from '../types';
 import {
     CARD_ERRORS,
     CARD_FIELD_TYPE,
@@ -21,6 +21,7 @@ export const defaultInputState : InputState = {
     maskedInputValue:   '',
     cursorStart:        0,
     cursorEnd:          0,
+    isFocused:          false,
     keyStrokeCount:     0,
     isPotentiallyValid:  true,
     isValid:            false
@@ -304,6 +305,24 @@ export function filterExtraFields(extraData : Object) : ExtraFields | Object {
     }, {});
 }
 
+
+export function parsedCardType(potentialCardTypes: $ReadOnlyArray<CardType>) : $ReadOnlyArray<ParsedCardType> {
+    
+    return potentialCardTypes.map(({ type, niceType, code }) => ({
+        type, niceType, code
+      }));
+    
+}
+
 export function getContext(win : Object) : string {
     return win.xprops?.parent?.uid || win.xprops?.uid;
+}
+
+export function kebabToCamelCase(field: string): string {
+    const camelCase = field.split("-");
+    camelCase.forEach((word, i) => {
+        camelCase[i] =  i !== 0 ? word.toLowerCase().replace(/^\w/, c => c.toUpperCase()) : word.toLowerCase();
+        
+    })
+    return camelCase.join("");
 }

@@ -14,6 +14,7 @@ import type { ZoidComponentInstance, MenuFlowProps } from '../../src/types';
 import { setupButton, setupCard, submitCardFields } from '../../src';
 import { loadFirebaseSDK, clearLsatState } from '../../src/api';
 import { type SetupButtonOptions } from '../../src/button/button';
+import { MOCK_FIREBASE_CONFIG, MOCK_SDK_META } from '../constants'
 
 import { triggerKeyPress } from './util';
 
@@ -34,7 +35,7 @@ export function promiseNoop() : ZalgoPromise<void> {
 
 export function mockAsyncProp(handler? : Function = noop, time? : number = 1) : Function {
     const currentPromise = new ZalgoPromise();
-    
+
     const asyncHandler = (...args) => {
         return ZalgoPromise.delay(time).then(() => handler(...args)).then((res) => {
             ZalgoPromise.delay(time).then(() => currentPromise.resolve(res)).catch(noop);
@@ -44,7 +45,7 @@ export function mockAsyncProp(handler? : Function = noop, time? : number = 1) : 
             throw err;
         });
     };
-    
+
     asyncHandler.await = () => currentPromise;
 
     return asyncHandler;
@@ -289,7 +290,7 @@ export function setupMocks() {
                     };
                 },
                 submit: () => {
-                    return submitCardFields({ facilitatorAccessToken: 'ABCDEF12345' });
+                    return submitCardFields({ facilitatorAccessToken: 'ABCDEF12345', featureFlags: {} });
                 }
             };
         },
@@ -532,7 +533,7 @@ export function createCardFieldsContainerHTML(type : string = 'single') : mixed 
     if (!body) {
         throw new Error('No document.body found');
     }
-    
+
     body.innerHTML += fields.join('\n');
 
     return document.querySelector(`#card-fields-${ type }-container`);
@@ -1253,17 +1254,6 @@ export function mockFirebaseScripts() : {| done : () => void, await : () => Zalg
     };
 }
 
-export const MOCK_FIREBASE_CONFIG = {
-    apiKey:            'AIzaSyAeyii31bJYddKqSHrkyiRKU3EHCvh-owM',
-    authDomain:        'testmessaging-63f5d.firebaseapp.com',
-    databaseURL:       'https://testmessaging-63f5d.firebaseio.com',
-    projectId:         'testmessaging-63f5d',
-    storageBucket:     'testmessaging-63f5d.appspot.com',
-    messagingSenderId: '330437320943',
-    appId:             '1:330437320943:web:c7a8b59c274429d1707b1a',
-    measurementId:     'G-6ZYN3ND8X2'
-};
-
 type MockFirebase = {|
     send : (string, Object) => ZalgoPromise<void>,
     expect : () => {|
@@ -1545,7 +1535,7 @@ export function getNativeFirebaseMock({ sessionUID, extraHandler } : {| sessionU
             message_type:       'request',
             message_name:       'onCancel',
             message_data:       {
-                
+
             }
         }));
     };
@@ -1628,8 +1618,6 @@ export function getNativeFirebaseMock({ sessionUID, extraHandler } : {| sessionU
     };
 }
 
-export const MOCK_SDK_META = 'abc123';
-
 export async function mockSetupButton(options : $Shape<SetupButtonOptions> = {}) : Promise<void> {
     await setupButton({
         facilitatorAccessToken:        'QQQ123000',
@@ -1647,6 +1635,10 @@ export async function mockSetupButton(options : $Shape<SetupButtonOptions> = {})
             }
         },
         sdkMeta: MOCK_SDK_META,
+        featureFlags: {
+            isLsatUpgradable: true,
+            shouldThrowIntegrationError: true
+        },
         ...options
     });
 }
@@ -1654,7 +1646,8 @@ export async function mockSetupButton(options : $Shape<SetupButtonOptions> = {})
 export async function mockSetupCardFields() : Promise<void> {
     await setupCard({
         cspNonce:               '111222333',
-        facilitatorAccessToken: 'ABCDEF12345'
+        facilitatorAccessToken: 'ABCDEF12345',
+        featureFlags: {}
     });
 }
 
@@ -1872,7 +1865,7 @@ export function getMockWindowOpen({ expectedUrl, times = 1, appSwitch = false, e
 
     let win : ?CrossDomainWindowType;
     let winOpts : ?{| [string] : string |};
-    
+
 
     const _onLoad = (url) => {
         if (!win) {
@@ -2020,7 +2013,7 @@ export function getMockWindowOpen({ expectedUrl, times = 1, appSwitch = false, e
         }
 
         win.location = url;
-        
+
         return ZalgoPromise.delay(10);
     };
 

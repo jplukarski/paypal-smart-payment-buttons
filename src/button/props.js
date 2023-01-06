@@ -6,13 +6,14 @@ import type { CustomStyle } from '@paypal/checkout-components/src/types';
 import { EXPERIENCE } from '@paypal/checkout-components/src/constants/button';
 
 import type { ContentType, ProxyWindow, Wallet, CheckoutFlowType, CardFormFlowType,
-    ThreeDomainSecureFlowType, MenuFlowType, PersonalizationType, QRCodeType, PaymentFieldsFlowType, InlinePaymentFieldsEligibility } from '../types';
+    ThreeDomainSecureFlowType, MenuFlowType, PersonalizationType, QRCodeType, PaymentFieldsFlowType, InlinePaymentFieldsEligibility, FeatureFlags } from '../types';
 import { type FirebaseConfig } from '../api';
 import { getNonce } from '../lib';
 import { getProps, type XProps, type Props } from '../props/props';
 
 // export something to force webpack to see this as an ES module
 export const TYPES = true;
+
 
 export type PrerenderDetailsType = {|
     win ? : ? ProxyWindow,
@@ -44,7 +45,21 @@ export type ButtonProps = {|
     buttonSessionID : string
 |};
 
-export function getButtonProps({ facilitatorAccessToken, brandedDefault, paymentSource } : {| facilitatorAccessToken : string, brandedDefault : boolean | null, paymentSource : $Values<typeof FUNDING> | null |}) : ButtonProps {
+export function getButtonProps({
+    facilitatorAccessToken,
+    brandedDefault,
+    paymentSource,
+    featureFlags,
+    enableOrdersApprovalSmartWallet,
+    smartWalletOrderID
+} : {|
+    facilitatorAccessToken : string,
+    brandedDefault : boolean | null,
+    paymentSource : $Values<typeof FUNDING> | null,
+    featureFlags: FeatureFlags,
+    enableOrdersApprovalSmartWallet? : boolean,
+    smartWalletOrderID? : string
+|}) : ButtonProps {
     const xprops : ButtonXProps = window.xprops;
 
     let {
@@ -102,7 +117,7 @@ export function getButtonProps({ facilitatorAccessToken, brandedDefault, payment
     }
 
     return {
-        ...getProps({ facilitatorAccessToken, branded, paymentSource }),
+        ...getProps({ facilitatorAccessToken, branded, paymentSource, featureFlags, enableOrdersApprovalSmartWallet, smartWalletOrderID }),
         style,
         buttonSessionID,
         branded,
@@ -156,7 +171,8 @@ export type ServiceData = {|
         paymentFields : InlinePaymentFieldsEligibility
     |},
     cookies : string,
-    personalization : PersonalizationType
+    personalization : PersonalizationType,
+    featureFlags: FeatureFlags
 |};
 
 type ServiceDataOptions = {|
@@ -173,11 +189,24 @@ type ServiceDataOptions = {|
         inlinePaymentFields : InlinePaymentFieldsEligibility
     |},
     cookies : string,
-    personalization : PersonalizationType
+    personalization : PersonalizationType,
+    featureFlags: FeatureFlags
 |};
 
-export function getServiceData({ facilitatorAccessToken, sdkMeta, content, buyerGeoCountry,
-    fundingEligibility, wallet, buyerAccessToken, serverMerchantID, eligibility, cookies, personalization } : ServiceDataOptions) : ServiceData {
+export function getServiceData({
+    facilitatorAccessToken,
+    sdkMeta,
+    content,
+    buyerGeoCountry,
+    fundingEligibility,
+    wallet,
+    buyerAccessToken,
+    serverMerchantID,
+    eligibility,
+    cookies,
+    personalization,
+    featureFlags
+} : ServiceDataOptions) : ServiceData {
 
     return {
         merchantID:   serverMerchantID,
@@ -188,21 +217,15 @@ export function getServiceData({ facilitatorAccessToken, sdkMeta, content, buyer
         content,
         buyerAccessToken,
         facilitatorAccessToken,
-        eligibility:  eligibility ? {
+        eligibility: {
             cardForm: eligibility.cardFields || false,
             paymentFields: eligibility.inlinePaymentFields || {
                 inlineEligibleAPMs : [],
                 isInlineEnabled : false
             }
-        } : {
-            cardForm: false,
-            paymentFields: {
-                inlineEligibleAPMs : [],
-                isInlineEnabled : false
-            }
         },
         cookies,
-        personalization
+        personalization,
+        featureFlags
     };
 }
-

@@ -28,17 +28,18 @@ export const HEADERS = {
 };
 
 export const DATA_ATTRIBUTES = {
-    FUNDING_SOURCE:      'data-funding-source',
-    CARD:                'data-card',
-    PAYMENT_METHOD_ID:   'data-payment-method-id',
-    INSTRUMENT_ID:       'data-instrument-id',
-    INSTRUMENT_TYPE:     'data-instrument-type',
-    MENU:                'data-menu',
-    NONCE:               'data-nonce',
-    RENDER_VERSION:      'data-render-version',
-    CLIENT_VERSION:      'data-client-version',
-    PAY_NOW:             'data-pay-now',
-    RESPONSE_START_TIME: 'data-response-start-time'
+    FUNDING_SOURCE:            'data-funding-source',
+    CARD:                      'data-card',
+    PAYMENT_METHOD_ID:         'data-payment-method-id',
+    INSTRUMENT_ID:             'data-instrument-id',
+    INSTRUMENT_TYPE:           'data-instrument-type',
+    SECONDARY_INSTRUMENT_TYPE: 'data-secondary-instrument-type',
+    MENU:                      'data-menu',
+    NONCE:                     'data-nonce',
+    RENDER_VERSION:            'data-render-version',
+    CLIENT_VERSION:            'data-client-version',
+    PAY_NOW:                   'data-pay-now',
+    RESPONSE_START_TIME:       'data-response-start-time'
 };
 
 export const CLASS = {
@@ -75,6 +76,7 @@ export const USER_EXPERIENCE_FLOW = {
 };
 
 export const PRODUCT_FLOW = {
+    ACCELERATED:           'ACCELERATED_CHECKOUT',
     SMART_PAYMENT_BUTTONS: 'SMART_PAYMENT_BUTTONS'
 };
 
@@ -86,9 +88,10 @@ export const FPTI_CONTEXT_TYPE = {
 };
 
 export const FPTI_STATE = {
-    BUTTON:   ('smart_button' : 'smart_button'),
-    WALLET:   ('smart_wallet' : 'smart_wallet'),
-    PXP:      ('PXP_CHECK' : 'PXP_CHECK')
+    BUTTON:            ('smart_button' : 'smart_button'),
+    WALLET:            ('smart_wallet' : 'smart_wallet'),
+    PXP:               ('PXP_CHECK' : 'PXP_CHECK'),
+    ELIGIBILITY_CHECK: ('eligibility_check' : 'eligibility_check')
 };
 
 export const FPTI_TRANSITION = {
@@ -179,7 +182,9 @@ export const FPTI_TRANSITION = {
     
     HONEY_IDENTIFY:                         ('honey_identify' : 'honey_identify'),
     
-    CALL_REST_API:                          ('call_rest_api' : 'call_rest_api')
+    CALL_REST_API:                          ('call_rest_api' : 'call_rest_api'),
+
+    ORDER_VALIDATE:                         ('process_order_validate', 'process_order_validate')
 };
 
 export const FPTI_MENU_OPTION = {
@@ -259,15 +264,7 @@ export const QRCODE_STATE = {
     DEFAULT:    'qr_default'
 };
 
-export const LSAT_UPGRADE_EXCLUDED_MERCHANTS = [
-    'AQipcJ1uXz50maKgYx49lKUB8MlSOXP573M6cpsFpHqDZOqnopsJpfYY7bQC_9CtQJsEhGlk8HLs2oZz',
-    'Aco-yrRKihknb5vDBbDOdtYywjYMEPaM7mQg6kev8VDAz01lLA88J4oAUnF4UV9F_InqkqX7K62_jOjx',
-    'AeAiB9K2rRsTXsFKZt4FMAQ8a6VEu4hijducis3a8NcIjV2J_c5I2H2PYhT3qCOwxT8P4l17skqgBlmg',
-    'AXKrWRqEvxiDoUIZQaD1tFi2QhtmhWve3yTDBi58bxWjieYJ9j73My-yJmM7hP00JvOXu4YD6L2eaI5O',
-    'AfRTnXv_QcuVyalbUxThtgk1xTygygsdevlBUTz36dDgD6XZNHp3Ym99a-mjMaokXyTTiI8VJ9mRgaFB',
-    'AejlsIlg_KjKjmLKqxJqFIAwn3ZP02emx41Z2It4IfirQ-nNgZgzWk1CU-Q1QDbYUXjWoYJZ4dq1S2pK',
-    'AQXD7-m_2yMo-5AxJ1fQaPeEWYDE7NZ9XrLzEXeiPLTHDu9vfe_T0foF8BoX8K5cMfXuRDysUEmhw-8Z'
-];
+
 
 export const ITEM_CATEGORY = {
     DIGITAL:  'DIGITAL',

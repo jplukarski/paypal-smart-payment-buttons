@@ -695,7 +695,6 @@
             }));
             var sfvcScreens = {
                 932: {
-                    device: "iPhone 14 Pro Max",
                     textSizeHeights: [ 746, 742, 738 ],
                     textSizeHeightsNoTabs: [ 854, 852, 850, 848 ],
                     zoomHeight: {
@@ -721,7 +720,6 @@
                     }
                 },
                 926: {
-                    device: "iPhone 12/13 Pro Max, iPhone 14 Plus",
                     textSizeHeights: [ 752, 748, 744, 738 ],
                     textSizeHeightsNoTabs: [ 860, 858, 856, 854 ],
                     zoomHeight: {
@@ -740,7 +738,6 @@
                     }
                 },
                 896: {
-                    device: "iPhone XS Max, iPhone 11 Pro Max, iPhone XR, iPhone 11",
                     textSizeHeights: [ 721, 717, 713, 707 ],
                     textSizeHeightsNoTabs: [ 829, 827, 825, 823 ],
                     zoomHeight: {
@@ -758,7 +755,6 @@
                     }
                 },
                 852: {
-                    device: "iPhone 14 Pro",
                     textSizeHeights: [ 666, 662, 658 ],
                     textSizeHeightsNoTabs: [ 774, 772, 770, 768 ],
                     zoomHeight: {
@@ -784,7 +780,6 @@
                     }
                 },
                 844: {
-                    device: "iPhone 12, iPhone 12 Pro, iPhone 13, iPhone 14",
                     textSizeHeights: [ 670, 666, 662, 656 ],
                     textSizeHeightsNoTabs: [ 778, 776, 774, 772 ],
                     zoomHeight: {
@@ -805,7 +800,6 @@
                     }
                 },
                 812: {
-                    device: "iPhone X, iPhone XS, iPhone 11 Pro, iPhone 12 Mini",
                     textSizeHeights: [ 641, 637, 633, 627 ],
                     textSizeHeightsNoTabs: [ 749, 747, 745, 743 ],
                     zoomHeight: {
@@ -823,7 +817,6 @@
                     }
                 },
                 736: {
-                    device: "iPhone 6 Plus, iPhone 6S Plus, iPhone 7 Plus, iPhone 8 Plus",
                     textSizeHeights: [ 628, 624, 620, 614 ],
                     textSizeHeightsNoTabs: [ 736, 734, 732, 730 ],
                     zoomHeight: {
@@ -842,7 +835,6 @@
                     }
                 },
                 667: {
-                    device: "iPhone 6, iPhone 6S, iPhone 7, iPhone 8,  iPhone SE2",
                     textSizeHeights: [ 559, 555, 551, 545 ],
                     textSizeHeightsNoTabs: [ 667, 665, 663, 661 ],
                     zoomHeight: {
@@ -3456,7 +3448,6 @@
         }));
         var sfvcScreens = {
             932: {
-                device: "iPhone 14 Pro Max",
                 textSizeHeights: [ 746, 742, 738 ],
                 textSizeHeightsNoTabs: [ 854, 852, 850, 848 ],
                 zoomHeight: {
@@ -3482,7 +3473,6 @@
                 }
             },
             926: {
-                device: "iPhone 12/13 Pro Max, iPhone 14 Plus",
                 textSizeHeights: [ 752, 748, 744, 738 ],
                 textSizeHeightsNoTabs: [ 860, 858, 856, 854 ],
                 zoomHeight: {
@@ -3501,7 +3491,6 @@
                 }
             },
             896: {
-                device: "iPhone XS Max, iPhone 11 Pro Max, iPhone XR, iPhone 11",
                 textSizeHeights: [ 721, 717, 713, 707 ],
                 textSizeHeightsNoTabs: [ 829, 827, 825, 823 ],
                 zoomHeight: {
@@ -3519,7 +3508,6 @@
                 }
             },
             852: {
-                device: "iPhone 14 Pro",
                 textSizeHeights: [ 666, 662, 658 ],
                 textSizeHeightsNoTabs: [ 774, 772, 770, 768 ],
                 zoomHeight: {
@@ -3545,7 +3533,6 @@
                 }
             },
             844: {
-                device: "iPhone 12, iPhone 12 Pro, iPhone 13, iPhone 14",
                 textSizeHeights: [ 670, 666, 662, 656 ],
                 textSizeHeightsNoTabs: [ 778, 776, 774, 772 ],
                 zoomHeight: {
@@ -3566,7 +3553,6 @@
                 }
             },
             812: {
-                device: "iPhone X, iPhone XS, iPhone 11 Pro, iPhone 12 Mini",
                 textSizeHeights: [ 641, 637, 633, 627 ],
                 textSizeHeightsNoTabs: [ 749, 747, 745, 743 ],
                 zoomHeight: {
@@ -3584,7 +3570,6 @@
                 }
             },
             736: {
-                device: "iPhone 6 Plus, iPhone 6S Plus, iPhone 7 Plus, iPhone 8 Plus",
                 textSizeHeights: [ 628, 624, 620, 614 ],
                 textSizeHeightsNoTabs: [ 736, 734, 732, 730 ],
                 zoomHeight: {
@@ -3603,7 +3588,6 @@
                 }
             },
             667: {
-                device: "iPhone 6, iPhone 6S, iPhone 7, iPhone 8,  iPhone SE2",
                 textSizeHeights: [ 559, 555, 551, 545 ],
                 textSizeHeightsNoTabs: [ 667, 665, 663, 661 ],
                 zoomHeight: {
@@ -3648,6 +3632,17 @@
                 return !device || (scale > 1 && device.zoomHeight && device.zoomHeight[scale] ? -1 !== device.zoomHeight[scale].indexOf(computedHeight) : -1 !== device.textSizeHeights.indexOf(computedHeight) || -1 !== device.textSizeHeightsNoTabs.indexOf(computedHeight));
             }
             return !1;
+        }
+        function _setPrototypeOf(o, p) {
+            return (_setPrototypeOf = Object.setPrototypeOf || function(o, p) {
+                o.__proto__ = p;
+                return o;
+            })(o, p);
+        }
+        function _inheritsLoose(subClass, superClass) {
+            subClass.prototype = Object.create(superClass.prototype);
+            subClass.prototype.constructor = subClass;
+            _setPrototypeOf(subClass, superClass);
         }
         function _extends() {
             return (_extends = Object.assign || function(target) {
@@ -4270,6 +4265,55 @@
             };
             return CrossDomainSafeWeakMap;
         }();
+        function _getPrototypeOf(o) {
+            return (_getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function(o) {
+                return o.__proto__ || Object.getPrototypeOf(o);
+            })(o);
+        }
+        function _isNativeReflectConstruct() {
+            if ("undefined" == typeof Reflect || !Reflect.construct) return !1;
+            if (Reflect.construct.sham) return !1;
+            if ("function" == typeof Proxy) return !0;
+            try {
+                Date.prototype.toString.call(Reflect.construct(Date, [], (function() {})));
+                return !0;
+            } catch (e) {
+                return !1;
+            }
+        }
+        function construct_construct(Parent, args, Class) {
+            return (construct_construct = _isNativeReflectConstruct() ? Reflect.construct : function(Parent, args, Class) {
+                var a = [ null ];
+                a.push.apply(a, args);
+                var instance = new (Function.bind.apply(Parent, a));
+                Class && _setPrototypeOf(instance, Class.prototype);
+                return instance;
+            }).apply(null, arguments);
+        }
+        function wrapNativeSuper_wrapNativeSuper(Class) {
+            var _cache = "function" == typeof Map ? new Map : void 0;
+            return (wrapNativeSuper_wrapNativeSuper = function(Class) {
+                if (null === Class || !(fn = Class, -1 !== Function.toString.call(fn).indexOf("[native code]"))) return Class;
+                var fn;
+                if ("function" != typeof Class) throw new TypeError("Super expression must either be null or a function");
+                if (void 0 !== _cache) {
+                    if (_cache.has(Class)) return _cache.get(Class);
+                    _cache.set(Class, Wrapper);
+                }
+                function Wrapper() {
+                    return construct_construct(Class, arguments, _getPrototypeOf(this).constructor);
+                }
+                Wrapper.prototype = Object.create(Class.prototype, {
+                    constructor: {
+                        value: Wrapper,
+                        enumerable: !1,
+                        writable: !0,
+                        configurable: !0
+                    }
+                });
+                return _setPrototypeOf(Wrapper, Class);
+            })(Class);
+        }
         function getFunctionName(fn) {
             return fn.name || fn.__name__ || fn.displayName || "anonymous";
         }
@@ -4417,7 +4461,19 @@
             for (var key in obj) obj.hasOwnProperty(key) && filter(obj[key], key) && (result[key] = obj[key]);
             return result;
         }
-        Error;
+        var util_ExtendableError = function(_Error) {
+            _inheritsLoose(ExtendableError, _Error);
+            function ExtendableError(message) {
+                var _this6;
+                (_this6 = _Error.call(this, message) || this).name = _this6.constructor.name;
+                "function" == typeof Error.captureStackTrace ? Error.captureStackTrace(function(self) {
+                    if (void 0 === self) throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
+                    return self;
+                }(_this6), _this6.constructor) : _this6.stack = new Error(message).stack;
+                return _this6;
+            }
+            return ExtendableError;
+        }(wrapNativeSuper_wrapNativeSuper(Error));
         function isDocumentReady() {
             return Boolean(document.body) && "complete" === document.readyState;
         }
@@ -4471,6 +4527,10 @@
                 return !1;
             }));
         }
+        _inheritsLoose((function() {
+            return _ExtendableError.apply(this, arguments) || this;
+        }), _ExtendableError = util_ExtendableError);
+        var _ExtendableError;
         var currentScript = "undefined" != typeof document ? document.currentScript : null;
         var getCurrentScript = memoize((function() {
             if (currentScript) return currentScript;
@@ -4939,7 +4999,7 @@
                 var env = _ref.env, sessionID = _ref.sessionID, buttonSessionID = _ref.buttonSessionID, sdkCorrelationID = _ref.sdkCorrelationID, clientID = _ref.clientID, fundingSource = _ref.fundingSource, sdkVersion = _ref.sdkVersion, locale = _ref.locale, buyerCountry = _ref.buyerCountry;
                 var logger = getLogger();
                 !function(_ref2) {
-                    var env = _ref2.env, sessionID = _ref2.sessionID, clientID = _ref2.clientID, sdkCorrelationID = _ref2.sdkCorrelationID, buyerCountry = _ref2.buyerCountry, locale = _ref2.locale, sdkVersion = _ref2.sdkVersion, fundingSource = _ref2.fundingSource;
+                    var env = _ref2.env, sessionID = _ref2.sessionID, clientID = _ref2.clientID, sdkCorrelationID = _ref2.sdkCorrelationID, buyerCountry = _ref2.buyerCountry, locale = _ref2.locale, sdkVersion = _ref2.sdkVersion, fundingSource = _ref2.fundingSource, smartWalletOrderID = _ref2.smartWalletOrderID, product = _ref2.product;
                     var logger = getLogger();
                     logger.addPayloadBuilder((function() {
                         return {
@@ -4951,18 +5011,21 @@
                         };
                     }));
                     logger.addTrackingBuilder((function() {
-                        var _ref3;
+                        var _tracking;
                         var lang = locale.lang, country = locale.country;
-                        return (_ref3 = {}).feed_name = "payments_sdk", _ref3.serverside_data_source = "checkout", 
-                        _ref3.client_id = clientID, _ref3.page_session_id = sessionID, _ref3.referer_url = window.location.host, 
-                        _ref3.buyer_cntry = buyerCountry, _ref3.locale = lang + "_" + country, _ref3.integration_identifier = clientID, 
-                        _ref3.sdk_environment = isIos() ? "iOS" : function(ua) {
+                        var tracking = ((_tracking = {}).feed_name = "payments_sdk", _tracking.serverside_data_source = "checkout", 
+                        _tracking.client_id = clientID, _tracking.page_session_id = sessionID, _tracking.referer_url = window.location.host, 
+                        _tracking.buyer_cntry = buyerCountry, _tracking.locale = lang + "_" + country, _tracking.integration_identifier = clientID, 
+                        _tracking.sdk_environment = isIos() ? "iOS" : function(ua) {
                             void 0 === ua && (ua = getUserAgent());
                             return /Android/.test(ua);
-                        }() ? "android" : null, _ref3.sdk_name = "payments_sdk", _ref3.sdk_version = sdkVersion, 
-                        _ref3.user_agent = window.navigator && window.navigator.userAgent, _ref3.context_correlation_id = sdkCorrelationID, 
-                        _ref3.t = Date.now().toString(), _ref3.selected_payment_method = fundingSource, 
-                        _ref3;
+                        }() ? "android" : null, _tracking.sdk_name = "payments_sdk", _tracking.sdk_version = sdkVersion, 
+                        _tracking.user_agent = window.navigator && window.navigator.userAgent, _tracking.context_correlation_id = sdkCorrelationID, 
+                        _tracking.t = Date.now().toString(), _tracking.selected_payment_method = fundingSource, 
+                        _tracking);
+                        product && (tracking.product = product);
+                        smartWalletOrderID && (tracking.token = smartWalletOrderID);
+                        return tracking;
                     }));
                     promise_ZalgoPromise.onPossiblyUnhandledException((function(err) {
                         var _logger$track;
@@ -5000,7 +5063,7 @@
                 logger.addTrackingBuilder((function() {
                     var _ref3;
                     return (_ref3 = {}).state_name = "smart_button", _ref3.context_type = "button_session_id", 
-                    _ref3.context_id = buttonSessionID, _ref3.button_session_id = buttonSessionID, _ref3.button_version = "5.0.117", 
+                    _ref3.context_id = buttonSessionID, _ref3.button_session_id = buttonSessionID, _ref3.button_version = "5.0.121", 
                     _ref3.user_id = buttonSessionID, _ref3.time = Date.now().toString(), _ref3;
                 }));
                 (function() {

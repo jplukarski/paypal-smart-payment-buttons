@@ -6,7 +6,7 @@ import { FPTI_KEY } from '@paypal/sdk-constants/src';
 
 import { applepay, checkout, cardField, cardForm, paymentFields, native, vaultCapture, walletCapture, popupBridge, type Payment, type PaymentFlow } from '../payment-flows';
 import { getLogger, sendBeacon } from '../lib';
-import { AMPLITUDE_KEY, FPTI_TRANSITION, BUYER_INTENT, FPTI_CONTEXT_TYPE, FPTI_CUSTOM_KEY } from '../constants';
+import { AMPLITUDE_KEY, FPTI_TRANSITION, BUYER_INTENT, FPTI_CONTEXT_TYPE, FPTI_CUSTOM_KEY, FPTI_STATE } from '../constants';
 import { updateButtonClientConfig } from '../api';
 import { getConfirmOrder } from '../props/confirmOrder';
 import { enableVaultSetup } from '../middleware';
@@ -74,7 +74,7 @@ export function initiatePaymentFlow({ payment, serviceData, config, components, 
     return ZalgoPromise.try(() => {
         const { merchantID, personalization, fundingEligibility, buyerCountry } = serviceData;
         const { clientID, onClick, createOrder, env, vault, partnerAttributionID, userExperienceFlow, buttonSessionID, intent, currency,
-            clientAccessToken, createBillingAgreement, createSubscription, commit, disableFunding, disableCard, userIDToken, enableNativeCheckout } = props;
+            clientAccessToken, createBillingAgreement, createSubscription, commit, disableFunding, disableCard, userIDToken, enableNativeCheckout, inlinexo } = props;
         
         sendPersonalizationBeacons(personalization);
 
@@ -99,11 +99,11 @@ export function initiatePaymentFlow({ payment, serviceData, config, components, 
                     [FPTI_KEY.CONTEXT_ID]:         buttonSessionID,
                     [FPTI_KEY.BUTTON_SESSION_UID]: buttonSessionID,
                     [AMPLITUDE_KEY.USER_ID]:       buttonSessionID,
-                    [AMPLITUDE_KEY.TIME]:          Date.now().toString(),
-                    [FPTI_KEY.TOKEN]:              null
+                    [AMPLITUDE_KEY.TIME]:          Date.now().toString()
                 };
             })
             .track({
+                [FPTI_KEY.STATE]:             FPTI_STATE.BUTTON,
                 [FPTI_KEY.TRANSITION]:        FPTI_TRANSITION.BUTTON_CLICK,
                 [FPTI_KEY.EVENT_NAME]:        FPTI_TRANSITION.BUTTON_CLICK,
                 [FPTI_KEY.CHOSEN_FI_TYPE]:    instrumentType,
@@ -115,6 +115,7 @@ export function initiatePaymentFlow({ payment, serviceData, config, components, 
             getLogger()
                 .info(`cross_site_tracking_${ isCrossSiteTrackingEnabled('enforce_policy') ? 'enabled' : 'disabled' }`)
                 .track({
+                    [FPTI_KEY.STATE]:      FPTI_STATE.BUTTON,
                     [FPTI_KEY.TRANSITION]: `cross_site_tracking_${ isCrossSiteTrackingEnabled('enforce_policy') ? 'enabled' : 'disabled' }`
                 }).flush();
 
@@ -148,7 +149,7 @@ export function initiatePaymentFlow({ payment, serviceData, config, components, 
 
             const updateClientConfigPromise = createOrder().then(orderID => {
                 if (updateFlowClientConfig) {
-                    return updateFlowClientConfig({ orderID, payment, userExperienceFlow, buttonSessionID });
+                    return updateFlowClientConfig({ orderID, payment, userExperienceFlow, buttonSessionID, inlinexo });
                 }
 
                 // Do not block by default
@@ -171,7 +172,15 @@ export function initiatePaymentFlow({ payment, serviceData, config, components, 
             });
 
             const validateOrderPromise = createOrder().then(orderID => {
-                return validateOrder(orderID, { env, clientID, merchantID, intent, currency, vault, buttonLabel });
+                return validateOrder(orderID, {
+                    env,
+                    merchantID,
+                    intent,
+                    currency,
+                    vault,
+                    buttonLabel,
+                    featureFlags: serviceData.featureFlags
+                });
             });
              
             const confirmOrderPromise = createOrder().then((orderID) => {
@@ -230,6 +239,7 @@ export function initiateMenuFlow({ payment, serviceData, config, components, pro
         }
 
         getLogger().info(`menu_click`).info(`pay_flow_${ name }`).track({
+            [FPTI_KEY.STATE]:          FPTI_STATE.BUTTON,
             [FPTI_KEY.TRANSITION]:     FPTI_TRANSITION.MENU_CLICK,
             [FPTI_KEY.CHOSEN_FUNDING]: fundingSource,
             [FPTI_KEY.PAYMENT_FLOW]:   name

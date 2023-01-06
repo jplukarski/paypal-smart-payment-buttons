@@ -15,7 +15,9 @@ import {
     getContext,
     markValidity,
     assertType,
-    shouldUseZeroPaddedExpiryPattern
+    shouldUseZeroPaddedExpiryPattern,
+    parsedCardType,
+    kebabToCamelCase
 } from './card-utils';
 
 
@@ -492,4 +494,46 @@ describe('card utils', () => {
         });
 
     });
+
+  describe("parsedCardType", () => {
+    it("returns only the type, niceType, and code objecs returned from the card validator module", () => {
+      const cardType = [
+        {
+          niceType: "Visa",
+          type: "visa",
+          patterns: [4],
+          matchStrength: 1,
+          gaps: [4, 8, 12],
+          lengths: [16, 18, 19],
+          code: {
+            name: "CVV",
+            size: 3,
+          },
+        },
+      ];
+
+      expect(parsedCardType(cardType)).toStrictEqual([
+        {
+          niceType: "Visa",
+          type: "visa",
+          code: {
+            name: "CVV",
+            size: 3,
+          },
+        },
+      ])
+    });
+  });
+
+    describe("kebabToCamelCase", () => {
+        it('converts a string from kebab-case to camelCase', () => {
+            const string = 'kebab-case-string'
+            expect(kebabToCamelCase(string)).toStrictEqual('kebabCaseString')
+            expect(kebabToCamelCase('string')).toStrictEqual('string')
+            expect(kebabToCamelCase('')).toStrictEqual('')
+            expect(kebabToCamelCase('HELLO-WORLD')).toStrictEqual('helloWorld')
+            expect(kebabToCamelCase('HELLOWORLD')).toStrictEqual('helloworld')
+            expect(kebabToCamelCase('hELlO-W1rLd')).toStrictEqual('helloW1rld')
+        })
+    })
 });

@@ -1,12 +1,14 @@
 /* @flow */
 /** @jsx h */
 
-import { h } from 'preact';
+import { h, Fragment } from 'preact';
 import { useState, useEffect, useRef } from 'preact/hooks';
 import cardValidator from 'card-validator';
 
 import { defaultNavigation, defaultInputState, navigateOnKeyDown, exportMethods } from '../lib';
 import type { CardPostalCodeChangeEvent, CardNavigation, FieldValidity, InputState, InputEvent } from '../types';
+
+import { AriaMessage } from './AriaMessage'
 
 type CardPostalCodeProps = {|
     name : string,
@@ -19,6 +21,7 @@ type CardPostalCodeProps = {|
     onChange : (expiryEvent : CardPostalCodeChangeEvent) => void,
     onFocus? : (event : InputEvent) => void,
     onBlur? : (event : InputEvent) => void,
+    onKeyDown? : (keyDown : boolean) => void,
     allowNavigation : boolean,
     onValidityChange? : (numberValidity : FieldValidity) => void,
     minLength: number
@@ -37,6 +40,7 @@ export function CardPostalCode(
         onChange,
         onFocus,
         onBlur,
+        onKeyDown,
         onValidityChange,
         minLength
     } : CardPostalCodeProps
@@ -46,15 +50,15 @@ export function CardPostalCode(
     const { inputValue, keyStrokeCount, isValid, isPotentiallyValid } = inputState;
 
     const postalCodeRef = useRef();
+    const ariaMessageRef = useRef()
 
     useEffect(() => {
-        exportMethods(postalCodeRef, setAttributes, setInputState);
+        exportMethods(postalCodeRef, setAttributes, setInputState, ariaMessageRef);
     }, []);
 
     useEffect(() => {
-        const validity = cardValidator.postalCode(inputValue, { minLength });
-        setInputState(newState => ({ ...newState, ...validity }));
-    }, [ inputValue ]);
+        onChange({ cardPostalCode: inputState.inputValue });
+    }, [ inputState ]);
 
     useEffect(() => {
         if (typeof onValidityChange === 'function') {
@@ -67,18 +71,25 @@ export function CardPostalCode(
 
     const setPostalCodeValue : (InputEvent) => void = (event : InputEvent) : void => {
         const { value } = event.target;
+        const validity = cardValidator.postalCode(value, { minLength });
 
         setInputState({
             ...inputState,
+            ...validity,
             inputValue:       value,
             keyStrokeCount:   keyStrokeCount + 1
         });
-
-        onChange({ event, cardPostalCode: value });
-
     };
 
     const onKeyDownEvent : (InputEvent) => void = (event : InputEvent) : void => {
+        if (typeof onKeyDown === 'function') {
+            if(event.key === "Enter"){
+                onKeyDown(true)
+            } else {
+                onKeyDown(false)
+            }
+        }
+
         if (allowNavigation) {
             navigateOnKeyDown(event, navigation);
         }
@@ -88,36 +99,40 @@ export function CardPostalCode(
         if (typeof onFocus === 'function') {
             onFocus(event);
         }
-        if (!isValid) {
-            setInputState((newState) => ({ ...newState, isPotentiallyValid: true }));
-        }
     };
 
     const onBlurEvent : (InputEvent) => void = (event : InputEvent) : void => {
         if (typeof onBlur === 'function') {
             onBlur(event);
         }
-        if (!isValid) {
-            setInputState((newState) => ({ ...newState, isPotentiallyValid: false, contentPasted: false }));
+        if ( typeof onKeyDown === 'function') {
+            onKeyDown(false)
         }
     };
 
     return (
-        <input
-            name={ name }
-            inputmode='numeric'
-            ref={ postalCodeRef }
-            type={ type }
-            className='card-field-postal-code'
-            value={ inputValue }
-            style={ style }
-            maxLength={ maxLength }
-            onKeyDown={ onKeyDownEvent }
-            onInput={ setPostalCodeValue }
-            onFocus={ onFocusEvent }
-            onBlur={ onBlurEvent }
-            minLength={ minLength }
-            { ...attributes }
-        />
+        <Fragment>
+            <input
+                aria-describedby={'card-postalCode-field-description'}
+                name={ name }
+                inputmode='numeric'
+                ref={ postalCodeRef }
+                type={ type }
+                className='card-field-postal-code'
+                value={ inputValue }
+                style={ style }
+                maxLength={ maxLength }
+                onKeyDown={ onKeyDownEvent }
+                onInput={ setPostalCodeValue }
+                onFocus={ onFocusEvent }
+                onBlur={ onBlurEvent }
+                minLength={ minLength }
+                { ...attributes }
+            />
+            <AriaMessage
+                ariaMessageId={'card-postalCode-field-description'}
+                ariaMessageRef={ariaMessageRef}
+            />
+        </Fragment>
     )
 }

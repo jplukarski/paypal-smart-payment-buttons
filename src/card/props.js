@@ -1,13 +1,14 @@
 /* @flow */
+/* eslint-disable flowtype/require-exact-type */
 
-import type { ZalgoPromise } from '@krakenjs/zalgo-promise/src';
+import { ZalgoPromise } from '@krakenjs/zalgo-promise/src';
 import { FUNDING, CARD, type FundingEligibilityType } from '@paypal/sdk-constants/src';
 import { EXPERIENCE } from '@paypal/checkout-components/src/constants/button';
 
-import type { ProxyWindow } from '../types';
+import type { ProxyWindow, FeatureFlags } from '../types';
 import { getProps, type XProps, type Props } from '../props/props';
 
-import type { CardStyle, CardPlaceholder } from './types';
+import type { CardStyle, CardPlaceholder, CardFieldsState, ParsedCardType, FieldsState } from './types';
 import { CARD_FIELD_TYPE, CARD_ERRORS } from './constants';
 
 // export something to force webpack to see this as an ES module
@@ -20,13 +21,35 @@ export type PrerenderDetailsType = {|
 |};
 
 export type CardExport = ({|
-    submit : () => ZalgoPromise<void>
+    submit : () => ZalgoPromise<void>,
+    getState : () => CardFieldsState
 |}) => ZalgoPromise<void>;
 
+export type InputEventState = {|
+    potentialCardTypes : $ReadOnlyArray<ParsedCardType>,
+    emittedBy: string,
+    fields: FieldsState,
+    errors : [$Values<typeof CARD_ERRORS>] | [],
+    isFormValid : boolean,
+|}
+
 export type OnChange = ({|
-    isValid : boolean,
-    errors : [$Values<typeof CARD_ERRORS>] | []
-|}) => ZalgoPromise<void>;
+    ...InputEventState,
+ |}) => ZalgoPromise<void>;
+
+
+export type OnBlur = (InputEventState) => ZalgoPromise<void>
+
+export type OnFocus = (InputEventState) => ZalgoPromise<void>
+
+export type OnInputSubmitRequest = (InputEventState) => ZalgoPromise<void>
+
+export type InputEvents = {
+    onChange? : OnChange,
+    onFocus? : OnFocus,
+    onBlur? : OnBlur,
+    onInputSubmitRequest? : OnInputSubmitRequest,
+}
 
 export type CardXProps = {|
     ...XProps,
@@ -38,7 +61,7 @@ export type CardXProps = {|
     maxLength? : number,
     cardSessionID : string,
     fundingEligibility : FundingEligibilityType,
-    onChange : OnChange,
+    inputEvents : InputEvents,
     export : CardExport,
     parent? : {|
         props : XProps,
@@ -59,16 +82,17 @@ export type CardProps = {|
     inlinexo : boolean,
     fundingEligibility : FundingEligibilityType,
     export : CardExport,
-    onChange : OnChange,
+    inputEvents : InputEvents,
     facilitatorAccessToken : string,
     disableAutocomplete? : boolean
 |};
 
 type GetCardPropsOptions = {|
-    facilitatorAccessToken : string
+    facilitatorAccessToken : string,
+    featureFlags: FeatureFlags
 |};
 
-export function getCardProps({ facilitatorAccessToken } : GetCardPropsOptions) : CardProps {
+export function getCardProps({ facilitatorAccessToken, featureFlags } : GetCardPropsOptions) : CardProps {
     const xprops : CardXProps = window.xprops;
 
     const {
@@ -79,14 +103,14 @@ export function getCardProps({ facilitatorAccessToken } : GetCardPropsOptions) :
         minLength,
         maxLength,
         fundingEligibility,
-        onChange,
+        inputEvents,
         branded = fundingEligibility?.card?.branded ?? true,
         parent,
         experience,
         export: xport
     } = xprops;
 
-    const props = getProps({ facilitatorAccessToken, branded, paymentSource: null });
+    const props = getProps({ facilitatorAccessToken, branded, paymentSource: null, featureFlags });
 
     return {
         ...props,
@@ -98,9 +122,11 @@ export function getCardProps({ facilitatorAccessToken } : GetCardPropsOptions) :
         maxLength,
         cardSessionID,
         fundingEligibility,
-        onChange,
+        inputEvents,
         inlinexo: experience === EXPERIENCE.INLINE,
         export:   parent ? parent.export : xport,
         facilitatorAccessToken
     };
 }
+
+/* eslint-enable flowtype/require-exact-type */

@@ -30,6 +30,7 @@ import type {
 import {  DEFAULT_CARD_TYPE } from '../constants';
 
 import { Icon } from './Icons';
+import { AriaMessage } from './AriaMessage'
 
 // Helper method to check if navigation to next field should be allowed
 function validateNavigation({ allowNavigation,  inputState } : {| allowNavigation : boolean, inputState : InputState |}) : boolean {
@@ -58,8 +59,9 @@ type CardNumberProps = {|
     onChange : (numberEvent : CardNumberChangeEvent) => void,
     onFocus? : (event : InputEvent) => void,
     onBlur? : (event : InputEvent) => void,
+    onKeyDown? : (keyDown : boolean) => void,
     onValidityChange? : (numberValidity : FieldValidity) => void,
-    onEligibilityChange? : (isCardEligible : boolean) => void
+    onEligibilityChange? : (isCardEligible : boolean) => void,
 |};
 
 export function CardNumber(
@@ -75,33 +77,42 @@ export function CardNumber(
         onChange,
         onFocus,
         onBlur,
+        onKeyDown,
         onValidityChange,
-        onEligibilityChange
+        onEligibilityChange,
     } : CardNumberProps
 ) : mixed {
     const [ attributes, setAttributes ] : [ Object, (Object) => Object ] = useState({ placeholder });
-    const [ cardType, setCardType ] : [ CardType, (CardType) => CardType ] = useState(DEFAULT_CARD_TYPE);
+    const [ cardTypes, setCardTypes ] : [ CardType, ($ReadOnlyArray<CardType>) => $ReadOnlyArray<CardType> ] = useState([DEFAULT_CARD_TYPE]);
     const [ maxLength, setMaxLength ] : [ number, (number) => number ] = useState(24);
     const [ inputState, setInputState ] : [ InputState, (InputState | InputState => InputState) => InputState ] = useState({ ...defaultInputState, ...state });
     const { inputValue, maskedInputValue, cursorStart, cursorEnd, keyStrokeCount, isValid, isPotentiallyValid, contentPasted } = inputState;
+    const [ cardType, setCardType ] : [ CardType, (CardType) => CardType ] = useState(DEFAULT_CARD_TYPE);
+
+    const numberRef = useRef()
+    const ariaMessageRef = useRef()
 
     const numberRef = useRef()
 
     useEffect(() => {
         if (!allowNavigation) {
-            exportMethods(numberRef, setAttributes, setInputState);
+            exportMethods(numberRef, setAttributes, setInputState, ariaMessageRef);
         }
     }, []);
 
     useEffect(() => {
-        const validity = cardValidator.number(inputValue);
-        setInputState(newState => ({ ...newState, ...validity }));
-    }, [ inputValue, maskedInputValue ]);
+        setCardType(cardTypes[0])
+    }, [cardTypes])
+
+    useEffect(() => {
+        onChange({ cardNumber: inputState.inputValue, potentialCardTypes: cardTypes});
+    }, [ inputState ]);
 
     useEffect(() => {
         if (typeof onEligibilityChange === 'function') {
             onEligibilityChange(checkCardEligibility(inputValue, cardType));
         }
+        
         if (cardType && cardType.lengths) {
             // get the maximum card length for the given card type
             const cardMaxLength = cardType.lengths.reduce((previousValue, currentValue) => {
@@ -140,8 +151,8 @@ export function CardNumber(
         const { value: rawValue, selectionStart, selectionEnd } = event.target;
         const value = removeNonDigits(rawValue);
         const detectedCardType = detectCardType(value);
+        const validity = cardValidator.number(value);
         const maskedValue = addGapsToCardNumber(value);
-
         let startCursorPosition = selectionStart;
         let endCursorPosition = selectionEnd;
         
@@ -160,9 +171,10 @@ export function CardNumber(
 
         moveCursor(event.target, startCursorPosition, endCursorPosition);
 
-        setCardType(detectedCardType);
+        setCardTypes(detectedCardType);
         setInputState({
             ...inputState,
+            ...validity,
             inputValue:       value,
             maskedInputValue: maskedValue,
             cursorStart:      startCursorPosition,
@@ -171,7 +183,6 @@ export function CardNumber(
             keyStrokeCount:   keyStrokeCount + 1
         });
 
-        onChange({ event, cardNumber: value, cardMaskedNumber: maskedValue });
     };
 
     const onFocusEvent : (InputEvent) => void = (event : InputEvent) : void => {
@@ -183,12 +194,8 @@ export function CardNumber(
         if (element) {
             element.classList.add('display-icon');
         }
-
         const maskedValue = addGapsToCardNumber(inputValue);
         const updatedState = { ...inputState, maskedInputValue: maskedValue, displayCardIcon: true };
-        if (!isValid) {
-            updatedState.isPotentiallyValid = true;
-        }
 
         setInputState((newState) => ({ ...newState, ...updatedState }));
     };
@@ -207,12 +214,13 @@ export function CardNumber(
 
         if (isValid) {
             updatedState.maskedInputValue = maskValidCard(maskedInputValue);
-        } else {
-            updatedState.isPotentiallyValid = false;
         }
 
         if (typeof onBlur === 'function') {
             onBlur(event);
+        }
+        if ( typeof onKeyDown === 'function') {
+            onKeyDown(false)
         }
 
         setInputState((newState) => ({ ...newState, ...updatedState }));
@@ -221,6 +229,14 @@ export function CardNumber(
     };
 
     const onKeyDownEvent : (InputEvent) => void = (event : InputEvent) : void => {
+        if (typeof onKeyDown === 'function') {
+            if(event.key === "Enter"){
+                onKeyDown(true)
+            } else {
+                onKeyDown(false)
+            }
+        }
+
         if (allowNavigation) {
             navigateOnKeyDown(event, navigation);
         }
@@ -233,6 +249,7 @@ export function CardNumber(
     return (
         <Fragment>
             <input
+                aria-describedby={'card-number-field-description'}
                 name={ name }
                 autocomplete={ autocomplete }
                 inputmode='numeric'
@@ -250,6 +267,10 @@ export function CardNumber(
                 { ...attributes }
             />
             <Icon iconId={ getIconId(cardType.type) } iconClass="card-icon" />
+            <AriaMessage
+                ariaMessageId={'card-number-field-description'}
+                ariaMessageRef={ariaMessageRef}
+            />
         </Fragment>
     );
 }
