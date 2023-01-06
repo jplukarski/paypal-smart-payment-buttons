@@ -223,8 +223,6 @@ curl -v -X POST https://api-m.sandbox.paypal.com/v2/checkout/orders/<order_id>/c
 }
 ```
 
-TODO: Add section for each field, including placeholders
-
 ### Available Fields
 
 #### Card Name Field (optional)
