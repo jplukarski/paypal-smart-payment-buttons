@@ -95,14 +95,6 @@ export function CardCVV(
     }, [ cardType ]);
 
     useEffect(() => {
-        const validity = cardValidator.cvv(inputValue, cardType?.code?.size);
-        if (touched) {
-            validity.isPotentiallyValid = false;
-        }
-        setInputState(newState => ({ ...newState, ...validity }));
-    }, [ cardType ]);
-
-    useEffect(() => {
         if (typeof onValidityChange === 'function') {
             onValidityChange({ isValid, isPotentiallyValid });
         }

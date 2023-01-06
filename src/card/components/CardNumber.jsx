@@ -92,8 +92,6 @@ export function CardNumber(
     const numberRef = useRef()
     const ariaMessageRef = useRef()
 
-    const numberRef = useRef()
-
     useEffect(() => {
         if (!allowNavigation) {
             exportMethods(numberRef, setAttributes, setInputState, ariaMessageRef);
