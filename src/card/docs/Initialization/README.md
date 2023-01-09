@@ -7,7 +7,7 @@
 
 
 ```html
-<script src="https://www.paypal.com/sdk/js?client-id=<YOUR_CLIENT_ID>" />
+<script src="https://www.paypal.com/sdk/js?client-id=<YOUR_CLIENT_ID>&components=card-fields" />
 
 <script>
     paypal.CardFields({...})
