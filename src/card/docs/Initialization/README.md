@@ -14,16 +14,6 @@
 </script>
 ```
 
-## Initialization Parameters
-
-Initialization Parameters can be passed via the script url query or via data attributes
-
-```html
-<script
-    src="https://www.paypal.com/sdk/js?client-id=test&components=card-fields"
-    data-user-id-token="xyz"></script>
-```
-
 ### Initialization Parameters
 
 Initialization Parameters can be passed via the script url query, and/or via data attributes. e.g.
@@ -80,21 +70,6 @@ Example:
 
 ```html
 <script src="https://www.paypal.com/sdk/js?client-id=test&components=buttons,card-fields"></script>
-```
-
-##### buyer-country
-
-- Optional
-- Default: buyer ip geolocation
-
-Pass in a custom country to inform the SDK of the geolocation of the user. Used primarily for eligibility.
-
-Available countries: See [Country Support](./support/countries.md)
-
-Example:
-
-```html
-<script src="https://www.paypal.com/sdk/js?client-id=test&buyer-country=FR"></script>
 ```
 
 ##### commit
