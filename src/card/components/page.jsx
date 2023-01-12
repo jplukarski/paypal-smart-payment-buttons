@@ -326,6 +326,6 @@ export function setupCard({ cspNonce, facilitatorAccessToken, featureFlags } : S
         facilitatorAccessToken,
         featureFlags
     });
-
+    console.log('setupCard function called')
     render(<Page cspNonce={ cspNonce } props={ props } featureFlags={featureFlags} />, getBody());
 }
