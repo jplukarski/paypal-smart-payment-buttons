@@ -1,16 +1,12 @@
 /* @flow */
 /** @jsx h */
 
-import { h, render, Fragment } from 'preact';
+import { h, Fragment } from 'preact';
 import { useState, useEffect, useRef } from 'preact/hooks';
 
-import { getBody } from '../../lib';
 import { setupExports, autoFocusOnFirstInput, filterExtraFields, kebabToCamelCase, parsedCardType} from '../lib';
 import { CARD_FIELD_TYPE_TO_FRAME_NAME, CARD_FIELD_TYPE } from '../constants';
 import { submitCardFields, getCardFieldState, getFieldErrors, isEmpty } from '../interface';
-import { getCardProps, type CardProps } from '../props';
-import type { SetupCardOptions} from '../types';
-import type {FeatureFlags } from '../../types'
 
 import { CardField, CardNumberField, CardCVVField, CardExpiryField, CardNameField, CardPostalCodeField } from './fields';
 
@@ -20,7 +16,7 @@ type PageProps = {|
     featureFlags: FeatureFlags
 |};
 
-function Page({ cspNonce, props, featureFlags } : PageProps) : mixed {
+export function Page({ cspNonce, props, featureFlags } : PageProps) : mixed {
     const { facilitatorAccessToken, style, disableAutocomplete, placeholder, type, export: xport, inputEvents, minLength, maxLength } = props;
     const { onChange, onFocus, onBlur, onInputSubmitRequest } = inputEvents || {};
     const [ fieldValue, setFieldValue ] = useState();
